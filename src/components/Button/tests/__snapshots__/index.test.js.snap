@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<Button/> snapshot 1`] = `
+<button
+  class="vs-btn-d vs-outline-secondary-btn"
+  type="button"
+>
+  123
+</button>
+`;

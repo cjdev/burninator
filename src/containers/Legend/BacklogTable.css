@@ -1,0 +1,9 @@
+.select-option:active,
+.select-option:focus,
+.select-option:hover,
+.select-option.is-focused {
+    background-color: #f0f0f0;
+}
+.select-option.is-selected {
+    background-color: #ddd;
+}

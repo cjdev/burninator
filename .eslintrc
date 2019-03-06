@@ -1,0 +1,18 @@
+{
+    "extends": [
+        "react-app",
+        "prettier",
+        "plugin:jest/recommended",
+    ],
+    "plugins": [
+        "prettier",
+        "react-hooks",
+        "jest",
+    ],
+    "rules": {
+        "jsx-a11y/href-no-hash": 0,
+        "react/prop-types": 1,
+        "prettier/prettier": "error",
+        "react-hooks/rules-of-hooks": "error"
+    }
+}

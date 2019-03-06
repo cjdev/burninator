@@ -1,0 +1,201 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<V2Chart /> snapshot:issues 1`] = `
+.c1 {
+  border: 0px solid black;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  line-height: 1.2;
+  margin-bottom: 8px;
+  font-size: 1.3rem;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.c1 div {
+  font-size: inherit;
+}
+
+.c2 * {
+  font-size: inherit;
+}
+
+.c0 {
+  border: 1px solid #ddd;
+  background-color: #fff;
+  padding: 8px 8px;
+  margin-bottom: 8px;
+  border-radius: 2px;
+}
+
+.c3 {
+  margin: 0;
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.c5 {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+input.c4 {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+<div
+  class="c0"
+>
+  <div
+    class="c1"
+  >
+    <div>
+      undefined
+    </div>
+    <div
+      class="c2"
+    >
+      <label
+        class="c3"
+      >
+        <input
+          class="c4"
+          type="checkbox"
+        />
+        <span
+          class="c5"
+        >
+          Tooltips
+        </span>
+      </label>
+    </div>
+  </div>
+  <div
+    class="recharts-responsive-container"
+    style="width: 100%; height: 300px;"
+  >
+    <div
+      style="position: absolute; width: 0px; height: 0px; visibility: hidden; display: none;"
+    />
+  </div>
+</div>
+`;
+
+exports[`<V2Chart /> snapshot:versions 1`] = `
+.c1 {
+  border: 0px solid black;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  line-height: 1.2;
+  margin-bottom: 8px;
+  font-size: 1.3rem;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.c1 div {
+  font-size: inherit;
+}
+
+.c2 * {
+  font-size: inherit;
+}
+
+.c0 {
+  border: 1px solid #ddd;
+  background-color: #fff;
+  padding: 8px 8px;
+  margin-bottom: 8px;
+  border-radius: 2px;
+}
+
+.c3 {
+  margin: 0;
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.c5 {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+input.c4 {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+<div
+  class="c0"
+>
+  <div
+    class="c1"
+  >
+    <div>
+      undefined
+    </div>
+    <div
+      class="c2"
+    >
+      <label
+        class="c3"
+      >
+        <input
+          class="c4"
+          type="checkbox"
+        />
+        <span
+          class="c5"
+        >
+          Tooltips
+        </span>
+      </label>
+    </div>
+  </div>
+  <div
+    class="recharts-responsive-container"
+    style="width: 100%; height: 300px;"
+  >
+    <div
+      style="position: absolute; width: 0px; height: 0px; visibility: hidden; display: none;"
+    />
+  </div>
+</div>
+`;

@@ -1,0 +1,40 @@
+# See http://help.github.com/ignore-files/ for more about ignoring files.
+
+# dependencies
+node_modules
+
+# production
+build
+public/CHANGELOG.md
+
+# misc
+*.gz
+*.tgz
+*.log
+.DS_Store
+.vscode/
+coverage/
+data*/
+jira-data.json
+logs/
+npm-debug.log
+npm-debug.log*
+setupSync.sh
+stats.json
+tags*
+.env
+.idea/
+*.swp
+*.env
+*deleteme*
+
+commit-id
+artifact-id
+
+*.gz
+*.tgz
+*.tar
+*.zip
+*.bz2
+
+
