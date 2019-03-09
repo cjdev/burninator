@@ -17,16 +17,20 @@ export const useTitleCrawl = containerRef => {
   const [titlePadding, setTitlePadding] = useState(0);
   useEffect(() => {
     if (!containerRef.current) return;
+    const currentRef = containerRef.current;
 
-    const containerX = containerRef.current.getBoundingClientRect().x;
+    const containerX = currentRef.getBoundingClientRect().x;
     const handleScroll = () => {
       const calculatedPadding = titleRef.current.getBoundingClientRect().x - containerX;
       const newPadding = calculatedPadding < 0 ? Math.abs(calculatedPadding) + 8 : 0;
       setTitlePadding(newPadding);
     };
 
-    containerRef.current.addEventListener('scroll', handleScroll);
-    return () => containerRef.current.removeEventListener('scroll', handleScroll);
+    currentRef.addEventListener('scroll', handleScroll);
+    return () => {
+      if (!currentRef) return;
+      currentRef.removeEventListener('scroll', handleScroll);
+    };
   }, [containerRef]);
   return [titleRef, titlePadding];
 };
