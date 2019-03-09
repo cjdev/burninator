@@ -2,8 +2,8 @@ import React from 'react';
 import * as R from 'ramda';
 import styled from 'styled-components/macro'; // eslint-disable-line no-unused-vars
 import isAfter from 'date-fns/is_after';
-import { mapIndex, formatDate, getUTCDate } from '../../utils';
-import { mapStartDateToTimeline, mapEndDateToWidth, phaseBgMap } from './utils';
+import { mapIndex, formatDate, getUTCDate } from '../../../utils';
+import { mapStartDateToTimeline, mapEndDateToWidth, phaseBgMap } from '../utils';
 
 const adjustWidth = (w, left, parentOffset) => {
   let changedLeft = false;

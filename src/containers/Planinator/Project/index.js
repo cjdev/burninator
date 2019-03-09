@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import * as R from 'ramda';
 import styled from 'styled-components/macro'; // eslint-disable-line no-unused-vars
-import { ChevronDownIcon, ChevronRightIcon } from '../../components/Icons';
-import { formatDate, getUTCDate } from '../../utils';
-import { ChildContainer } from './Children';
-import { mapStartDateToTimeline, mapEndDateToWidth, phaseBgMap } from './utils';
-import { useTitleCrawl } from './useTitleCrawl';
-import { SettingsButton } from './ProjectSettings';
+import { ChevronDownIcon, ChevronRightIcon } from '../../../components/Icons';
+import { formatDate, getUTCDate } from '../../../utils';
+import { ChildContainer } from '../Children';
+import { mapStartDateToTimeline, mapEndDateToWidth, phaseBgMap } from '../utils';
+import { useTitleCrawl } from '../useTitleCrawl';
+import { SettingsButton } from './Settings';
 
 const getEarliestStart = R.pipe(
   R.sort(R.ascend(R.prop('startDate'))),

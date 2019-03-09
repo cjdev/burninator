@@ -10,7 +10,7 @@ import { SettingsButton } from './PlanSettings';
 import { Roadmap } from './Roadmap';
 import { reducer, initialState } from './state';
 import { getPlan } from './api';
-import PlaninatorContext from './PlaninatorContext';
+import PlaninatorContext from './context';
 
 const PlaninatorHeader = ({ noVersions, state }) => {
   return (

@@ -1,12 +1,12 @@
 import React, { useContext, useState } from 'react';
 import styled from 'styled-components/macro'; // eslint-disable-line no-unused-vars
-import { ChevronDownIcon, ChevronRightIcon } from '../../components/Icons';
-import { mapIndex } from '../../utils';
-import { Project } from './Project';
-import { useTitleCrawl } from './useTitleCrawl';
-import { getTodayAndPosition } from './utils';
-import { SettingsButton } from './TrackModal';
-import PlaninatorContext from './PlaninatorContext';
+import { ChevronDownIcon, ChevronRightIcon } from '../../../components/Icons';
+import { mapIndex } from '../../../utils';
+import { Project } from '../Project';
+import { useTitleCrawl } from '../useTitleCrawl';
+import { getTodayAndPosition } from '../utils';
+import PlaninatorContext from '../context';
+import { SettingsButton } from './Settings';
 
 const TodayMarker = ({ pos }) => (
   <div

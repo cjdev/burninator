@@ -3,9 +3,9 @@ import styled from 'styled-components/macro'; // eslint-disable-line no-unused-v
 import { connect } from 'react-redux';
 import * as M from '@cjdev/visual-stack/lib/components/Modal';
 import { openModal, closeModal } from '@cjdev/visual-stack-redux';
-import { SettingsIcon } from '../../components/Icons';
-import { BasicButton } from '../../components/Button';
-import { Spinner } from '../../components/Spinner';
+import { SettingsIcon } from '../../../components/Icons';
+import { BasicButton } from '../../../components/Button';
+import { Spinner } from '../../../components/Spinner';
 
 const TrackSettingsModal = ({ closeModal, settings, track }) => {
   const error = null;

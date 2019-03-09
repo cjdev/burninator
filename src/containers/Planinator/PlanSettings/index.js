@@ -7,7 +7,7 @@ import * as M from '@cjdev/visual-stack/lib/components/Modal';
 import { BasicButton } from '../../../components/Button';
 import { Spinner } from '../../../components/Spinner';
 import { putPlan, getPlan } from '../api';
-import PlaninatorContext from '../PlaninatorContext';
+import PlaninatorContext from '../context';
 
 const SettingsModal = ({ closeModal }) => {
   const { state, dispatch, planId, version } = useContext(PlaninatorContext);
