@@ -39,7 +39,7 @@ const RenameModalPure = ({
       getBoardVersions(boardId);
       setUpdating(false);
     }
-  }, [boardVersionUpdate]);
+  }, [boardId, boardVersionUpdate, closeModal, getBoardVersions, updating]);
   return (
     <M.Modal onBackgroundClick={closeModal}>
       <M.Dialog>

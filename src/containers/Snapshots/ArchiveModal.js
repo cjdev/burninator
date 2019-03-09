@@ -33,7 +33,8 @@ const ArchiveModalPure = ({
       getBoardVersions(boardId);
       setUpdating(false);
     }
-  }, [boardVersionUpdate]);
+  }, [updating, boardId, closeModal, getBoardVersions, boardVersionUpdate]);
+
   return (
     <M.Modal onBackgroundClick={closeModal}>
       <M.Dialog>

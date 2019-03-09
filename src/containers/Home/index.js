@@ -9,7 +9,7 @@ import { BoardList } from './BoardList';
 const Home = ({ onMount, boards }) => {
   useEffect(() => {
     onMount();
-  }, []);
+  }, [onMount]);
   return <>{boards ? <BoardList boards={boards} /> : <SpinnerPanel />}</>;
 };
 Home.propTypes = {

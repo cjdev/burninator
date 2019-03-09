@@ -14,7 +14,7 @@ import { formatLongDate, formatOrEmpty } from '../../utils';
 const Synopsis = ({ currentBoard, getBoard, match }) => {
   useEffect(() => {
     getBoard({ boardId: match.params.boardId, version: 'current' });
-  }, []);
+  }, [getBoard, match.params.boardId]);
   const { isLoaded, processed } = currentBoard;
   if (!isLoaded) {
     return <SpinnerPanel />;

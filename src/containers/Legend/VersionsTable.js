@@ -36,7 +36,7 @@ const VersionsTable = ({ currentBoard }) => {
     return () => {
       window.clearInterval(timer);
     };
-  }, [currentBoard]);
+  }, [currentBoard, lastUpdate]);
 
   if (versions.length === 0) {
     return <div>No Versions!</div>;
