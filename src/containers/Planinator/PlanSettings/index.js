@@ -16,7 +16,7 @@ const SettingsModal = ({ closeModal }) => {
 
   const [updating, setUpdating] = useState(false);
 
-  // const [localState, localDispatch] = useReducer(localReducer, initialState);
+  console.log('Date.now(): ', Date.now());
   const [start, setStart] = useState(settings.startDate || '');
   const [end, setEnd] = useState(settings.endDate || '');
 

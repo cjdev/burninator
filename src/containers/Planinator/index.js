@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
 import { withRouter } from 'react-router-dom';
 import { ModalMountPoint } from '@cjdev/visual-stack-redux/lib/components/Modal';
-import { Page, Header, Title, HeaderRight } from '../../components/Page';
-import { Panel } from '../../components/Panel';
+import { Page, Header, Title } from '../../components/Page';
+import { Panel, PanelTitle, PanelTitleLeft, PanelTitleRight } from '../../components/Panel';
 import { SpinnerPanel } from '../../components/Spinner';
 import { SettingsButton } from './PlanSettings';
 import { Roadmap } from './Roadmap';
@@ -17,9 +17,6 @@ const PlaninatorHeader = ({ noVersions, state }) => {
     <Header>
       <Helmet title="Planinator" />
       <Title>Planinator</Title>
-      <HeaderRight>
-        <SettingsButton name={noVersions ? 'Start' : 'Settings'} state={state} />
-      </HeaderRight>
     </Header>
   );
 };
@@ -54,7 +51,15 @@ const Planinator = ({ match }) => {
           ) : otherError ? (
             <div>Error: {apiMeta.error}?</div>
           ) : (
-            <Roadmap />
+            <>
+              <PanelTitle>
+                <PanelTitleLeft>{state.settings.name}</PanelTitleLeft>
+                <PanelTitleRight>
+                  <SettingsButton name={noVersions ? 'Start' : 'Settings'} state={state} />
+                </PanelTitleRight>
+              </PanelTitle>
+              <Roadmap />
+            </>
           )}
         </Panel>
         <ModalMountPoint />
