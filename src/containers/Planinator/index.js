@@ -3,7 +3,7 @@ import { Helmet } from 'react-helmet';
 import { withRouter } from 'react-router-dom';
 import { ModalMountPoint } from '@cjdev/visual-stack-redux/lib/components/Modal';
 import { Page, Header, Title, HeaderRight } from '../../components/Page';
-import { Panel, PanelTitle, PanelTitleLeft, PanelTitleRight } from '../../components/Panel';
+import { Panel } from '../../components/Panel';
 import { SpinnerPanel } from '../../components/Spinner';
 import { SettingsButton } from './SettingsModal';
 import { Roadmap } from './Roadmap';

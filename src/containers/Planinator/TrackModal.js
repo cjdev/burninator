@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components/macro'; // eslint-disable-line no-unused-vars
 import { connect } from 'react-redux';
 import * as M from '@cjdev/visual-stack/lib/components/Modal';

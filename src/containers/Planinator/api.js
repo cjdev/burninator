@@ -1,17 +1,5 @@
 import { actions } from './state';
 
-// const assertOk = response => {
-//   return response.then(r => {
-//     if (!r.ok) {
-//       r.text().then(text => {
-//         throw Error(text);
-//       });
-//     } else {
-//       return response;
-//     }
-//   });
-// };
-
 export const getPlan = async (planId, version, dispatch) => {
   try {
     dispatch(actions.getPlanStart());
