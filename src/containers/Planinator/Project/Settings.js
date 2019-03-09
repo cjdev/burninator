@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useContext, useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components/macro'; // eslint-disable-line no-unused-vars
 import { connect } from 'react-redux';
 import * as M from '@cjdev/visual-stack/lib/components/Modal';
@@ -6,6 +7,8 @@ import { openModal, closeModal } from '@cjdev/visual-stack-redux';
 import { SettingsIcon } from '../../../components/Icons';
 import { BasicButton } from '../../../components/Button';
 import { Spinner } from '../../../components/Spinner';
+import { putPlan, getPlan } from '../api';
+import Context from '../context';
 
 const getSettingsForm = projectSettings => {
   switch (projectSettings.phase) {
@@ -104,8 +107,19 @@ const getSettingsForm = projectSettings => {
 };
 
 const ProjectSettingsModal = ({ closeModal, projectSettings }) => {
-  const error = null;
-  const loading = false;
+  const { state, dispatch, planId, version } = useContext(Context);
+  const { settings, tracks, putApiMeta } = state;
+  const { error, loading } = putApiMeta;
+  const [updating, setUpdating] = useState(false);
+
+  useEffect(() => {
+    if (updating && !putApiMeta.loading && !putApiMeta.error) {
+      closeModal();
+      getPlan(planId, version, dispatch);
+      setUpdating(false);
+    }
+  }, [updating, closeModal, putApiMeta, planId, version, dispatch]);
+
   const form = getSettingsForm(projectSettings);
 
   return (
@@ -119,7 +133,15 @@ const ProjectSettingsModal = ({ closeModal, projectSettings }) => {
             <BasicButton type="text" onClick={closeModal}>
               Cancel
             </BasicButton>
-            <BasicButton type="outline-secondary" onClick={form.onSave}>
+            <BasicButton
+              type="outline-secondary"
+              onClick={() => {
+                setUpdating(true);
+                // TODO: move action to specific handlers...
+                // form.onSave(...);
+                putPlan(planId, { settings, tracks }, dispatch);
+              }}
+            >
               Save
               {loading && <Spinner />}
             </BasicButton>
@@ -128,6 +150,13 @@ const ProjectSettingsModal = ({ closeModal, projectSettings }) => {
       </M.Dialog>
     </M.Modal>
   );
+};
+ProjectSettingsModal.propTypes = {
+  closeModal: PropTypes.func.isRequired,
+  projectSettings: PropTypes.shape({
+    name: PropTypes.string,
+    phase: PropTypes.string,
+  }),
 };
 
 export const SettingsButtonPure = ({ hover, openModal, closeModal, projectSettings, ...props }) => {
@@ -148,6 +177,15 @@ export const SettingsButtonPure = ({ hover, openModal, closeModal, projectSettin
       />
     </span>
   );
+};
+SettingsButtonPure.propTypes = {
+  hover: PropTypes.bool.isRequired,
+  openModal: PropTypes.func.isRequired,
+  closeModal: PropTypes.func.isRequired,
+  projectSettings: PropTypes.shape({
+    name: PropTypes.string,
+    phase: PropTypes.string,
+  }),
 };
 
 export const SettingsButton = connect(

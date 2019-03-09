@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState, useContext, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components/macro'; // eslint-disable-line no-unused-vars
 import { connect } from 'react-redux';
 import * as M from '@cjdev/visual-stack/lib/components/Modal';
@@ -6,10 +7,22 @@ import { openModal, closeModal } from '@cjdev/visual-stack-redux';
 import { SettingsIcon } from '../../../components/Icons';
 import { BasicButton } from '../../../components/Button';
 import { Spinner } from '../../../components/Spinner';
+import { putPlan, getPlan } from '../api';
+import PlaninatorContext from '../context';
 
-const TrackSettingsModal = ({ closeModal, settings, track }) => {
-  const error = null;
-  const loading = false;
+const TrackSettingsModal = ({ closeModal, track }) => {
+  const { state, dispatch, planId, version } = useContext(PlaninatorContext);
+  const { settings, tracks, putApiMeta } = state;
+  const { error, loading } = putApiMeta;
+
+  const [updating, setUpdating] = useState(false);
+  useEffect(() => {
+    if (updating && !putApiMeta.loading && !putApiMeta.error) {
+      closeModal();
+      getPlan(planId, version, dispatch);
+      setUpdating(false);
+    }
+  }, [updating, closeModal, putApiMeta, planId, version, dispatch]);
 
   return (
     <M.Modal onBackgroundClick={closeModal}>
@@ -32,7 +45,8 @@ const TrackSettingsModal = ({ closeModal, settings, track }) => {
             <BasicButton
               type="outline-secondary"
               onClick={() => {
-                console.log('save track settings');
+                setUpdating(true);
+                putPlan(planId, { settings, tracks }, dispatch);
               }}
             >
               Save
@@ -44,10 +58,16 @@ const TrackSettingsModal = ({ closeModal, settings, track }) => {
     </M.Modal>
   );
 };
+TrackSettingsModal.propTypes = {
+  track: PropTypes.shape({
+    name: PropTypes.string,
+  }).isRequired,
+  closeModal: PropTypes.func.isRequired,
+};
 
-export const SettingsButtonPure = ({ hover, openModal, closeModal, track, settings, ...props }) => {
+export const SettingsButtonPure = ({ hover, openModal, closeModal, track, ...props }) => {
   return (
-    <span onClick={() => openModal(TrackSettingsModal, { closeModal, settings, track })}>
+    <span onClick={() => openModal(TrackSettingsModal, { closeModal, track })}>
       <SettingsIcon
         css={`
           margin-top: -3px;
@@ -64,6 +84,14 @@ export const SettingsButtonPure = ({ hover, openModal, closeModal, track, settin
       />
     </span>
   );
+};
+SettingsButtonPure.propTypes = {
+  hover: PropTypes.bool,
+  track: PropTypes.shape({
+    name: PropTypes.string,
+  }).isRequired,
+  openModal: PropTypes.func.isRequired,
+  closeModal: PropTypes.func,
 };
 
 export const SettingsButton = connect(

@@ -24,7 +24,6 @@ const SettingsModal = ({ closeModal }) => {
     if (updating && !putApiMeta.loading && !putApiMeta.error) {
       closeModal();
       getPlan(planId, version, dispatch);
-      // getBoardVersions(boardId);
       setUpdating(false);
     }
   }, [updating, closeModal, putApiMeta, planId, version, dispatch]);
