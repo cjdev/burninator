@@ -1,29 +1,33 @@
-import React, { useState, useContext } from 'react';
-import styled from 'styled-components/macro';
+import React, { useState, useContext, useEffect } from 'react';
+import styled from 'styled-components/macro'; // eslint-disable-line no-unused-vars
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { openModal, closeModal } from '@cjdev/visual-stack-redux';
 import * as M from '@cjdev/visual-stack/lib/components/Modal';
-import { BasicButton } from '../../components/Button';
-import { Spinner } from '../../components/Spinner';
-import { savePlanSettings, getPlan } from './api';
-import { PlaninatorDispatch } from './';
+import { BasicButton } from '../../../components/Button';
+import { Spinner } from '../../../components/Spinner';
+import { putPlan, getPlan } from '../api';
+import PlaninatorContext from '../PlaninatorContext';
 
-const FormContainer = styled.div``;
+const SettingsModal = ({ closeModal }) => {
+  const { state, dispatch, planId, version } = useContext(PlaninatorContext);
+  const { settings, tracks, putApiMeta } = state;
+  const { error, loading } = putApiMeta;
 
-// const initialState = {};
-// const localReducer = (state, action) => {
-//   return initialState;
-// };
-
-const SettingsModal = ({ closeModal, settings }) => {
-  const dispatch = useContext(PlaninatorDispatch);
-
-  const error = null;
-  const loading = false;
+  const [updating, setUpdating] = useState(false);
 
   // const [localState, localDispatch] = useReducer(localReducer, initialState);
   const [start, setStart] = useState(settings.startDate || '');
   const [end, setEnd] = useState(settings.endDate || '');
+
+  useEffect(() => {
+    if (updating && !putApiMeta.loading && !putApiMeta.error) {
+      closeModal();
+      getPlan(planId, version, dispatch);
+      // getBoardVersions(boardId);
+      setUpdating(false);
+    }
+  }, [updating, closeModal, putApiMeta, planId, version, dispatch]);
 
   return (
     <M.Modal onBackgroundClick={closeModal}>
@@ -31,7 +35,7 @@ const SettingsModal = ({ closeModal, settings }) => {
         <M.Content>
           <M.Header title="Settings" />
           <M.Body>
-            <FormContainer>
+            <div>
               <label>Start Date</label>
               <input
                 name="startDate"
@@ -48,7 +52,7 @@ const SettingsModal = ({ closeModal, settings }) => {
                 value={end}
                 onChange={e => setEnd(e.target.value)}
               />
-            </FormContainer>
+            </div>
             <ul>
               <li>rename?</li>
               <li>save a version</li>
@@ -63,11 +67,20 @@ const SettingsModal = ({ closeModal, settings }) => {
             <BasicButton
               type="outline-secondary"
               onClick={() => {
-                console.log('Save', start, end);
+                setUpdating(true);
+                putPlan(planId, { settings, tracks }, dispatch);
               }}
             >
               Save
-              {loading && <Spinner />}
+              {loading && (
+                <span
+                  css={`
+                    margin-left: 8px;
+                  `}
+                >
+                  <Spinner />
+                </span>
+              )}
             </BasicButton>
           </M.Footer>
         </M.Content>
@@ -75,12 +88,18 @@ const SettingsModal = ({ closeModal, settings }) => {
     </M.Modal>
   );
 };
+SettingsModal.propTypes = {
+  closeModal: PropTypes.func.isRequired,
+};
 
-const SettingsButtonPure = ({ name = 'Settings', openModal, closeModal, state }) => (
-  <BasicButton onClick={() => openModal(SettingsModal, { closeModal, settings: state.settings })}>
-    {name}
-  </BasicButton>
+const SettingsButtonPure = ({ name = 'Settings', openModal, closeModal }) => (
+  <BasicButton onClick={() => openModal(SettingsModal, { closeModal })}>{name}</BasicButton>
 );
+SettingsButtonPure.propTypes = {
+  name: PropTypes.string,
+  openModal: PropTypes.func.isRequired,
+  closeModal: PropTypes.func,
+};
 
 export const SettingsButton = connect(
   null,

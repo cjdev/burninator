@@ -1,16 +1,16 @@
 import React, { useEffect, useReducer } from 'react';
+import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
 import { withRouter } from 'react-router-dom';
 import { ModalMountPoint } from '@cjdev/visual-stack-redux/lib/components/Modal';
 import { Page, Header, Title, HeaderRight } from '../../components/Page';
 import { Panel } from '../../components/Panel';
 import { SpinnerPanel } from '../../components/Spinner';
-import { SettingsButton } from './SettingsModal';
+import { SettingsButton } from './PlanSettings';
 import { Roadmap } from './Roadmap';
 import { reducer, initialState } from './state';
 import { getPlan } from './api';
-
-export const PlaninatorDispatch = React.createContext(null);
+import PlaninatorContext from './PlaninatorContext';
 
 const PlaninatorHeader = ({ noVersions, state }) => {
   return (
@@ -23,11 +23,15 @@ const PlaninatorHeader = ({ noVersions, state }) => {
     </Header>
   );
 };
+PlaninatorHeader.propTypes = {
+  noVersions: PropTypes.bool,
+  state: PropTypes.any,
+};
 
 const Planinator = ({ match }) => {
   const { planId, version } = match.params;
   const [state, dispatch] = useReducer(reducer, initialState);
-  const { settings, tracks, apiMeta } = state;
+  const { apiMeta } = state;
   // console.log('apiMeta: ', apiMeta);
 
   const noVersions = apiMeta.error === 'Not found';
@@ -35,14 +39,14 @@ const Planinator = ({ match }) => {
 
   useEffect(() => {
     getPlan(planId, version, dispatch);
-  }, []);
+  }, [planId, version]);
 
   if (apiMeta.loading) {
     return <SpinnerPanel />;
   }
 
   return (
-    <PlaninatorDispatch.Provider value={dispatch}>
+    <PlaninatorContext.Provider value={{ state, dispatch, planId, version }}>
       <Page header={<PlaninatorHeader state={state} noVersions={noVersions} />}>
         <Panel>
           {noVersions ? (
@@ -50,13 +54,21 @@ const Planinator = ({ match }) => {
           ) : otherError ? (
             <div>Error: {apiMeta.error}?</div>
           ) : (
-            <Roadmap settings={settings} tracks={tracks} />
+            <Roadmap />
           )}
         </Panel>
         <ModalMountPoint />
       </Page>
-    </PlaninatorDispatch.Provider>
+    </PlaninatorContext.Provider>
   );
+};
+Planinator.propTypes = {
+  match: PropTypes.shape({
+    params: PropTypes.shape({
+      planId: PropTypes.string.isRequired,
+      version: PropTypes.string,
+    }).isRequired,
+  }).isRequired,
 };
 
 export default withRouter(Planinator);

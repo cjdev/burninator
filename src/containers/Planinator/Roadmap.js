@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useContext, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components/macro';
 import * as R from 'ramda';
@@ -11,6 +11,7 @@ import startOfMonth from 'date-fns/start_of_month';
 import { Track } from './Track';
 import { getUTCDate, mapIndex } from '../../utils';
 import { getTodayAndPosition } from './utils';
+import PlaninatorContext from './PlaninatorContext';
 
 const RoadmapContainer = styled.div`
   padding: 8px;
@@ -66,7 +67,10 @@ Month.propTypes = {
   width: PropTypes.number,
 };
 
-export const Roadmap = ({ settings, tracks = [] }) => {
+export const Roadmap = () => {
+  const { state } = useContext(PlaninatorContext);
+  const { settings, tracks = [] } = state;
+
   const containerRef = useRef(null);
   const { monthWidthPx } = settings;
   const startDateUTC = getUTCDate(settings.startDate);
@@ -96,9 +100,7 @@ export const Roadmap = ({ settings, tracks = [] }) => {
           width: ${width}px;
         `}
       >
-        {mapIndex((t, idx) => (
-          <Track key={idx} track={t} settings={settings} containerRef={containerRef} />
-        ))(tracks)}
+        {mapIndex((t, idx) => <Track key={idx} track={t} containerRef={containerRef} />)(tracks)}
       </div>
     </RoadmapContainer>
   );

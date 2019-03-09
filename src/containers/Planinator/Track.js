@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import styled from 'styled-components/macro'; // eslint-disable-line no-unused-vars
 import { ChevronDownIcon, ChevronRightIcon } from '../../components/Icons';
 import { mapIndex } from '../../utils';
@@ -6,6 +6,7 @@ import { Project } from './Project';
 import { useTitleCrawl } from './useTitleCrawl';
 import { getTodayAndPosition } from './utils';
 import { SettingsButton } from './TrackModal';
+import PlaninatorContext from './PlaninatorContext';
 
 const TodayMarker = ({ pos }) => (
   <div
@@ -21,7 +22,9 @@ const TodayMarker = ({ pos }) => (
   />
 );
 
-export const Track = ({ track, settings, containerRef }) => {
+export const Track = ({ track, containerRef }) => {
+  const { state } = useContext(PlaninatorContext);
+  const { settings } = state;
   const [expanded, toggleExpanded] = useState(true);
   const [titleRef, titlePadding] = useTitleCrawl(containerRef);
   const [hover, setHover] = useState(false);

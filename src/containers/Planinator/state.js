@@ -4,6 +4,7 @@ export const actions = {
   getPlanStart: createAction('@burninator/planinator/getPlanStart'),
   getPlanSuccess: createAction('@burninator/planinator/getPlanSuccess'),
   getPlanError: createAction('@burninator/planinator/getPlanError'),
+
   putPlanStart: createAction('@burninator/planinator/putPlanStart'),
   putPlanSuccess: createAction('@burninator/planinator/putPlanSuccess'),
   putPlanError: createAction('@burninator/planinator/putPlanError'),
@@ -42,19 +43,21 @@ const handleGetPlanError = (state, { payload }) => {
 };
 
 const handlePutPlanStart = (state, action) => {
+  console.log('handlePutPlanStart');
   return {
     ...state,
-    apiMeta: {
+    putApiMeta: {
       error: null,
       loading: true,
     },
   };
 };
 
-const handlePutPlanSuccess = (state, { payload }) => {
+const handlePutPlanSuccess = (state, action) => {
+  console.log('handlePutPlanSuccess');
   return {
     ...state,
-    apiMeta: {
+    putApiMeta: {
       error: null,
       loading: false,
     },
@@ -62,9 +65,10 @@ const handlePutPlanSuccess = (state, { payload }) => {
 };
 
 const handlePutPlanError = (state, { payload }) => {
+  console.log('handlePutPlanError');
   return {
     ...state,
-    apiMeta: {
+    putApiMeta: {
       error: payload,
       loading: false,
     },
@@ -75,6 +79,10 @@ export const initialState = {
   settings: {},
   tracks: [],
   apiMeta: {
+    error: null,
+    loading: false,
+  },
+  putApiMeta: {
     error: null,
     loading: false,
   },
