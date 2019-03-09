@@ -13,11 +13,9 @@ export const mapIndex = R.addIndex(R.map);
 export const toTitleCase = str =>
   str.replace(/\w\S*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
 
-export const format = (m, f, alt) => {
-  const altText = alt || '';
-  const formatString = f || 'YYYY-MM-DDTHH:mm:ssZ';
-  return m ? dateFnsFormat(m, formatString) : altText;
-};
+export const format = (m, formatString = 'YYYY-MM-DDTHH:mm:ssZ', altText = '') =>
+  m ? dateFnsFormat(m, formatString) : altText;
+
 export const formatIso = m => format(m);
 export const formatOrEmpty = m => format(m, 'MM/DD/YYYY');
 
@@ -27,6 +25,7 @@ export const formatLongDate = m => (m ? moment(m).format('MM/DD/YYYY H:mm:ss') :
 export const formatShortDate = m => (m ? moment(m).format('MM/D/YY H:mm') : '--');
 export const formatTs = m => moment(m).format('YYYYMMDD_HH:mm:ss');
 export const diffDates = (a, b, unit) => moment(a).diff(moment(b), unit);
+
 export const daysSince = date => differenceInDays(new Date(), date);
 export const weekDaysBetween = (start, end) =>
   R.filter(d => R.not(isWeekend(d)))(eachDay(start, end)).length;
@@ -37,7 +36,6 @@ export const getHoursDiffFromNow = time => moment(time).diff(moment(), 'hours');
 
 export const getUTCDate = (dateString = Date.now()) => {
   const date = new Date(dateString);
-
   return new Date(
     date.getUTCFullYear(),
     date.getUTCMonth(),
