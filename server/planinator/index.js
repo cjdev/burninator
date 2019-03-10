@@ -142,9 +142,13 @@ export const handlePutPlan = async (req, res) => {
   }
 };
 
+export const handleResetPlan = async (req, res) => {
+  await db.putPlan('1', ppp);
+  return res.status(200).send('OK');
+};
+
 export const handleGetPlan = async (req, res) => {
   logger.silly('req: ', jtos(req.params));
-  // db.putPlan(req.params.planId, ppp);
   try {
     const planData = await db.getPlan(req.params.planId, req.params.version);
     logger.silly(planData);

@@ -32,6 +32,9 @@ app.use(bodyParser.json());
 app.use(expressLogger);
 app.use(express.static(path.join(__dirname, '..', 'build')));
 
+// <temp>
+app.get('/api/planinator/reset', planinator.handleResetPlan);
+// </temp>
 app.get('/api/planinator/:planId/:version?', planinator.handleGetPlan);
 app.put('/api/planinator/:planId', planinator.handlePutPlan);
 
