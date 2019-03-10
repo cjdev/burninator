@@ -7,6 +7,7 @@ import { Page, Header, Title } from '../../components/Page';
 import { Panel, PanelTitle, PanelTitleLeft, PanelTitleRight } from '../../components/Panel';
 import { SpinnerPanel } from '../../components/Spinner';
 import { SettingsButton } from './PlanSettings';
+import { AddTrackButton } from './Track/AddTrack';
 import { Roadmap } from './Roadmap';
 import { reducer, initialState } from './state';
 import { getPlan } from './api';
@@ -55,6 +56,7 @@ const Planinator = ({ match }) => {
               <PanelTitle>
                 <PanelTitleLeft>{state.settings.name}</PanelTitleLeft>
                 <PanelTitleRight>
+                  <AddTrackButton />
                   <SettingsButton name={noVersions ? 'Start' : 'Settings'} state={state} />
                 </PanelTitleRight>
               </PanelTitle>

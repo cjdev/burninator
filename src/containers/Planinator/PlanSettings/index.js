@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components/macro'; // eslint-disable-line no-unused-vars
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -6,43 +6,32 @@ import { openModal, closeModal } from '@cjdev/visual-stack-redux';
 import * as M from '@cjdev/visual-stack/lib/components/Modal';
 import { BasicButton } from '../../../components/Button';
 import { Spinner } from '../../../components/Spinner';
-import { putPlan, getPlan } from '../api';
-import PlaninatorContext from '../context';
 import { tsToDateString, dateStringToTs, dateFormat } from '../utils';
+import { useModalPlanUpdater } from '../useModalPlanUpdater';
+import { useFocus } from '../useFocus';
 
 const SettingsModal = ({ closeModal }) => {
-  const { state, dispatch, planId, version } = useContext(PlaninatorContext);
-  const { settings, tracks, putApiMeta } = state;
-  const { error, loading } = putApiMeta;
-
-  const [updating, setUpdating] = useState(false);
-
-  const [start, setStart] = useState(settings.startDate ? tsToDateString(settings.startDate) : '');
-  const [end, setEnd] = useState(settings.endDate ? tsToDateString(settings.endDate) : '');
-  const [planName, setPlanName] = useState(settings.name || '');
-
-  useEffect(() => {
-    if (updating && !putApiMeta.loading && !putApiMeta.error) {
-      closeModal();
-      getPlan(planId, version, dispatch);
-      setUpdating(false);
-    }
-  }, [updating, closeModal, putApiMeta, planId, version, dispatch]);
-
-  const handleSave = () => {
-    setUpdating(true);
-    const newPlan = {
-      tracks,
+  const getUpdatedPlan = state => {
+    return {
+      tracks: state.tracks,
       settings: {
-        ...settings,
+        ...state.settings,
         endDate: dateStringToTs(end),
         startDate: dateStringToTs(start),
         name: planName,
       },
     };
-    putPlan(planId, newPlan, dispatch);
   };
 
+  const { state, handler } = useModalPlanUpdater(getUpdatedPlan, closeModal);
+  const { settings, putApiMeta } = state;
+  const { error, loading } = putApiMeta;
+
+  const [start, setStart] = useState(settings.startDate ? tsToDateString(settings.startDate) : '');
+  const [end, setEnd] = useState(settings.endDate ? tsToDateString(settings.endDate) : '');
+  const [planName, setPlanName] = useState(settings.name || '');
+
+  const focusRef = useFocus();
   return (
     <M.Modal onBackgroundClick={closeModal}>
       <M.Dialog>
@@ -52,6 +41,7 @@ const SettingsModal = ({ closeModal }) => {
             <div>
               <label>Name</label>
               <input
+                ref={focusRef}
                 name="planName"
                 type="text"
                 placeholder="Plan Name"
@@ -79,7 +69,6 @@ const SettingsModal = ({ closeModal }) => {
               <ul>
                 <li>save a version</li>
                 <li>choose a saved version</li>
-                <li>create a new track</li>
               </ul>
             </div>
           </M.Body>
@@ -88,7 +77,7 @@ const SettingsModal = ({ closeModal }) => {
             <BasicButton type="text" onClick={closeModal}>
               Cancel
             </BasicButton>
-            <BasicButton type="outline-secondary" onClick={handleSave}>
+            <BasicButton type="outline-secondary" onClick={handler}>
               Save
               {loading && (
                 <span
