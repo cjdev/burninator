@@ -1,5 +1,6 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import * as R from 'ramda';
 import styled from 'styled-components/macro'; // eslint-disable-line no-unused-vars
 import { connect } from 'react-redux';
 import * as M from '@cjdev/visual-stack/lib/components/Modal';
@@ -7,34 +8,54 @@ import { openModal, closeModal } from '@cjdev/visual-stack-redux';
 import { SettingsIcon } from '../../../components/Icons';
 import { BasicButton } from '../../../components/Button';
 import { Spinner } from '../../../components/Spinner';
-import { putPlan, getPlan } from '../api';
-import PlaninatorContext from '../context';
+import { useModalPlanUpdater } from '../useModalPlanUpdater';
 
 const TrackSettingsModal = ({ closeModal, track }) => {
-  const { state, dispatch, planId, version } = useContext(PlaninatorContext);
-  const { settings, tracks, putApiMeta } = state;
+  const [trackName, setTrackName] = useState(track.name);
+
+  const getNewPlan = state => {
+    if (!trackName) return null;
+
+    const newTracks = R.map(t => {
+      if (t.id === track.id) {
+        return {
+          ...t,
+          name: trackName,
+        };
+      }
+      return t;
+    })(state.tracks);
+    return {
+      ...state,
+      tracks: newTracks,
+    };
+  };
+  const { state, handler } = useModalPlanUpdater(getNewPlan, closeModal);
+  const { putApiMeta } = state;
   const { error, loading } = putApiMeta;
 
-  const [updating, setUpdating] = useState(false);
-  useEffect(() => {
-    if (updating && !putApiMeta.loading && !putApiMeta.error) {
-      closeModal();
-      getPlan(planId, version, dispatch);
-      setUpdating(false);
-    }
-  }, [updating, closeModal, putApiMeta, planId, version, dispatch]);
+  const getPlanWithoutTrack = state => ({
+    ...state,
+    tracks: R.reject(R.propEq('id', track.id))(state.tracks),
+  });
+  const { handler: deleteHandler } = useModalPlanUpdater(getPlanWithoutTrack, closeModal);
 
   return (
     <M.Modal onBackgroundClick={closeModal}>
       <M.Dialog>
         <M.Content>
-          <M.Header title={`Settings: ${track.name}`} />
+          <M.Header title={`Track: ${track.name}`} />
           <M.Body>
+            <label>Track Name</label>
+            <input
+              name="trackName"
+              type="text"
+              value={trackName}
+              onChange={e => setTrackName(e.target.value)}
+            />
             <ul>
               <li>add project</li>
               <li>reorder projects</li>
-              <li>rename track</li>
-              <li>delete track</li>
             </ul>
           </M.Body>
           <M.Footer>
@@ -42,16 +63,25 @@ const TrackSettingsModal = ({ closeModal, track }) => {
             <BasicButton type="text" onClick={closeModal}>
               Cancel
             </BasicButton>
-            <BasicButton
-              type="outline-secondary"
-              onClick={() => {
-                setUpdating(true);
-                putPlan(planId, { settings, tracks }, dispatch);
-              }}
-            >
+            <BasicButton type="outline-secondary" onClick={handler}>
               Save
               {loading && <Spinner />}
             </BasicButton>
+          </M.Footer>
+          <M.Footer>
+            <div
+              css={`
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                color: #e1523d;
+              `}
+            >
+              <span>Click to permanently delete this track. DANGER!</span>
+              <BasicButton type="danger" onClick={deleteHandler}>
+                Delete Forever
+              </BasicButton>
+            </div>
           </M.Footer>
         </M.Content>
       </M.Dialog>
