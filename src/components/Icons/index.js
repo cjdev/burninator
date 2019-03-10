@@ -15,6 +15,7 @@ import {
   mdiLoading,
   mdiPackageDown,
   mdiPackageUp,
+  mdiPlaylistPlus,
   mdiRenameBox,
   mdiSettings,
   mdiUnfoldMoreHorizontal,
@@ -42,6 +43,7 @@ export const ExpandCollapseIcon = makeIcon(mdiUnfoldMoreHorizontal);
 export const LoadingIcon = makeIcon(mdiLoading, { spin: 1 });
 export const PageLoadingIcon = makeIcon(mdiLoading, { size: 7, spin: 1 });
 export const PlaninatorIcon = makeIcon(mdiChartTimeline);
+export const PlaylistPlusIcon = makeIcon(mdiPlaylistPlus);
 export const RenameBoxIcon = makeIcon(mdiRenameBox);
 export const SettingsIcon = makeIcon(mdiSettings);
 export const UnarchiveIcon = makeIcon(mdiPackageUp);

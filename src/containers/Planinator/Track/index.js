@@ -2,12 +2,7 @@ import React, { useContext, useState } from 'react';
 import * as R from 'ramda';
 import PropTypes from 'prop-types';
 import styled from 'styled-components/macro'; // eslint-disable-line no-unused-vars
-import {
-  ChevronDownIcon,
-  ChevronRightIcon,
-  ChevronDoubleDownIcon,
-  ChevronDoubleUpIcon,
-} from '../../../components/Icons';
+import { ChevronDownIcon, ChevronRightIcon } from '../../../components/Icons';
 import { mapIndex } from '../../../utils';
 import { Project } from '../Project';
 import { useTitleCrawl } from '../useTitleCrawl';
@@ -15,64 +10,7 @@ import { getTodayAndPosition } from '../utils';
 import PlaninatorContext from '../context';
 import { SettingsButton } from './Settings';
 import { putPlan, getPlan } from '../api';
-
-const UpButton = ({ hover, onClick, active }) => {
-  if (!active) {
-    return (
-      <ChevronDoubleUpIcon
-        css={`
-          margin-top: -3px;
-          ${hover ? `fill: #ddd;` : `fill: transparent`}
-        `}
-      />
-    );
-  }
-  return (
-    <span onClick={onClick}>
-      <ChevronDoubleUpIcon
-        css={`
-          margin-top: -3px;
-          ${hover ? `fill: #ddd;` : `fill: transparent`}
-          &:hover {
-            fill: #585858;
-          }
-          &:active {
-            fill: #333;
-          }
-        `}
-      />
-    </span>
-  );
-};
-
-const DownButton = ({ hover, onClick, active }) => {
-  if (!active) {
-    return (
-      <ChevronDoubleDownIcon
-        css={`
-          margin-top: -3px;
-          ${hover ? `fill: #ddd;` : `fill: transparent`}
-        `}
-      />
-    );
-  }
-  return (
-    <span onClick={onClick}>
-      <ChevronDoubleDownIcon
-        css={`
-          margin-top: -3px;
-          ${hover ? `fill: #ddd;` : `fill: transparent`}
-          &:hover {
-            fill: #585858;
-          }
-          &:active {
-            fill: #333;
-          }
-        `}
-      />
-    </span>
-  );
-};
+import { AddProjectButton, UpButton, DownButton } from './Buttons';
 
 const TodayMarker = ({ pos }) => (
   <div
@@ -99,6 +37,10 @@ export const Track = ({ track, position, containerRef }) => {
   // TODO: protect the buttons with these
   const activeUpButton = position > 0;
   const activeDownButton = position < tracks.length - 1;
+
+  const handleAddProject = () => {
+    console.log('handleAddProject');
+  };
 
   const handleClickDown = async () => {
     const newPlan = {
@@ -172,9 +114,22 @@ export const Track = ({ track, position, containerRef }) => {
           >
             {track.name}
           </span>
-          <DownButton hover={hover} onClick={handleClickDown} active={activeDownButton} />
-          <UpButton hover={hover} onClick={handleClickUp} active={activeUpButton} />
-          <SettingsButton track={track} hover={hover} />
+          <span
+            css={`
+              padding: 0 8px;
+              display: flex:
+              align-items: center;
+              justify-content: space-around;
+              & > * {
+                margin: 0 2px;
+              }
+ `}
+          >
+            <AddProjectButton hover={hover} onClick={handleAddProject} />
+            <DownButton hover={hover} onClick={handleClickDown} active={activeDownButton} />
+            <UpButton hover={hover} onClick={handleClickUp} active={activeUpButton} />
+            <SettingsButton track={track} hover={hover} />
+          </span>
         </div>
       </div>
       <TodayMarker pos={todayLeft} />
