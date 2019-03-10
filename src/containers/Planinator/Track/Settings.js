@@ -54,7 +54,7 @@ const TrackSettingsModal = ({ closeModal, track }) => {
               onChange={e => setTrackName(e.target.value)}
             />
             <ul>
-              <li>add project</li>
+              <li>tie to jira board</li>
             </ul>
           </M.Body>
           <M.Footer>

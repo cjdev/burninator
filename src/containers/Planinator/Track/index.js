@@ -10,7 +10,8 @@ import { getTodayAndPosition } from '../utils';
 import PlaninatorContext from '../context';
 import { SettingsButton } from './Settings';
 import { putPlan, getPlan } from '../api';
-import { AddProjectButton, UpButton, DownButton } from './Buttons';
+import { UpButton, DownButton } from './Buttons';
+import { AddProjectButton } from './AddProject';
 
 const TodayMarker = ({ pos }) => (
   <div
@@ -34,13 +35,8 @@ export const Track = ({ track, position, containerRef }) => {
 
   const { tracks, settings } = state;
 
-  // TODO: protect the buttons with these
   const activeUpButton = position > 0;
   const activeDownButton = position < tracks.length - 1;
-
-  const handleAddProject = () => {
-    console.log('handleAddProject');
-  };
 
   const handleClickDown = async () => {
     const newPlan = {
@@ -125,7 +121,7 @@ export const Track = ({ track, position, containerRef }) => {
               }
  `}
           >
-            <AddProjectButton hover={hover} onClick={handleAddProject} />
+            <AddProjectButton track={track} hover={hover} />
             <DownButton hover={hover} onClick={handleClickDown} active={activeDownButton} />
             <UpButton hover={hover} onClick={handleClickUp} active={activeUpButton} />
             <SettingsButton track={track} hover={hover} />
@@ -149,4 +145,5 @@ Track.propTypes = {
     projects: PropTypes.array,
   }),
   containerRef: PropTypes.object,
+  position: PropTypes.number.isRequired,
 };

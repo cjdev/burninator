@@ -46,6 +46,7 @@ export const getUTCDate = (dateString = Date.now()) => {
   );
 };
 
+export const validDateFormat = new RegExp(/\d\d\d\d-\d\d-\d\d/);
 export const dateIndicatesStaleBoard = time => getHoursDiffFromNow(time) < -24;
 export const equalsTrue = val => val === true || val === 'true';
 export const parseQuery = queryString => qs.parse(queryString, { ignoreQueryPrefix: true });
@@ -99,3 +100,4 @@ export function tableIf(...args) {
 }
 
 export const noName = n => n === undefined || n === 'undefined' || n === '';
+export const isNilOrEmpty = v => v === undefined || v === null || v === 'undefined' || v === '';

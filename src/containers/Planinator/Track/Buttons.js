@@ -1,29 +1,7 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components/macro'; // eslint-disable-line no-unused-vars
-import {
-  ChevronDoubleDownIcon,
-  ChevronDoubleUpIcon,
-  PlaylistPlusIcon,
-} from '../../../components/Icons';
-
-export const AddProjectButton = ({ hover, onClick }) => {
-  return (
-    <span onClick={onClick}>
-      <PlaylistPlusIcon
-        css={`
-          margin-top: -3px;
-          ${hover ? `fill: #ddd;` : `fill: transparent;`}
-          &:hover {
-            fill: #585858;
-          }
-          &:active {
-            fill: #333;
-          }
-        `}
-      />
-    </span>
-  );
-};
+import { ChevronDoubleDownIcon, ChevronDoubleUpIcon } from '../../../components/Icons';
 
 export const UpButton = ({ hover, onClick, active }) => {
   if (!active) {
@@ -55,6 +33,11 @@ export const UpButton = ({ hover, onClick, active }) => {
     </span>
   );
 };
+UpButton.propTypes = {
+  active: PropTypes.bool,
+  hover: PropTypes.bool,
+  onClick: PropTypes.func.isRequired,
+};
 
 export const DownButton = ({ hover, onClick, active }) => {
   if (!active) {
@@ -83,4 +66,9 @@ export const DownButton = ({ hover, onClick, active }) => {
       />
     </span>
   );
+};
+DownButton.propTypes = {
+  active: PropTypes.bool,
+  hover: PropTypes.bool,
+  onClick: PropTypes.func.isRequired,
 };
