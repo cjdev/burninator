@@ -8,6 +8,7 @@ import { BasicButton } from '../../../components/Button';
 import { Spinner } from '../../../components/Spinner';
 import { putPlan, getPlan } from '../api';
 import PlaninatorContext from '../context';
+import { tsToDateString, dateStringToTs, dateFormat } from '../utils';
 
 const SettingsModal = ({ closeModal }) => {
   const { state, dispatch, planId, version } = useContext(PlaninatorContext);
@@ -16,9 +17,9 @@ const SettingsModal = ({ closeModal }) => {
 
   const [updating, setUpdating] = useState(false);
 
-  console.log('Date.now(): ', Date.now());
-  const [start, setStart] = useState(settings.startDate || '');
-  const [end, setEnd] = useState(settings.endDate || '');
+  const [start, setStart] = useState(settings.startDate ? tsToDateString(settings.startDate) : '');
+  const [end, setEnd] = useState(settings.endDate ? tsToDateString(settings.endDate) : '');
+  const [planName, setPlanName] = useState(settings.name || '');
 
   useEffect(() => {
     if (updating && !putApiMeta.loading && !putApiMeta.error) {
@@ -28,6 +29,20 @@ const SettingsModal = ({ closeModal }) => {
     }
   }, [updating, closeModal, putApiMeta, planId, version, dispatch]);
 
+  const handleSave = () => {
+    setUpdating(true);
+    const newPlan = {
+      tracks,
+      settings: {
+        ...settings,
+        endDate: dateStringToTs(end),
+        startDate: dateStringToTs(start),
+        name: planName,
+      },
+    };
+    putPlan(planId, newPlan, dispatch);
+  };
+
   return (
     <M.Modal onBackgroundClick={closeModal}>
       <M.Dialog>
@@ -35,11 +50,20 @@ const SettingsModal = ({ closeModal }) => {
           <M.Header title="Settings" />
           <M.Body>
             <div>
+              <label>Name</label>
+              <input
+                name="planName"
+                type="text"
+                placeholder="Plan Name"
+                value={planName}
+                onChange={e => setPlanName(e.target.value)}
+              />
+
               <label>Start Date</label>
               <input
                 name="startDate"
                 type="text"
-                placeholder="yyyy-mm-dd"
+                placeholder={dateFormat}
                 value={start}
                 onChange={e => setStart(e.target.value)}
               />
@@ -47,29 +71,24 @@ const SettingsModal = ({ closeModal }) => {
               <input
                 name="endDate"
                 type="text"
-                placeholder="yyyy-mm-dd"
+                placeholder={dateFormat}
                 value={end}
                 onChange={e => setEnd(e.target.value)}
               />
+              <label>To Do</label>
+              <ul>
+                <li>save a version</li>
+                <li>choose a saved version</li>
+                <li>create a new track</li>
+              </ul>
             </div>
-            <ul>
-              <li>rename?</li>
-              <li>save a version</li>
-              <li>choose a saved version</li>
-            </ul>
           </M.Body>
           <M.Footer>
             <span>{error}</span>
             <BasicButton type="text" onClick={closeModal}>
               Cancel
             </BasicButton>
-            <BasicButton
-              type="outline-secondary"
-              onClick={() => {
-                setUpdating(true);
-                putPlan(planId, { settings, tracks }, dispatch);
-              }}
-            >
+            <BasicButton type="outline-secondary" onClick={handleSave}>
               Save
               {loading && (
                 <span

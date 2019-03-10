@@ -1,5 +1,13 @@
 import diffInDays from 'date-fns/difference_in_days';
 import { getUTCDate } from '../../utils';
+import mo from 'moment';
+import uuid from 'uuid/v4';
+
+export { uuid };
+
+export const dateFormat = 'YYYY-MM-DD';
+export const tsToDateString = ts => mo.utc(ts).format(dateFormat);
+export const dateStringToTs = dateString => mo.utc(dateString).valueOf();
 
 const DAYS_PER_MONTH = 30;
 
