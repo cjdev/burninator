@@ -1,4 +1,5 @@
 import React, { useContext, useState } from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components/macro'; // eslint-disable-line no-unused-vars
 import { ChevronDownIcon, ChevronRightIcon } from '../../../components/Icons';
 import { mapIndex } from '../../../utils';
@@ -21,6 +22,9 @@ const TodayMarker = ({ pos }) => (
     `}
   />
 );
+TodayMarker.propTypes = {
+  pos: PropTypes.number.isRequired,
+};
 
 export const Track = ({ track, containerRef }) => {
   const { state } = useContext(PlaninatorContext);
@@ -92,4 +96,11 @@ export const Track = ({ track, containerRef }) => {
       )}
     </div>
   );
+};
+Track.propTypes = {
+  track: PropTypes.shape({
+    name: PropTypes.string,
+    projects: PropTypes.array,
+  }),
+  containerRef: PropTypes.object,
 };
