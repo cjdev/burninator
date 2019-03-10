@@ -100,7 +100,9 @@ export const Roadmap = () => {
           width: ${width}px;
         `}
       >
-        {mapIndex((t, idx) => <Track key={idx} track={t} containerRef={containerRef} />)(tracks)}
+        {mapIndex((t, idx) => (
+          <Track key={idx} position={idx} track={t} containerRef={containerRef} />
+        ))(tracks)}
       </div>
     </RoadmapContainer>
   );

@@ -8,6 +8,8 @@ import {
   mdiExclamation,
   mdiChartTimeline,
   mdiChevronDown,
+  mdiChevronDoubleDown,
+  mdiChevronDoubleUp,
   mdiChevronRight,
   mdiClose,
   mdiLoading,
@@ -32,6 +34,8 @@ export const AlertIcon = makeIcon(mdiExclamation, { color: t.issueList.red.color
 export const ArchiveIcon = makeIcon(mdiPackageDown);
 export const BoardsIcon = makeIcon(mdiDeveloperBoard);
 export const ChevronDownIcon = makeIcon(mdiChevronDown);
+export const ChevronDoubleDownIcon = makeIcon(mdiChevronDoubleDown);
+export const ChevronDoubleUpIcon = makeIcon(mdiChevronDoubleUp);
 export const ChevronRightIcon = makeIcon(mdiChevronRight);
 export const CloseIcon = makeIcon(mdiClose);
 export const ExpandCollapseIcon = makeIcon(mdiUnfoldMoreHorizontal);

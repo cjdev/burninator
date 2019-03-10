@@ -55,7 +55,6 @@ const TrackSettingsModal = ({ closeModal, track }) => {
             />
             <ul>
               <li>add project</li>
-              <li>reorder projects</li>
             </ul>
           </M.Body>
           <M.Footer>
