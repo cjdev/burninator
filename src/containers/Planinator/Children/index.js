@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import * as R from 'ramda';
 import styled from 'styled-components/macro'; // eslint-disable-line no-unused-vars
 import isAfter from 'date-fns/is_after';
@@ -47,6 +48,17 @@ const Child = ({ data, settings, parentOffset = { left: 0, width: 0 } }) => {
     </div>
   );
 };
+Child.propTypes = {
+  data: PropTypes.shape({
+    startDate: PropTypes.number,
+    endDate: PropTypes.number,
+  }).isRequired,
+  settings: PropTypes.object,
+  parentOffset: PropTypes.shape({
+    left: PropTypes.number,
+    width: PropTypes.number,
+  }),
+};
 
 const ChildRow = ({ data, settings, parentOffset }) => {
   // console.log('row data: ', data);
@@ -65,6 +77,11 @@ const ChildRow = ({ data, settings, parentOffset }) => {
       ))(data)}
     </div>
   );
+};
+ChildRow.propTypes = {
+  data: PropTypes.object.isRequired,
+  settings: PropTypes.object,
+  parentOffset: PropTypes.object,
 };
 
 export const ChildContainer = ({ project, settings, parentOffset }) => {
@@ -135,4 +152,9 @@ export const ChildContainer = ({ project, settings, parentOffset }) => {
       ))(childRows)}
     </div>
   );
+};
+ChildContainer.propTypes = {
+  project: PropTypes.object,
+  settings: PropTypes.object,
+  parentOffset: PropTypes.object,
 };

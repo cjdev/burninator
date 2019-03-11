@@ -23,14 +23,14 @@ export const LinkButton = styled.button`
 
 const IconButton = props => <Button type="icon" {...props} />;
 
-const makeIconButton = (icon, props) => ({ children, ...laterProps }) => {
-  return (
-    <IconButton {...props} {...laterProps}>
-      {children}
-      {React.createElement(icon)}
-    </IconButton>
-  );
-};
+// eslint-disable-next-line react/prop-types
+const makeIconButton = (icon, props) => ({ children, ...laterProps }) => (
+  <IconButton {...props} {...laterProps}>
+    {children}
+    {React.createElement(icon)}
+  </IconButton>
+);
+
 export const ExpandCollapseButton = makeIconButton(Icons.ExpandCollapseIcon);
 export const CloseButton = makeIconButton(Icons.CloseIcon);
 export const AlertButton = makeIconButton(Icons.AlertIcon);

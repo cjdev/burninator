@@ -45,5 +45,8 @@ export const HeaderRight = ({ children }) => {
     </div>
   );
 };
+HeaderRight.propTypes = {
+  children: PropTypes.node,
+};
 
 export { Page, Header, Title };

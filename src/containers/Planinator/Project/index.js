@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import * as R from 'ramda';
 import styled from 'styled-components/macro'; // eslint-disable-line no-unused-vars
 import { ChevronDownIcon, ChevronRightIcon } from '../../../components/Icons';
@@ -127,4 +128,14 @@ export const Project = ({ project, settings, track, containerRef }) => {
       )}
     </div>
   );
+};
+Project.propTypes = {
+  project: PropTypes.shape({
+    startDate: PropTypes.number,
+    endDate: PropTypes.number,
+    children: PropTypes.array,
+  }),
+  settings: PropTypes.object,
+  track: PropTypes.object,
+  containerRef: PropTypes.object,
 };

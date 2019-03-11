@@ -80,6 +80,9 @@ const TypeTd = ({ issueType, ...props }) => <Td {...props} />;
 export const Type = styled(TypeTd)`
   ${props => (props.issueType === 'SubTask' ? redCell : undefined)};
 `;
+TypeTd.propTypes = {
+  issueType: PropTypes.string,
+};
 
 export const Status = styled(Td)`
   white-space: nowrap;
@@ -107,6 +110,9 @@ const EpicTd = ({ last, ...props }) => <Td ellipsis noselect {...props} />;
 export const Epic = styled(EpicTd)`
   ${({ last }) => (last ? greenCell : undefined)};
 `;
+EpicTd.propTypes = {
+  last: PropTypes.bool,
+};
 
 const VersionTd = ({ last, ...props }) => <Td noselect {...props} />;
 export const Version = styled(VersionTd)`
@@ -118,8 +124,15 @@ export const Version = styled(VersionTd)`
   }
   ${({ name, last }) => (name ? last && greenCell : redCell)};
 `;
+VersionTd.propTypes = {
+  last: PropTypes.bool,
+};
 
 const PointsTd = ({ points, pointsLeft, ...props }) => <Td {...props} />;
+PointsTd.propTypes = {
+  points: PropTypes.number,
+  pointsLeft: PropTypes.number,
+};
 
 export const Points = styled(PointsTd)`
   text-align: center;
@@ -178,6 +191,7 @@ export const KeyAndSummary = ({ issue, highlight = false }) => (
 );
 KeyAndSummary.propTypes = {
   issue: PropTypes.object.isRequired,
+  highlight: PropTypes.string,
 };
 
 const HighlightTd = styled(Td)`

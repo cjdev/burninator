@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import * as VSTable from '@cjdev/visual-stack/lib/components/Table';
 import styled, { css } from 'styled-components/macro';
 
@@ -14,6 +15,11 @@ const wrap = css`
 `;
 
 const CleanTable = ({ debug, fixed, ...props }) => <VSTable.Table {...props} />;
+CleanTable.propTypes = {
+  debug: PropTypes.string,
+  fixed: PropTypes.bool,
+};
+
 // prettier-ignore
 export const Table = styled(CleanTable)`
   border-collapse: collapse;
@@ -37,6 +43,14 @@ export const Table = styled(CleanTable)`
 const CleanTr = ({ complete, borderHover, excepted, noUnderline, override, ...props }) => (
   <VSTable.Tr {...props} />
 );
+CleanTr.propTypes = {
+  complete: PropTypes.string,
+  borderHover: PropTypes.bool,
+  excepted: PropTypes.string,
+  noUnderline: PropTypes.bool,
+  override: PropTypes.string,
+};
+
 // prettier-ignore
 export const Tr = styled(CleanTr)`
   ${props => props.borderHover && `
@@ -127,8 +141,27 @@ const CleanTd = ({
 export const Td = styled(CleanTd)`
   ${cellCss};
 `;
+CleanTd.propTypes = {
+  active: PropTypes.string,
+  bold: PropTypes.bool,
+  description: PropTypes.string,
+  ellipsis: PropTypes.bool,
+  index: PropTypes.bool,
+  left: PropTypes.bool,
+  last: PropTypes.bool,
+  min: PropTypes.string,
+  normal: PropTypes.string,
+  noselect: PropTypes.bool,
+};
 
 const CleanTh = ({ ellipsis, index, left, min, noselect, ...props }) => <VSTable.Th {...props} />;
+CleanTh.propTypes = {
+  ellipsis: PropTypes.bool,
+  index: PropTypes.bool,
+  left: PropTypes.bool,
+  min: PropTypes.string,
+  noselect: PropTypes.bool,
+};
 export const Th = styled(CleanTh)`
   ${cellCss};
 `;
