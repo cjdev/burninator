@@ -12,6 +12,7 @@ import { useModalPlanUpdater } from '../useModalPlanUpdater';
 import { isNilOrEmpty } from '../../../utils';
 import { PhaseSelector } from '../PhaseSelector';
 import { getPhaseForm } from '../components/PhaseForms';
+import { DeleteFooter } from '../components/DeleteFooter';
 
 const ProjectSettingsModal = ({ closeModal, track, project }) => {
   const getUpdatedPlan = state => {
@@ -58,6 +59,22 @@ const ProjectSettingsModal = ({ closeModal, track, project }) => {
     (phaseFormData.isValid && !phaseFormData.isValid())
   );
 
+  const getPlanWithoutProject = state => {
+    const tracks = R.map(t => {
+      if (t.id !== track.id) return t;
+      return {
+        ...t,
+        projects: R.reject(R.propEq('id', project.id))(t.projects),
+      };
+    })(state.tracks);
+    return {
+      settings: state.settings,
+      tracks,
+    };
+  };
+
+  const { handler: deleteHandler } = useModalPlanUpdater(getPlanWithoutProject, closeModal);
+
   return (
     <M.Modal onBackgroundClick={closeModal}>
       <M.Dialog>
@@ -86,6 +103,7 @@ const ProjectSettingsModal = ({ closeModal, track, project }) => {
               {loading && <Spinner />}
             </BasicButton>
           </M.Footer>
+          <DeleteFooter onDelete={deleteHandler} />
         </M.Content>
       </M.Dialog>
     </M.Modal>

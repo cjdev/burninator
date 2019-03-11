@@ -9,6 +9,7 @@ import { SettingsIcon } from '../../../components/Icons';
 import { BasicButton } from '../../../components/Button';
 import { Spinner } from '../../../components/Spinner';
 import { useModalPlanUpdater } from '../useModalPlanUpdater';
+import { DeleteFooter } from '../components/DeleteFooter';
 
 const TrackSettingsModal = ({ closeModal, track }) => {
   const [trackName, setTrackName] = useState(track.name);
@@ -67,21 +68,7 @@ const TrackSettingsModal = ({ closeModal, track }) => {
               {loading && <Spinner />}
             </BasicButton>
           </M.Footer>
-          <M.Footer>
-            <div
-              css={`
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                color: #e1523d;
-              `}
-            >
-              <span>Click to permanently delete this track. DANGER!</span>
-              <BasicButton type="danger" onClick={deleteHandler}>
-                Delete Forever
-              </BasicButton>
-            </div>
-          </M.Footer>
+          <DeleteFooter onDelete={deleteHandler} />
         </M.Content>
       </M.Dialog>
     </M.Modal>
