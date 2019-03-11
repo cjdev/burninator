@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react';
 import * as R from 'ramda';
 import PropTypes from 'prop-types';
 import styled from 'styled-components/macro'; // eslint-disable-line no-unused-vars
+import { withRouter } from 'react-router-dom';
 import { ChevronDownIcon, ChevronRightIcon } from '../../../components/Icons';
 import { mapIndex } from '../../../utils';
 import { Project } from '../Project';
@@ -12,6 +13,8 @@ import { SettingsButton } from './Settings';
 import { putPlan, getPlan } from '../api';
 import { UpButton, DownButton } from './Buttons';
 import { AddProjectButton } from './AddProject';
+import { Tooltip } from '../../../components/Tooltips';
+import { BoardsIcon } from '../../../components/Icons';
 
 const TodayMarker = ({ pos }) => (
   <div
@@ -30,7 +33,7 @@ TodayMarker.propTypes = {
   pos: PropTypes.number.isRequired,
 };
 
-export const Track = ({ track, position, containerRef }) => {
+export const TrackPure = ({ history, track, position, containerRef }) => {
   const { state, planId, dispatch, version } = useContext(PlaninatorContext);
 
   const { tracks, settings } = state;
@@ -75,8 +78,6 @@ export const Track = ({ track, position, containerRef }) => {
     >
       <div
         ref={titleRef}
-        onMouseOver={() => setHover(true)}
-        onMouseOut={() => setHover(false)}
         css={`
           padding-left: ${titlePadding}px;
           min-height: 40px;
@@ -94,7 +95,6 @@ export const Track = ({ track, position, containerRef }) => {
           css={`
             user-select: none;
             text-transform: uppercase;
-            cursor: pointer;
             display: flex;
             align-items: center;
             // background: #ccc;
@@ -103,19 +103,59 @@ export const Track = ({ track, position, containerRef }) => {
           <span
             css={`
               display: inline-block;
+              display: flex;
+              align-items: center;
               margin-right: 4px;
               font-size: inherit;
+              cursor: pointer;
             `}
             onClick={() => toggleExpanded(!expanded)}
           >
             {track.name}
           </span>
+          {track.board && (
+            <span
+              onClick={() => {
+                history.push(`/board/${track.board}`);
+              }}
+              css={`
+                display: inline-block;
+                margin-left: 4px;
+                && {
+                  border: 0;
+                }
+              `}
+            >
+              <Tooltip effect="solid" id={track.id}>
+                {track.board}
+              </Tooltip>
+              <BoardsIcon
+                data-tip
+                data-for={track.id}
+                size={1.1}
+                css={`
+                  margin-top: -3px;
+                  fill: currentColor;
+                  cursor: pointer;
+                  &:hover {
+                    fill: #585858;
+                  }
+                  &:active {
+                    fill: #333;
+                  }
+                `}
+              />
+            </span>
+          )}
           <span
+            onMouseOver={() => setHover(true)}
+            onMouseOut={() => setHover(false)}
             css={`
               padding: 0 8px;
               display: flex:
               align-items: center;
               justify-content: space-around;
+                cursor: pointer;
               & > * {
                 margin: 0 2px;
               }
@@ -145,7 +185,8 @@ export const Track = ({ track, position, containerRef }) => {
     </div>
   );
 };
-Track.propTypes = {
+TrackPure.propTypes = {
+  history: PropTypes.object.isRequired,
   track: PropTypes.shape({
     name: PropTypes.string,
     projects: PropTypes.array,
@@ -153,3 +194,4 @@ Track.propTypes = {
   containerRef: PropTypes.object,
   position: PropTypes.number.isRequired,
 };
+export const Track = withRouter(TrackPure);
