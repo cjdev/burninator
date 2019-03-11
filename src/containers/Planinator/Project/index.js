@@ -26,7 +26,7 @@ const getStartEnd = children => {
   };
 };
 
-export const Project = ({ project, settings, containerRef }) => {
+export const Project = ({ project, settings, track, containerRef }) => {
   const showDates = false; //project.phase === 'build';
   const expandable = project.children !== undefined;
   const [expanded, toggleExpanded] = useState(false);
@@ -119,7 +119,7 @@ export const Project = ({ project, settings, containerRef }) => {
 
         <span>
           <span>{showDates && `${formatDate(start)} - ${formatDate(end)}`}</span>
-          <SettingsButton projectSettings={project} hover={hover} />
+          <SettingsButton project={project} track={track} hover={hover} />
         </span>
       </div>
       {expanded && (

@@ -12,20 +12,7 @@ import { useModalPlanUpdater } from '../useModalPlanUpdater';
 import { uuid } from '../utils';
 import { isNilOrEmpty } from '../../../utils';
 import { PhaseSelector } from '../PhaseSelector';
-import { DateRangeForm, BuildPhaseForm } from './PhaseForms';
-
-const phaseFormMap = {
-  assess: DateRangeForm,
-  design: DateRangeForm,
-  build: BuildPhaseForm,
-  launch: DateRangeForm,
-  complete: DateRangeForm,
-};
-
-const getPhaseForm = phase => {
-  if (!phase) return null;
-  return phaseFormMap[phase];
-};
+import { getPhaseForm } from '../components/PhaseForms';
 
 const AddProjectModal = ({ closeModal, track }) => {
   const getUpdatedPlan = state => {
@@ -49,20 +36,17 @@ const AddProjectModal = ({ closeModal, track }) => {
         projects: newProjects,
       };
     })(state.tracks);
-
-    const newPlan = {
+    return {
       settings: state.settings,
       tracks: newTracks,
     };
-    console.log('newPlan: ', newPlan);
-    return newPlan;
   };
+  const [projectName, setProjectName] = useState('');
+  const [phase, setPhase] = useState(null);
+
   const { state, handler } = useModalPlanUpdater(getUpdatedPlan, closeModal);
   const { putApiMeta } = state;
   const { error, loading } = putApiMeta;
-
-  const [projectName, setProjectName] = useState('');
-  const [phase, setPhase] = useState(null);
 
   const PhaseForm = useMemo(() => getPhaseForm(phase), [phase]);
   const [phaseFormData, setPhaseFormData] = useState({ data: null });
@@ -89,12 +73,7 @@ const AddProjectModal = ({ closeModal, track }) => {
               onChange={e => setProjectName(e.target.value)}
             />
             <label>Phase</label>
-            <PhaseSelector
-              onChange={e => {
-                setPhase(e ? e.value : null);
-              }}
-              value={phase}
-            />
+            <PhaseSelector onChange={e => setPhase(e ? e.value : null)} value={phase} />
             {PhaseForm && <PhaseForm onChange={setPhaseFormData} />}
           </M.Body>
           <M.Footer>

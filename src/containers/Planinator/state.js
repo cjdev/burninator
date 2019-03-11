@@ -43,7 +43,6 @@ const handleGetPlanError = (state, { payload }) => {
 };
 
 const handlePutPlanStart = (state, action) => {
-  console.log('handlePutPlanStart');
   return {
     ...state,
     putApiMeta: {
@@ -54,7 +53,6 @@ const handlePutPlanStart = (state, action) => {
 };
 
 const handlePutPlanSuccess = (state, action) => {
-  console.log('handlePutPlanSuccess');
   return {
     ...state,
     putApiMeta: {
@@ -65,7 +63,6 @@ const handlePutPlanSuccess = (state, action) => {
 };
 
 const handlePutPlanError = (state, { payload }) => {
-  console.log('handlePutPlanError');
   return {
     ...state,
     putApiMeta: {

@@ -132,7 +132,13 @@ export const Track = ({ track, position, containerRef }) => {
       {expanded && (
         <div>
           {mapIndex((p, idx) => (
-            <Project key={idx} project={p} settings={settings} containerRef={containerRef} />
+            <Project
+              key={idx}
+              track={track}
+              project={p}
+              settings={settings}
+              containerRef={containerRef}
+            />
           ))(track.projects || [])}
         </div>
       )}

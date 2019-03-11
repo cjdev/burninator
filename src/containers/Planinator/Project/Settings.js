@@ -1,147 +1,87 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components/macro'; // eslint-disable-line no-unused-vars
 import { connect } from 'react-redux';
+import * as R from 'ramda';
 import * as M from '@cjdev/visual-stack/lib/components/Modal';
 import { openModal, closeModal } from '@cjdev/visual-stack-redux';
 import { SettingsIcon } from '../../../components/Icons';
 import { BasicButton } from '../../../components/Button';
 import { Spinner } from '../../../components/Spinner';
-import { putPlan, getPlan } from '../api';
-import Context from '../context';
+import { useModalPlanUpdater } from '../useModalPlanUpdater';
+import { isNilOrEmpty } from '../../../utils';
+import { PhaseSelector } from '../PhaseSelector';
+import { getPhaseForm } from '../components/PhaseForms';
 
-const getSettingsForm = projectSettings => {
-  switch (projectSettings.phase) {
-    case 'launch':
-      return {
-        body: (
-          <div>
-            {projectSettings.phase}
-            <ul>
-              <li>what action can be taken on a launch project?</li>
-              <li>rename</li>
-              <li>start/end</li>
-              <li>delete</li>
-              <li>change phase?</li>
-            </ul>
-          </div>
-        ),
-        onSave: () => {
-          console.log('save');
-        },
-      };
-    case 'assess':
-      return {
-        body: (
-          <div>
-            {projectSettings.phase}
-            <ul>
-              <li>what action can be taken on an assess project?</li>
-              <li>rename</li>
-              <li>start/end</li>
-              <li>delete</li>
-              <li>change phase?</li>
-            </ul>
-          </div>
-        ),
-        onSave: () => {
-          console.log('save');
-        },
-      };
-    case 'design':
-      return {
-        body: (
-          <div>
-            {projectSettings.phase}
-            <ul>
-              <li>what action can be taken on a design project?</li>
-              <li>rename</li>
-              <li>start/end</li>
-              <li>delete</li>
-              <li>change phase?</li>
-            </ul>
-          </div>
-        ),
-        onSave: () => {
-          console.log('save');
-        },
-      };
-    case 'build':
-      return {
-        body: (
-          <div>
-            {projectSettings.phase}
-            <ul>
-              <li>what action can be taken on a build project?</li>
-              <li>add/remove versions from the attached board</li>
-              <li>rename</li>
-              <li>delete</li>
-              <li>change phase?</li>
-            </ul>
-          </div>
-        ),
-        onSave: () => {
-          console.log('save');
-        },
-      };
-    case 'complete':
-      return {
-        body: (
-          <div>
-            {projectSettings.phase}
-            <ul>
-              <li>what action can be taken on a completed project?</li>
-              <li>rename</li>
-              <li>delete</li>
-              <li>change phase?</li>
-            </ul>
-          </div>
-        ),
-        onSave: () => {
-          console.log('save');
-        },
-      };
-    default:
-      throw Error(`Unknown phase:${projectSettings.phase}`);
-  }
-};
+const ProjectSettingsModal = ({ closeModal, track, project }) => {
+  const getUpdatedPlan = state => {
+    const finalPhaseFormData = phaseFormData.convert();
+    const newTracks = R.map(t => {
+      if (t.id !== track.id) return t;
 
-const ProjectSettingsModal = ({ closeModal, projectSettings }) => {
-  const { state, dispatch, planId, version } = useContext(Context);
-  const { settings, tracks, putApiMeta } = state;
+      const newProjects = R.map(p => {
+        if (p.id !== project.id) return p;
+        return {
+          ...p,
+          name: projectName,
+          phase,
+          ...finalPhaseFormData,
+        };
+      })(t.projects);
+
+      return {
+        ...t,
+        projects: newProjects,
+      };
+    })(state.tracks);
+    // const changed = R.not(R.equals(newTracks, state.tracks));
+    return {
+      settings: state.settings,
+      tracks: newTracks,
+    };
+  };
+
+  const [projectName, setProjectName] = useState(project.name);
+  const [phase, setPhase] = useState(project.phase);
+
+  const { state, handler } = useModalPlanUpdater(getUpdatedPlan, closeModal);
+  const { putApiMeta } = state;
   const { error, loading } = putApiMeta;
-  const [updating, setUpdating] = useState(false);
 
-  useEffect(() => {
-    if (updating && !putApiMeta.loading && !putApiMeta.error) {
-      closeModal();
-      getPlan(planId, version, dispatch);
-      setUpdating(false);
-    }
-  }, [updating, closeModal, putApiMeta, planId, version, dispatch]);
+  const PhaseForm = useMemo(() => getPhaseForm(phase), [phase]);
+  const [phaseFormData, setPhaseFormData] = useState({ data: null });
 
-  const form = getSettingsForm(projectSettings);
+  const formValid = !(
+    isNilOrEmpty(projectName) ||
+    phase === null ||
+    phaseFormData.data === null ||
+    (phaseFormData.isValid && !phaseFormData.isValid())
+  );
 
   return (
     <M.Modal onBackgroundClick={closeModal}>
       <M.Dialog>
         <M.Content>
-          <M.Header title={`Settings: ${projectSettings.name}`} />
-          <M.Body>{form.body}</M.Body>
+          <M.Header title={`Settings: ${project.name}`} />
+          <M.Body>
+            <label>Project Name</label>
+            <input
+              name="projectName"
+              type="text"
+              placeholder="Project Name"
+              value={projectName}
+              onChange={e => setProjectName(e.target.value)}
+            />
+            <label>Phase</label>
+            <PhaseSelector onChange={e => setPhase(e ? e.value : null)} value={phase} />
+            {PhaseForm && <PhaseForm project={project} onChange={setPhaseFormData} />}
+          </M.Body>
           <M.Footer>
             <span>{error}</span>
             <BasicButton type="text" onClick={closeModal}>
               Cancel
             </BasicButton>
-            <BasicButton
-              type="outline-secondary"
-              onClick={() => {
-                setUpdating(true);
-                // TODO: move action to specific handlers...
-                // form.onSave(...);
-                putPlan(planId, { settings, tracks }, dispatch);
-              }}
-            >
+            <BasicButton type="outline-secondary" onClick={handler} disabled={!formValid}>
               Save
               {loading && <Spinner />}
             </BasicButton>
@@ -153,15 +93,18 @@ const ProjectSettingsModal = ({ closeModal, projectSettings }) => {
 };
 ProjectSettingsModal.propTypes = {
   closeModal: PropTypes.func.isRequired,
-  projectSettings: PropTypes.shape({
+  track: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+  }),
+  project: PropTypes.shape({
     name: PropTypes.string,
     phase: PropTypes.string,
   }),
 };
 
-export const SettingsButtonPure = ({ hover, openModal, closeModal, projectSettings, ...props }) => {
+export const SettingsButtonPure = ({ hover, openModal, closeModal, project, track, ...props }) => {
   return (
-    <span onClick={() => openModal(ProjectSettingsModal, { closeModal, projectSettings })}>
+    <span onClick={() => openModal(ProjectSettingsModal, { closeModal, project, track })}>
       <SettingsIcon
         css={`
           ${hover ? `fill: currentColor;` : `fill: transparent`}
@@ -182,7 +125,10 @@ SettingsButtonPure.propTypes = {
   hover: PropTypes.bool.isRequired,
   openModal: PropTypes.func.isRequired,
   closeModal: PropTypes.func.isRequired,
-  projectSettings: PropTypes.shape({
+  track: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+  }),
+  project: PropTypes.shape({
     name: PropTypes.string,
     phase: PropTypes.string,
   }),

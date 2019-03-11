@@ -1,10 +1,25 @@
-import React, { useReducer } from 'react';
+import React, { useEffect, useReducer } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components/macro'; // eslint-disable-line no-unused-vars
-import { dateStringToTs } from '../utils';
-import { validDateFormat } from '../../../utils';
+import { dateStringToTs, tsToDateString } from '../../utils';
+import { validDateFormat } from '../../../../utils';
 
-export const DateRangeForm = ({ onChange }) => {
+const buildOnChangeData = newState => {
+  return {
+    data: newState,
+    isValid: function() {
+      return validDateFormat.test(newState.startDate) && validDateFormat.test(newState.endDate);
+    },
+    convert: function() {
+      return {
+        startDate: dateStringToTs(newState.startDate),
+        endDate: dateStringToTs(newState.endDate),
+      };
+    },
+  };
+};
+
+export const DateRangeForm = ({ project, onChange }) => {
   const [state, dispatch] = useReducer(
     (state, action) => {
       let newState;
@@ -24,27 +39,21 @@ export const DateRangeForm = ({ onChange }) => {
         default:
           return state;
       }
-      onChange({
-        data: newState,
-        isValid: function() {
-          return (
-            validDateFormat.test(this.data.startDate) && validDateFormat.test(this.data.endDate)
-          );
-        },
-        convert: function() {
-          return {
-            startDate: dateStringToTs(this.data.startDate),
-            endDate: dateStringToTs(this.data.endDate),
-          };
-        },
-      });
+
+      onChange(buildOnChangeData(newState));
       return newState;
     },
     {
-      startDate: '',
-      endDate: '',
+      startDate: project ? tsToDateString(project.startDate) : '',
+      endDate: project ? tsToDateString(project.endDate) : '',
     }
   );
+
+  useEffect(() => {
+    if (project) {
+      onChange(buildOnChangeData(state));
+    }
+  }, [project]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <>
@@ -91,19 +100,6 @@ export const DateRangeForm = ({ onChange }) => {
   );
 };
 DateRangeForm.propTypes = {
-  onChange: PropTypes.func.isRequired,
-};
-
-export const BuildPhaseForm = ({ onChange }) => {
-  return (
-    <>
-      <label>Build: TODO</label>
-      <ul>
-        <li>select releases from a list populated by the latst associated jira board</li>
-      </ul>
-    </>
-  );
-};
-BuildPhaseForm.propTypes = {
+  project: PropTypes.shape({}),
   onChange: PropTypes.func.isRequired,
 };
