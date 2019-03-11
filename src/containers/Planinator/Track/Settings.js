@@ -10,6 +10,7 @@ import { BasicButton } from '../../../components/Button';
 import { Spinner } from '../../../components/Spinner';
 import { useModalPlanUpdater } from '../useModalPlanUpdater';
 import { DeleteFooter } from '../components/DeleteFooter';
+import { BoardSelector } from '../components/BoardSelector';
 
 const TrackSettingsModal = ({ closeModal, track }) => {
   const [trackName, setTrackName] = useState(track.name);
@@ -22,6 +23,7 @@ const TrackSettingsModal = ({ closeModal, track }) => {
         return {
           ...t,
           name: trackName,
+          board,
         };
       }
       return t;
@@ -41,6 +43,8 @@ const TrackSettingsModal = ({ closeModal, track }) => {
   });
   const { handler: deleteHandler } = useModalPlanUpdater(getPlanWithoutTrack, closeModal);
 
+  const [board, setBoard] = useState(track.board || null);
+
   return (
     <M.Modal onBackgroundClick={closeModal}>
       <M.Dialog>
@@ -54,9 +58,8 @@ const TrackSettingsModal = ({ closeModal, track }) => {
               value={trackName}
               onChange={e => setTrackName(e.target.value)}
             />
-            <ul>
-              <li>tie to jira board</li>
-            </ul>
+            <label>Jira Board</label>
+            <BoardSelector onChange={e => setBoard(e ? e.value : null)} value={board} />
           </M.Body>
           <M.Footer>
             <span>{error}</span>

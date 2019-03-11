@@ -30,7 +30,6 @@ const Planinator = ({ match }) => {
   const { planId, version } = match.params;
   const [state, dispatch] = useReducer(reducer, initialState);
   const { apiMeta } = state;
-  // console.log('apiMeta: ', apiMeta);
 
   const noVersions = apiMeta.error === 'Not found';
   const otherError = apiMeta.error && !noVersions;

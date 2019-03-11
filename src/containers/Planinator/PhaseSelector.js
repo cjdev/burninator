@@ -32,13 +32,11 @@ const Select = styled(ReactSelector)`
   margin-bottom: 0.8rem;
 `;
 
-export const PhaseSelector = props => {
-  return (
-    <Select
-      options={phaseOptions}
-      optionRenderer={renderPhaseOption}
-      valueRenderer={renderPhaseOption}
-      {...props}
-    />
-  );
-};
+export const PhaseSelector = props => (
+  <Select
+    options={phaseOptions}
+    optionRenderer={renderPhaseOption}
+    valueRenderer={renderPhaseOption}
+    {...props}
+  />
+);

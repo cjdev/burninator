@@ -9,6 +9,7 @@ import { Spinner } from '../../../components/Spinner';
 import { uuid } from '../utils';
 import { useModalPlanUpdater } from '../useModalPlanUpdater';
 import { useFocus } from '../useFocus';
+import { BoardSelector } from '../components/BoardSelector';
 
 const AddTrackModal = ({ closeModal }) => {
   const getNewPlan = state => {
@@ -26,6 +27,7 @@ const AddTrackModal = ({ closeModal }) => {
         {
           id: uuid(),
           name: trackName,
+          board,
         },
       ],
     };
@@ -37,23 +39,25 @@ const AddTrackModal = ({ closeModal }) => {
   const { putApiMeta } = state;
   const { error, loading } = putApiMeta;
 
+  const [board, setBoard] = useState(null);
+
   return (
     <M.Modal onBackgroundClick={closeModal}>
       <M.Dialog>
         <M.Content>
           <M.Header title="Add Track" />
           <M.Body>
-            <div>
-              <label>Name</label>
-              <input
-                ref={focusRef}
-                name="trackName"
-                type="text"
-                placeholder="Track Name"
-                value={trackName}
-                onChange={e => setTrackName(e.target.value)}
-              />
-            </div>
+            <label>Name</label>
+            <input
+              ref={focusRef}
+              name="trackName"
+              type="text"
+              placeholder="Track Name"
+              value={trackName}
+              onChange={e => setTrackName(e.target.value)}
+            />
+            <label>Jira Board</label>
+            <BoardSelector onChange={e => setBoard(e ? e.value : null)} value={board} />
           </M.Body>
           <M.Footer>
             <span>{error}</span>
