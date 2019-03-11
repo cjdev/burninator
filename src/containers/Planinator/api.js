@@ -13,7 +13,6 @@ export const getPlan = async (planId, version, dispatch) => {
 };
 
 export const putPlan = async (planId, planData, dispatch) => {
-  console.log('putPlan: ', { planId });
   try {
     dispatch(actions.putPlanStart());
     const res = await fetch(`/api/planinator/${planId}`, {
