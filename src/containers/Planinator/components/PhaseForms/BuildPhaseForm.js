@@ -3,6 +3,7 @@ import * as R from 'ramda';
 import PropTypes from 'prop-types';
 import styled from 'styled-components/macro'; // eslint-disable-line no-unused-vars
 import { ReleaseSelector } from '../ReleaseSelector';
+import { uuid } from '../../utils';
 
 const buildOnChangeData = newState => {
   return {
@@ -12,7 +13,9 @@ const buildOnChangeData = newState => {
     },
     convert: function() {
       return {
-        children: R.map(r => ({ releaseId: r.value, phase: 'build' }))(newState.releases),
+        children: R.map(r => ({ releaseId: r.value, phase: 'build', id: uuid() }))(
+          newState.releases
+        ),
       };
     },
   };
