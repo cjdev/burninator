@@ -27,7 +27,7 @@ export const ReleaseSelector = ({ board, ...rest }) => {
       const releases = R.pipe(
         R.filter(v => v.id !== 'undefined'),
         R.map(v => ({ value: v.id, label: v.name })),
-        R.sortBy(R.prop('sorter'))
+        R.sortBy(R.prop('label'))
       )(b.jiraVersions);
       setReleases(releases);
     });
