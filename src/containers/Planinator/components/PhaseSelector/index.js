@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactSelector from 'react-select';
 import styled from 'styled-components/macro'; // eslint-disable-line no-unused-vars
-import { phaseOptions, phaseBgMap } from './utils';
+import { phaseOptions, phaseBgMap } from '../../utils';
 
 const renderPhaseOption = option => {
   const p = phaseBgMap[option.value];

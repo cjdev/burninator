@@ -79,7 +79,7 @@ const ChildRow = ({ data, settings, parentOffset }) => {
   );
 };
 ChildRow.propTypes = {
-  data: PropTypes.object.isRequired,
+  data: PropTypes.array.isRequired,
   settings: PropTypes.object,
   parentOffset: PropTypes.object,
 };

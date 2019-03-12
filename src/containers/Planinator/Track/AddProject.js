@@ -11,7 +11,7 @@ import { Spinner } from '../../../components/Spinner';
 import { useModalPlanUpdater } from '../useModalPlanUpdater';
 import { uuid } from '../utils';
 import { isNilOrEmpty } from '../../../utils';
-import { PhaseSelector } from '../PhaseSelector';
+import { PhaseSelector } from '../components/PhaseSelector';
 import { getPhaseForm } from '../components/PhaseForms';
 
 const AddProjectModal = ({ closeModal, track }) => {
