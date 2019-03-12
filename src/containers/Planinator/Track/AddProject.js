@@ -22,18 +22,16 @@ const AddProjectModal = ({ closeModal, track }) => {
         return t;
       }
       const projects = t.projects || [];
-      const newProjects = [
-        ...projects,
-        {
-          id: uuid(),
-          name: projectName,
-          phase,
-          ...finalPhaseFormData,
-        },
-      ];
+      const newProject = {
+        id: uuid(),
+        name: projectName,
+        phase,
+        ...finalPhaseFormData,
+      };
+
       return {
         ...t,
-        projects: newProjects,
+        projects: [...projects, newProject],
       };
     })(state.tracks);
     return {
@@ -57,6 +55,11 @@ const AddProjectModal = ({ closeModal, track }) => {
     phaseFormData.data === null ||
     (phaseFormData.isValid && !phaseFormData.isValid())
   );
+  // console.log(': ', projectName);
+  // console.log('phase: ', phase);
+  // console.log('phaseFormData.data: ', phaseFormData.data);
+  // console.log(phaseFormData.isValid && !phaseFormData.isValid());
+  // console.log('formValid: ', formValid);
 
   return (
     <M.Modal onBackgroundClick={closeModal}>
@@ -74,7 +77,7 @@ const AddProjectModal = ({ closeModal, track }) => {
             />
             <label>Phase</label>
             <PhaseSelector onChange={e => setPhase(e ? e.value : null)} value={phase} />
-            {PhaseForm && <PhaseForm onChange={setPhaseFormData} />}
+            {PhaseForm && <PhaseForm track={track} onChange={setPhaseFormData} />}
           </M.Body>
           <M.Footer>
             <span>{error}</span>
