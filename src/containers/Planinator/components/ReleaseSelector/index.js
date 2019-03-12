@@ -12,14 +12,12 @@ const Select = styled(ReactSelector)`
   margin-bottom: 0.8rem;
 `;
 
-const getBoardDetails = allBoards => board => {
-  console.log(': getBoardDetails');
-  return allBoards ? allBoards.find(b => b.boardId === String(board)) : null;
-};
+const getBoardDetails = (allBoards, board) =>
+  allBoards ? allBoards.find(b => b.boardId === String(board)) : null;
 
 export const ReleaseSelector = ({ board, ...rest }) => {
   const allBoards = useKnownBoards();
-  const boardDetails = useMemo(() => getBoardDetails(allBoards)(board), [allBoards, board]);
+  const boardDetails = useMemo(() => getBoardDetails(allBoards, board), [allBoards, board]);
   const [releases, setReleases] = useState(null);
   useEffect(() => {
     fetchBoard(board, 'current').then(boardData => {
