@@ -47,7 +47,7 @@ export const BuildPhaseForm = ({ track, onChange }) => {
     if (track) {
       onChange(buildOnChangeData(state));
     }
-  }, [track]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [track, state, onChange]);
 
   if (!track.board) {
     return <div>No board associated with this track.</div>;
