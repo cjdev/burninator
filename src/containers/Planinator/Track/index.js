@@ -2,7 +2,6 @@ import React, { useContext, useState } from 'react';
 import * as R from 'ramda';
 import PropTypes from 'prop-types';
 import styled from 'styled-components/macro'; // eslint-disable-line no-unused-vars
-import { withRouter } from 'react-router-dom';
 import { ChevronDownIcon, ChevronRightIcon } from '../../../components/Icons';
 import { mapIndex } from '../../../utils';
 import { Project } from '../Project';
@@ -33,7 +32,7 @@ TodayMarker.propTypes = {
   pos: PropTypes.number.isRequired,
 };
 
-export const TrackPure = ({ history, track, position, containerRef }) => {
+export const Track = ({ track, position, containerRef }) => {
   const { state, planId, dispatch, version, knownBoards } = useContext(PlaninatorContext);
   const { tracks, settings } = state;
 
@@ -114,38 +113,37 @@ export const TrackPure = ({ history, track, position, containerRef }) => {
             {track.name}
           </span>
           {track.board && (
-            <span
-              onClick={() => {
-                history.push(`/board/${track.board}`);
-              }}
-              css={`
-                display: inline-block;
-                margin-left: 4px;
-                && {
-                  border: 0;
-                }
-              `}
-            >
-              <Tooltip effect="solid" id={track.id}>
-                Go to {knownBoards.byId[track.board].backlogName}
-              </Tooltip>
-              <BoardsIcon
-                data-tip
-                data-for={track.id}
-                size={1.1}
+            <a href={`/board/${track.board}`} rel="noopener noreferrer" target="_blank">
+              <span
                 css={`
-                  margin-top: -3px;
-                  fill: currentColor;
-                  cursor: pointer;
-                  &:hover {
-                    fill: #585858;
-                  }
-                  &:active {
-                    fill: #333;
+                  display: inline-block;
+                  margin-left: 4px;
+                  && {
+                    border: 0;
                   }
                 `}
-              />
-            </span>
+              >
+                <Tooltip effect="solid" id={track.id}>
+                  Go to {knownBoards.byId[track.board].backlogName}
+                </Tooltip>
+                <BoardsIcon
+                  data-tip
+                  data-for={track.id}
+                  size={1.1}
+                  css={`
+                    margin-top: -3px;
+                    fill: currentColor;
+                    cursor: pointer;
+                    &:hover {
+                      fill: #585858;
+                    }
+                    &:active {
+                      fill: #333;
+                    }
+                  `}
+                />
+              </span>
+            </a>
           )}
           <span
             onMouseOver={() => setHover(true)}
@@ -185,8 +183,7 @@ export const TrackPure = ({ history, track, position, containerRef }) => {
     </div>
   );
 };
-TrackPure.propTypes = {
-  history: PropTypes.object.isRequired,
+Track.propTypes = {
   track: PropTypes.shape({
     name: PropTypes.string,
     projects: PropTypes.array,
@@ -194,4 +191,3 @@ TrackPure.propTypes = {
   containerRef: PropTypes.object,
   position: PropTypes.number.isRequired,
 };
-export const Track = withRouter(TrackPure);
