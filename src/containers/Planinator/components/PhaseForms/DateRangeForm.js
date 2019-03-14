@@ -71,6 +71,7 @@ export const DateRangeForm = ({ project, onChange }) => {
         >
           <label>Start Date</label>
           <input
+            placeholder="yyyy-mm-dd"
             name="startDate"
             type="text"
             value={state.startDate}
@@ -87,6 +88,7 @@ export const DateRangeForm = ({ project, onChange }) => {
         >
           <label>End Date</label>
           <input
+            placeholder="yyyy-mm-dd"
             name="endDate"
             type="text"
             value={state.endDate}
