@@ -13,7 +13,7 @@ const buildOnChangeData = newState => {
     },
     convert: function() {
       return {
-        children: R.map(r => ({ releaseId: r.value, phase: 'build', id: uuid() }))(
+        children: R.map(r => ({ releaseId: r.value, name: r.label, phase: 'build', id: uuid() }))(
           newState.releases
         ),
       };

@@ -5,6 +5,7 @@ import styled from 'styled-components/macro'; // eslint-disable-line no-unused-v
 import isAfter from 'date-fns/is_after';
 import { mapIndex, formatDate, getUTCDate } from '../../../utils';
 import { mapStartDateToTimeline, mapEndDateToWidth, phaseBgMap } from '../utils';
+import { Tooltip } from '../../../components/Tooltips';
 
 const adjustWidth = (w, left, parentOffset) => {
   let changedLeft = false;
@@ -19,6 +20,7 @@ const adjustWidth = (w, left, parentOffset) => {
 };
 
 const Child = ({ data, settings, parentOffset = { left: 0, width: 0 } }) => {
+  // console.log('data: ', data);
   const start = getUTCDate(data.startDate);
   const end = getUTCDate(data.endDate);
   let left = mapStartDateToTimeline(settings, start, parentOffset.left);
@@ -26,26 +28,33 @@ const Child = ({ data, settings, parentOffset = { left: 0, width: 0 } }) => {
   const adjustedWidth = adjustWidth(width, left, parentOffset);
 
   return (
-    <div
-      css={`
-        position: absolute;
-        left: ${left}px;
-        width: ${adjustedWidth}px;
+    <>
+      <div
+        css={`
+          position: absolute;
+          left: ${left}px;
+          width: ${adjustedWidth}px;
 
-        background: ${phaseBgMap[data.phase || 'default'].bg};
-        color: ${phaseBgMap[data.phase || 'default'].color};
-        border: 1px solid #999;
-        border-radius: 2px;
-        padding: 8px;
+          background: ${phaseBgMap[data.phase || 'default'].bg};
+          color: ${phaseBgMap[data.phase || 'default'].color};
+          border: 1px solid #999;
+          border-radius: 2px;
+          padding: 8px;
 
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-      `}
-    >
-      {data.name} {false && { left } / { adjustedWidth }}
-      {false && <span>{`${formatDate(data.startDate)} - ${formatDate(data.endDate)}`}</span>}
-    </div>
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        `}
+        data-for={data.id}
+        data-tip
+      >
+        <Tooltip effect="solid" id={data.id}>
+          <div>{data.name}</div>
+          <div>{`${formatDate(data.startDate)} - ${formatDate(data.endDate)}`}</div>
+        </Tooltip>
+        {data.name}
+      </div>
+    </>
   );
 };
 Child.propTypes = {
