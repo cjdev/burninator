@@ -34,8 +34,7 @@ TodayMarker.propTypes = {
 };
 
 export const TrackPure = ({ history, track, position, containerRef }) => {
-  const { state, planId, dispatch, version } = useContext(PlaninatorContext);
-
+  const { state, planId, dispatch, version, knownBoards } = useContext(PlaninatorContext);
   const { tracks, settings } = state;
 
   const activeUpButton = position > 0;
@@ -64,6 +63,7 @@ export const TrackPure = ({ history, track, position, containerRef }) => {
   const [hover, setHover] = useState(false);
   const [titleRef, titlePadding] = useTitleCrawl(containerRef);
   const { left: todayLeft } = getTodayAndPosition(settings);
+
   return (
     <div
       css={`
@@ -127,7 +127,7 @@ export const TrackPure = ({ history, track, position, containerRef }) => {
               `}
             >
               <Tooltip effect="solid" id={track.id}>
-                {track.board}
+                Go to {knownBoards.byId[track.board].backlogName}
               </Tooltip>
               <BoardsIcon
                 data-tip

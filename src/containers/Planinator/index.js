@@ -12,6 +12,7 @@ import { Roadmap } from './Roadmap';
 import { reducer, initialState } from './state';
 import { getPlan } from './api';
 import PlaninatorContext from './context';
+import { useKnownBoards } from './useKnownBoards';
 
 const PlaninatorHeader = ({ noVersions, state }) => {
   return (
@@ -27,6 +28,8 @@ PlaninatorHeader.propTypes = {
 };
 
 const Planinator = ({ match }) => {
+  const knownBoards = useKnownBoards();
+
   const { planId, version } = match.params;
   const [state, dispatch] = useReducer(reducer, initialState);
   const { apiMeta } = state;
@@ -43,7 +46,7 @@ const Planinator = ({ match }) => {
   }
 
   return (
-    <PlaninatorContext.Provider value={{ state, dispatch, planId, version }}>
+    <PlaninatorContext.Provider value={{ state, dispatch, planId, version, knownBoards }}>
       <Page header={<PlaninatorHeader state={state} noVersions={noVersions} />}>
         <Panel>
           {noVersions ? (

@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useContext, useMemo, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components/macro'; // eslint-disable-line no-unused-vars
 import ReactSelector from 'react-select';
@@ -6,7 +6,7 @@ import * as R from 'ramda';
 import { Spinner } from '../../../../components/Spinner';
 import { fetchBoard } from '../../../../api';
 import Board from '../../../../domain/Board';
-import { useKnownBoards } from '../../useKnownBoards';
+import PlaninatorContext from '../../context';
 
 const Select = styled(ReactSelector)`
   margin-bottom: 0.8rem;
@@ -16,8 +16,8 @@ const getBoardDetails = (allBoards, board) =>
   allBoards ? allBoards.find(b => b.boardId === String(board)) : null;
 
 export const ReleaseSelector = ({ board, ...rest }) => {
-  const allBoards = useKnownBoards();
-  const boardDetails = useMemo(() => getBoardDetails(allBoards, board), [allBoards, board]);
+  const { knownBoards } = useContext(PlaninatorContext);
+  const boardDetails = useMemo(() => getBoardDetails(knownBoards.values, board), [knownBoards, board]);
   const [releases, setReleases] = useState(null);
   useEffect(() => {
     fetchBoard(board, 'current').then(boardData => {
