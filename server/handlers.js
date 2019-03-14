@@ -35,7 +35,7 @@ const noopTimer = {
   update: () => {},
 };
 
-const getBoard = async (boardId, version = 'current', timer = noopTimer) => {
+export const getBoard = async (boardId, version = 'current', timer = noopTimer) => {
   const filePath = await getPathToVersion(boardId, version);
   // timer.update('getBoard: POST getPathToVersion');
 

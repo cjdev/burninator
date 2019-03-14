@@ -45,6 +45,7 @@
     "bluebird": "^3.4.6",
     "cors": "^2.8.5",
     "date-fns": "^1.29.0",
+    "deep-object-diff": "^1.1.0",
     "dotenv": "6.1.0",
     "es6-promise": "^4.2.4",
     "express": "^4.16.3",
