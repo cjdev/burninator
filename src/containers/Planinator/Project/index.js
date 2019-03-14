@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import * as R from 'ramda';
 import styled from 'styled-components/macro'; // eslint-disable-line no-unused-vars
 import { ChevronDownIcon, ChevronRightIcon } from '../../../components/Icons';
-import { formatDate, getUTCDate } from '../../../utils';
+import { getUTCDate } from '../../../utils';
 import { ChildContainer } from '../Children';
 import { mapStartDateToTimeline, mapEndDateToWidth, phaseBgMap } from '../utils';
 import { useTitleCrawl } from '../useTitleCrawl';
@@ -14,6 +14,7 @@ const getEarliestStart = R.pipe(
   R.pluck('startDate'),
   R.head
 );
+
 const getLatestEnd = R.pipe(
   R.sort(R.ascend(R.prop('endDate'))),
   R.pluck('endDate'),
@@ -27,11 +28,7 @@ const getStartEnd = children => {
   };
 };
 
-export const Project = ({ project, settings, track, containerRef }) => {
-  const showDates = false; //project.phase === 'build';
-  const expandable = project.children !== undefined;
-  const [expanded, toggleExpanded] = useState(false);
-
+const getDates = project => {
   // if the project has start and end, use them
   let start, end;
   if (project.startDate && project.endDate) {
@@ -44,6 +41,13 @@ export const Project = ({ project, settings, track, containerRef }) => {
     start = getUTCDate(dates.startDate);
     end = getUTCDate(dates.endDate);
   }
+  return { start, end };
+};
+
+export const Project = ({ project, settings, track, containerRef }) => {
+  const expandable = project.children !== undefined;
+
+  const { start, end } = useMemo(() => getDates(project), [project]);
 
   const left = mapStartDateToTimeline(settings, start);
   const width = mapEndDateToWidth(settings, { start, end });
@@ -52,6 +56,7 @@ export const Project = ({ project, settings, track, containerRef }) => {
   const [titleRef, titlePadding] = useTitleCrawl(containerRef);
   const [hover, setHover] = useState(false);
 
+  const [expanded, toggleExpanded] = useState(false);
   const nameWithChevron = (
     <span
       css={`
@@ -118,16 +123,14 @@ export const Project = ({ project, settings, track, containerRef }) => {
           {expandable ? nameWithChevron : project.name}
         </span>
 
-        <span>
-          <SettingsButton
-            css={`
-              margin-top: -3px;
-            `}
-            project={project}
-            track={track}
-            hover={hover}
-          />
-        </span>
+        <SettingsButton
+          css={`
+            margin-top: -3px;
+          `}
+          project={project}
+          track={track}
+          hover={hover}
+        />
       </div>
       {expanded && (
         <ChildContainer project={project} settings={settings} parentOffset={{ left, width }} />

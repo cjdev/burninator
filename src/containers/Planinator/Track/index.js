@@ -8,36 +8,15 @@ import { Project } from '../Project';
 import { useTitleCrawl } from '../useTitleCrawl';
 import { getTodayAndPosition } from '../utils';
 import PlaninatorContext from '../context';
-import { SettingsButton } from './Settings';
 import { putPlan, getPlan } from '../api';
-import { UpButton, DownButton } from './Buttons';
-import { AddProjectButton } from './AddProject';
-import { Tooltip } from '../../../components/Tooltips';
-import { BoardsIcon } from '../../../components/Icons';
-
-const TodayMarker = ({ pos }) => (
-  <div
-    css={`
-      position: absolute;
-      top: 0;
-      left: ${pos - 2}px;
-      width: 1px;
-      height: 100%;
-      border-left: 2px dashed #eee;
-      z-index: 9;
-    `}
-  />
-);
-TodayMarker.propTypes = {
-  pos: PropTypes.number.isRequired,
-};
+import { TrackTitle } from './TrackTitle';
+import { BoardLink } from './BoardLink';
+import { ButtonSet } from './ButtonSet';
+import { TodayMarker } from './TodayMarker';
 
 export const Track = ({ track, position, containerRef }) => {
-  const { state, planId, dispatch, version, knownBoards } = useContext(PlaninatorContext);
+  const { state, planId, dispatch, version } = useContext(PlaninatorContext);
   const { tracks, settings } = state;
-
-  const activeUpButton = position > 0;
-  const activeDownButton = position < tracks.length - 1;
 
   const handleClickDown = async () => {
     const newPlan = {
@@ -59,7 +38,6 @@ export const Track = ({ track, position, containerRef }) => {
   };
 
   const [expanded, toggleExpanded] = useState(true);
-  const [hover, setHover] = useState(false);
   const [titleRef, titlePadding] = useTitleCrawl(containerRef);
   const { left: todayLeft } = getTodayAndPosition(settings);
 
@@ -71,7 +49,6 @@ export const Track = ({ track, position, containerRef }) => {
         padding: 4px;
         margin: 8px 0;
         user-select: none;
-        background: #fff;
         position: relative;
       `}
     >
@@ -82,7 +59,6 @@ export const Track = ({ track, position, containerRef }) => {
           min-height: 40px;
           display: flex;
           align-items: center;
-          // background: #999;
         `}
       >
         {expanded ? (
@@ -96,74 +72,17 @@ export const Track = ({ track, position, containerRef }) => {
             text-transform: uppercase;
             display: flex;
             align-items: center;
-            // background: #ccc;
           `}
         >
-          <span
-            css={`
-              display: inline-block;
-              display: flex;
-              align-items: center;
-              margin-right: 4px;
-              font-size: inherit;
-              cursor: pointer;
-            `}
-            onClick={() => toggleExpanded(!expanded)}
-          >
-            {track.name}
-          </span>
-          {track.board && (
-            <a href={`/board/${track.board}`} rel="noopener noreferrer" target="_blank">
-              <span
-                css={`
-                  display: inline-block;
-                  margin-left: 4px;
-                  && {
-                    border: 0;
-                  }
-                `}
-              >
-                <Tooltip effect="solid" id={track.id}>
-                  Go to {knownBoards.byId[track.board].backlogName}
-                </Tooltip>
-                <BoardsIcon
-                  data-tip
-                  data-for={track.id}
-                  size={1.1}
-                  css={`
-                    margin-top: -3px;
-                    fill: currentColor;
-                    cursor: pointer;
-                    &:hover {
-                      fill: #585858;
-                    }
-                    &:active {
-                      fill: #333;
-                    }
-                  `}
-                />
-              </span>
-            </a>
-          )}
-          <span
-            onMouseOver={() => setHover(true)}
-            onMouseOut={() => setHover(false)}
-            css={`
-              padding: 0 8px;
-              display: flex:
-              align-items: center;
-              justify-content: space-around;
-                cursor: pointer;
-              & > * {
-                margin: 0 2px;
-              }
- `}
-          >
-            <AddProjectButton track={track} hover={hover} />
-            <DownButton hover={hover} onClick={handleClickDown} active={activeDownButton} />
-            <UpButton hover={hover} onClick={handleClickUp} active={activeUpButton} />
-            <SettingsButton track={track} hover={hover} />
-          </span>
+          <TrackTitle onClick={() => toggleExpanded(!expanded)}>{track.name}</TrackTitle>
+          {track.board && <BoardLink track={track} />}
+          <ButtonSet
+            track={track}
+            totalLength={tracks.length}
+            position={position}
+            onClickUp={handleClickUp}
+            onClickDown={handleClickDown}
+          />
         </div>
       </div>
       <TodayMarker pos={todayLeft} />
