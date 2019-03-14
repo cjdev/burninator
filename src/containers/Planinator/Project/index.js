@@ -8,6 +8,8 @@ import { ChildContainer } from '../Children';
 import { mapStartDateToTimeline, mapEndDateToWidth, phaseBgMap } from '../utils';
 import { useTitleCrawl } from '../useTitleCrawl';
 import { SettingsButton } from './Settings';
+import { Tooltip } from '../../../components/Tooltips';
+import { formatDate } from '../../../utils';
 
 const getEarliestStart = R.pipe(
   R.sort(R.ascend(R.prop('startDate'))),
@@ -112,6 +114,8 @@ export const Project = ({ project, settings, track, containerRef }) => {
           color: ${phaseBgMap[project.phase || 'default'].color};
           overflow-x: hidden;
         `}
+        data-for={project.id}
+        data-tip
       >
         <span
           ref={titleRef}
@@ -121,6 +125,11 @@ export const Project = ({ project, settings, track, containerRef }) => {
           `}
         >
           {expandable ? nameWithChevron : project.name}
+
+          <Tooltip effect="solid" id={project.id}>
+            <div>{project.name}</div>
+            <div>{`${formatDate(start)} - ${formatDate(end)}`}</div>
+          </Tooltip>
         </span>
 
         <SettingsButton
