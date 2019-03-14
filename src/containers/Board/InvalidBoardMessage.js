@@ -38,9 +38,13 @@ const InvalidBoardMessage = ({ processed, velocity, location, onSyncClick, onRes
   return (
     <Panel>
       <PanelTitle>Something went wrong...</PanelTitle>
-      <div>
-        The error message I got was <code> {processed.error} </code>.
-      </div>
+
+      {processed.error && (
+        <div>
+          The error message I got was <code> {processed.error.message} </code>.
+        </div>
+      )}
+
       {processed.error === 'Not Found' && (
         <>
           <div>
@@ -64,7 +68,7 @@ const InvalidBoardMessage = ({ processed, velocity, location, onSyncClick, onRes
             value for the <b>v</b> query string parameter.
           </Li>
         )}
-        {velocity <= 0 && (
+        {(velocity <= 0 || velocity === undefined) && (
           <>
             <Li>The velocity is 0</Li>
             <Li>
