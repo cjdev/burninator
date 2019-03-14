@@ -98,7 +98,6 @@ export const Project = ({ project, settings, track, containerRef }) => {
         css={`
           display: flex;
           align-items: center;
-          justify-content: space-between;
           border: 1px solid #999;
           ${hover && `border: 1px solid #666;`}
           border-radius: 2px;
@@ -113,14 +112,21 @@ export const Project = ({ project, settings, track, containerRef }) => {
           ref={titleRef}
           css={`
             padding-left: ${titlePadding}px;
+            margin-right: 8px;
           `}
         >
           {expandable ? nameWithChevron : project.name}
         </span>
 
         <span>
-          <span>{showDates && `${formatDate(start)} - ${formatDate(end)}`}</span>
-          <SettingsButton project={project} track={track} hover={hover} />
+          <SettingsButton
+            css={`
+              margin-top: -3px;
+            `}
+            project={project}
+            track={track}
+            hover={hover}
+          />
         </span>
       </div>
       {expanded && (
