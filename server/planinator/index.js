@@ -251,17 +251,17 @@ export const handleGetPlan = async (req, res) => {
             startDate: getStartDate(board, child.releaseId),
             endDate: getEndDate(board, child.releaseId),
           };
-        })(project.children);
+        })(project.children || []);
         return {
           ...project,
           children: newChildren,
         };
-      })(track.projects);
+      })(track.projects || []);
       return {
         ...track,
         projects: newProjects,
       };
-    })(pd.tracks);
+    })(pd.tracks || []);
 
     const final = {
       ...pd,
@@ -274,7 +274,7 @@ export const handleGetPlan = async (req, res) => {
 
     res.json(final);
   } catch (err) {
-    logger.error(err.message);
+    logger.error(err);
     if (err.message === 'Not found') {
       res.status(404).send('Not found');
       return;
