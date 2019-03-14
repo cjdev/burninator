@@ -48,7 +48,7 @@ CleanTr.propTypes = {
   borderHover: PropTypes.bool,
   excepted: PropTypes.string,
   noUnderline: PropTypes.bool,
-  override: PropTypes.string,
+  override: PropTypes.bool,
 };
 
 // prettier-ignore
