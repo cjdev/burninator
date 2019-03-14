@@ -50,6 +50,7 @@ export const Track = ({ track, position, containerRef }) => {
         margin: 8px 0;
         user-select: none;
         position: relative;
+        background: #fff;
       `}
     >
       <div
