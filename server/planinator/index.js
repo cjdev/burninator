@@ -129,34 +129,7 @@ const ppp = {
     { id: uuid(), name: 'Tracking' },
   ],
 };
-
 // console.log('ppp: ', ppp);
-/**
- * Plans
- *
- * Accomodate a future with multiple plans:
- *
- *******************************
-plan/
-  globalsettings(?)
-  plans/
-    <planId:1>/
-      planSettings(?)
-      versions/
-        <version:1>
-        <version:2>
-        ...
-    <planId:2>/
-      planSettings(?)
-      versions/
-        <version:1>
-        <version:2>
-        ...
- *******************************
- *
- *
- *
- */
 
 export const handlePutPlan = async (req, res) => {
   try {
@@ -179,6 +152,7 @@ export const handleResetPlan = async (req, res) => {
 ///////////////////////////////////////////////////////////////////////////////
 //
 const toTs = dateStr => new Date(dateStr).getTime();
+const sortByTs = (a, b) => a.startDate - b.startDate;
 const releaseIdLens = R.view(R.lensPath(['versionObj', 'id']));
 
 const getStartDate = (board, releaseId) => {
@@ -244,14 +218,19 @@ export const handleGetPlan = async (req, res) => {
 
       const newProjects = R.map(project => {
         if (project.phase !== 'build') return project;
-        const newChildren = R.map(child => {
-          if (!child.releaseId) return child;
-          return {
-            ...child,
-            startDate: getStartDate(board, child.releaseId),
-            endDate: getEndDate(board, child.releaseId),
-          };
-        })(project.children || []);
+
+        const newChildren = R.pipe(
+          R.map(child => {
+            if (!child.releaseId) return child;
+            return {
+              ...child,
+              startDate: getStartDate(board, child.releaseId),
+              endDate: getEndDate(board, child.releaseId),
+            };
+          }),
+          R.sort(sortByTs)
+        )(project.children || []);
+
         return {
           ...project,
           children: newChildren,
