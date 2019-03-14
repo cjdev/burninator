@@ -20,7 +20,13 @@ const buildOnChangeData = newState => {
     },
   };
 };
-export const BuildPhaseForm = ({ track, onChange }) => {
+
+const toSelectOptions = projectChildren => {
+  if (!projectChildren) return [];
+  return R.map(c => ({ value: c.releaseId, label: c.name }))(projectChildren);
+};
+
+export const BuildPhaseForm = ({ track, project = {}, onChange }) => {
   const [state, dispatch] = useReducer(
     (state, action) => {
       let newState = state;
@@ -39,7 +45,7 @@ export const BuildPhaseForm = ({ track, onChange }) => {
       return newState;
     },
     {
-      releases: [],
+      releases: toSelectOptions(project.children),
     }
   );
 
@@ -68,4 +74,12 @@ BuildPhaseForm.propTypes = {
   track: PropTypes.shape({
     board: PropTypes.number,
   }).isRequired,
+  project: PropTypes.shape({
+    children: PropTypes.arrayOf(
+      PropTypes.shape({
+        releaseId: PropTypes.string,
+        name: PropTypes.string,
+      })
+    ),
+  }),
 };
