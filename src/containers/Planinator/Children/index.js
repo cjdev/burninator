@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import * as R from 'ramda';
 import styled from 'styled-components/macro'; // eslint-disable-line no-unused-vars
@@ -6,6 +6,7 @@ import isAfter from 'date-fns/is_after';
 import { mapIndex, formatDate, getUTCDate } from '../../../utils';
 import { mapStartDateToTimeline, mapEndDateToWidth, phaseBgMap } from '../utils';
 import { Tooltip } from '../../../components/Tooltips';
+import { SettingsButton } from './Settings';
 
 const adjustWidth = (w, left, parentOffset) => {
   let changedLeft = false;
@@ -19,17 +20,27 @@ const adjustWidth = (w, left, parentOffset) => {
   return width;
 };
 
-const Child = ({ data, settings, parentOffset = { left: 0, width: 0 } }) => {
+//
+// while keeping the release tied to jira, allow user to change the phase
+// to 'launch' or complete
+// * preserves the dates
+// * gear on the child to manage this
+//
+//
+const Child = ({ data, track, project, settings, parentOffset = { left: 0, width: 0 } }) => {
   // console.log('data: ', data);
   const start = getUTCDate(data.startDate);
   const end = getUTCDate(data.endDate);
   let left = mapStartDateToTimeline(settings, start, parentOffset.left);
   const width = mapEndDateToWidth(settings, { start, end }, parentOffset.left);
   const adjustedWidth = adjustWidth(width, left, parentOffset);
+  const [hover, setHover] = useState(false);
 
   return (
     <>
       <div
+        onMouseOver={() => setHover(true)}
+        onMouseOut={() => setHover(false)}
         css={`
           position: absolute;
           left: ${left}px;
@@ -52,7 +63,23 @@ const Child = ({ data, settings, parentOffset = { left: 0, width: 0 } }) => {
           <div>{data.name}</div>
           <div>{`${formatDate(data.startDate)} - ${formatDate(data.endDate)}`}</div>
         </Tooltip>
-        {data.name}
+        <div
+          css={`
+            overflow-x: hidden;
+          `}
+        >
+          {data.name}
+        </div>
+        <SettingsButton
+          css={`
+            margin-top: -3px;
+            margin-left: 4px;
+          `}
+          project={project}
+          track={track}
+          child={data}
+          hover={hover}
+        />
       </div>
     </>
   );

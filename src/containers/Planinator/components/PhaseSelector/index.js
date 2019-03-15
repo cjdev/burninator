@@ -1,4 +1,6 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import * as R from 'ramda';
 import ReactSelector from 'react-select';
 import styled from 'styled-components/macro'; // eslint-disable-line no-unused-vars
 import { phaseOptions, phaseBgMap } from '../../utils';
@@ -32,11 +34,17 @@ const Select = styled(ReactSelector)`
   margin-bottom: 0.8rem;
 `;
 
-export const PhaseSelector = props => (
-  <Select
-    options={phaseOptions}
-    optionRenderer={renderPhaseOption}
-    valueRenderer={renderPhaseOption}
-    {...props}
-  />
-);
+export const PhaseSelector = ({ phaseFilter, ...rest }) => {
+  const finalOptions = phaseFilter ? R.filter(phaseFilter, phaseOptions) : phaseOptions;
+  return (
+    <Select
+      options={finalOptions}
+      optionRenderer={renderPhaseOption}
+      valueRenderer={renderPhaseOption}
+      {...rest}
+    />
+  );
+};
+PhaseSelector.propTypes = {
+  phaseFilter: PropTypes.func,
+};
