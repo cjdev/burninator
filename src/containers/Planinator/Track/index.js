@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useMemo, useContext, useState } from 'react';
 import * as R from 'ramda';
 import PropTypes from 'prop-types';
 import styled from 'styled-components/macro'; // eslint-disable-line no-unused-vars
