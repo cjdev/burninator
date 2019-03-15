@@ -98,8 +98,6 @@ export const Project = ({ project, settings, track, containerRef }) => {
         white-space: nowrap;
         z-index: 99;
       `}
-      onMouseOver={() => setHover(true)}
-      onMouseOut={() => setHover(false)}
     >
       <div
         css={`
@@ -116,6 +114,8 @@ export const Project = ({ project, settings, track, containerRef }) => {
         `}
         data-for={project.id}
         data-tip
+        onMouseOver={() => setHover(true)}
+        onMouseOut={() => setHover(false)}
       >
         <span
           ref={titleRef}
