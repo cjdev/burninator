@@ -13,19 +13,6 @@ import { getUTCDate, mapIndex } from '../../../utils';
 import { getTodayAndPosition } from '../utils';
 import PlaninatorContext from '../context';
 
-const RoadmapContainer = styled.div`
-  padding: 8px;
-  margin: 0;
-  width: calc(100vw - 120px);
-  height: calc(100vh - 120px);
-  border: 1px solid #ccc;
-  border-radius: 2px;
-  background: #f6f6f6;
-
-  overflow-x: auto;
-  overflow-y: auto;
-`;
-
 const getQuarterMark = date => {
   const m = getMonth(date);
   if (m === 0) return 1;
@@ -34,8 +21,26 @@ const getQuarterMark = date => {
   if (m === 9) return 4;
 };
 
+const RoadmapContainer = styled.div`
+  margin: 0;
+  width: calc(100vw - 120px);
+  height: calc(100vh - 120px);
+  border: 1px solid #ccc;
+  border-radius: 2px;
+  background: #f6f6f6;
+  position: relative;
+  overflow-x: auto;
+  overflow-y: auto;
+`;
+
 const Months = styled.div`
-  display: flex;
+  position: sticky;
+  top: 0;
+  right: 0;
+  width: 100%;
+  min-width: 100%;
+  background: #f6f6f6;
+  z-index: 998;
 `;
 
 const Month = ({ date, width }) => {
@@ -48,13 +53,14 @@ const Month = ({ date, width }) => {
       css={`
         background: #f6f6f6;
         min-width: ${width}px; // ~3px/day
-        padding: 0 4px;
+        padding: 0 4px 8px;
         color: #999;
         font-variant: all-small-caps;
         text-transform: uppercase;
         & div {
           font-size: 1.2em;
         }
+        border-bottom: 1px solid #ccc;
       `}
     >
       <div>{q}&nbsp;</div>
@@ -89,11 +95,17 @@ export const Roadmap = () => {
   return (
     <RoadmapContainer ref={containerRef}>
       <Months>
-        {mapIndex(i => (
-          <Month key={i} width={monthWidthPx} date={addMonths(startMonth, i)}>
-            {i}
-          </Month>
-        ))(R.range(0, numMonths))}
+        <div
+          css={`
+            display: flex;
+          `}
+        >
+          {mapIndex(i => (
+            <Month key={i} width={monthWidthPx} date={addMonths(startMonth, i)}>
+              {i}
+            </Month>
+          ))(R.range(0, numMonths))}
+        </div>
       </Months>
       <div
         css={`
