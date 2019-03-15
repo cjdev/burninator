@@ -1,6 +1,6 @@
 import * as R from 'ramda';
 import diffInDays from 'date-fns/difference_in_days';
-import { getUTCDate, toTitleCase } from '../../utils';
+import { getUTCDate, toTitleCase, mapIndex } from '../../utils';
 import mo from 'moment';
 import uuid from 'uuid/v4';
 
@@ -9,17 +9,6 @@ export { uuid };
 export const dateFormat = 'YYYY-MM-DD';
 export const tsToDateString = ts => mo.utc(ts).format(dateFormat);
 export const dateStringToTs = dateString => mo.utc(dateString).valueOf();
-
-const DAYS_PER_MONTH = 30;
-
-export const getTodayAndPosition = settings => {
-  const today = getUTCDate(new Date());
-  const left = mapStartDateToTimeline(settings, today);
-  return {
-    today,
-    left,
-  };
-};
 
 export const phaseMap = {
   assess: { bg: '#f8941d', color: '#fff' },
@@ -35,6 +24,25 @@ export const phaseBgMap = {
 
 export const phases = R.keys(phaseMap);
 export const phaseOptions = R.map(p => ({ value: p, label: toTitleCase(p) }))(phases);
+
+const DAYS_PER_MONTH = 30;
+const QUARTER_MULTIPLIER = 3;
+
+export const getTodayAndPosition = settings => {
+  const today = getUTCDate(new Date());
+  const left = mapStartDateToTimeline(settings, today);
+  return {
+    today,
+    left,
+  };
+};
+
+export const getTimelineMarkerPositions = settings => {
+  const totalDays = diffInDays(settings.endDate, settings.startDate);
+  return mapIndex((_, i) => i * settings.monthWidthPx * QUARTER_MULTIPLIER)(
+    new Array(Math.ceil(totalDays / DAYS_PER_MONTH))
+  );
+};
 
 export const mapStartDateToTimeline = (settings, startDate, offset = 0) => {
   const numDays = diffInDays(startDate, settings.startDate);

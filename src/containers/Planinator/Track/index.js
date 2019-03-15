@@ -6,18 +6,19 @@ import { ChevronDownIcon, ChevronRightIcon } from '../../../components/Icons';
 import { mapIndex } from '../../../utils';
 import { Project } from '../Project';
 import { useTitleCrawl } from '../useTitleCrawl';
-import { getTodayAndPosition } from '../utils';
+import { getTodayAndPosition, getTimelineMarkerPositions } from '../utils';
 import PlaninatorContext from '../context';
 import { putPlan, getPlan } from '../api';
 import { TrackTitle } from './TrackTitle';
 import { BoardLink } from './BoardLink';
 import { ButtonSet } from './ButtonSet';
-import { TodayMarker } from './TodayMarker';
+import { TimeMarker } from './TimelineMarker';
 
 export const Track = ({ track, position, containerRef }) => {
   const { state, planId, dispatch, version } = useContext(PlaninatorContext);
   const { tracks, settings } = state;
 
+  const timelineMarkers = useMemo(() => getTimelineMarkerPositions(settings), [settings]);
   const handleClickDown = async () => {
     const newPlan = {
       ...state,
@@ -53,6 +54,10 @@ export const Track = ({ track, position, containerRef }) => {
         background: #fff;
       `}
     >
+      <TimeMarker pos={todayLeft} today={true} />
+      {timelineMarkers.map(t => (
+        <TimeMarker pos={t} key={t} />
+      ))}
       <div
         ref={titleRef}
         css={`
@@ -86,7 +91,6 @@ export const Track = ({ track, position, containerRef }) => {
           />
         </div>
       </div>
-      <TodayMarker pos={todayLeft} />
       {expanded && (
         <div>
           {mapIndex((p, idx) => (
