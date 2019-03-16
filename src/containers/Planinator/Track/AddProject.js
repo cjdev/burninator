@@ -55,11 +55,6 @@ const AddProjectModal = ({ closeModal, track }) => {
     phaseFormData.data === null ||
     (phaseFormData.isValid && !phaseFormData.isValid())
   );
-  // console.log(': ', projectName);
-  // console.log('phase: ', phase);
-  // console.log('phaseFormData.data: ', phaseFormData.data);
-  // console.log(phaseFormData.isValid && !phaseFormData.isValid());
-  // console.log('formValid: ', formValid);
 
   return (
     <M.Modal onBackgroundClick={closeModal}>

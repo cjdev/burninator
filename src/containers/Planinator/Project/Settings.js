@@ -90,7 +90,14 @@ const ProjectSettingsModal = ({ closeModal, track, project }) => {
             />
             <label>Phase</label>
             <PhaseSelector onChange={e => setPhase(e ? e.value : null)} value={phase} />
-            {PhaseForm && <PhaseForm track={track} project={project} onChange={setPhaseFormData} />}
+            {PhaseForm && (
+              <PhaseForm
+                track={track}
+                project={project}
+                range={project}
+                onChange={setPhaseFormData}
+              />
+            )}
           </M.Body>
           <M.Footer>
             <span>{error}</span>

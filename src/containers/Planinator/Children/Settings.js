@@ -13,7 +13,7 @@ import { Spinner } from '../../../components/Spinner';
 import { PhaseSelector } from '../components/PhaseSelector';
 import { useModalPlanUpdater } from '../useModalPlanUpdater';
 import { DeleteFooter } from '../components/DeleteFooter';
-import { formatDate } from '../../../utils';
+import { DateRangeForm } from '../components/PhaseForms/DateRangeForm';
 
 const id = R.prop('id');
 const idsNotEqual = (obj, againstObj) => R.not(R.equals(id(obj), id(againstObj)));
@@ -82,12 +82,7 @@ const ChildSettingsModal = ({ child, project, track, closeModal }) => {
         <M.Content>
           <M.Header title={`Settings: ${child.name}`} />
           <M.Body>
-            <label>TODO: layout</label>
-            <label>Start Date</label>
-            <div>{formatDate(child.startDate)}</div>
-            <label>End Date</label>
-            <div>{formatDate(child.endDate)}</div>
-
+            <DateRangeForm disabled={true} range={child} />
             <label>Phase</label>
             <PhaseSelector
               phaseFilter={p => R.includes(p.value, ['build', 'launch', 'complete'])}

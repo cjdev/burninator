@@ -19,7 +19,18 @@ const buildOnChangeData = newState => {
   };
 };
 
-export const DateRangeForm = ({ project, onChange }) => {
+const Input = styled.input`
+  ${({ disabled }) =>
+    disabled &&
+    ` &&& {
+      background: transparent;
+      color: #999;
+      border-color: #eee;
+    }
+  `}
+`;
+
+export const DateRangeForm = ({ range, onChange = () => {}, disabled = false }) => {
   const [state, dispatch] = useReducer(
     (state, action) => {
       let newState;
@@ -44,16 +55,16 @@ export const DateRangeForm = ({ project, onChange }) => {
       return newState;
     },
     {
-      startDate: project ? tsToDateString(project.startDate) : '',
-      endDate: project ? tsToDateString(project.endDate) : '',
+      startDate: range ? tsToDateString(range.startDate) : '',
+      endDate: range ? tsToDateString(range.endDate) : '',
     }
   );
 
   useEffect(() => {
-    if (project) {
+    if (range) {
       onChange(buildOnChangeData(state));
     }
-  }, [project]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [range]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <>
@@ -70,7 +81,8 @@ export const DateRangeForm = ({ project, onChange }) => {
           `}
         >
           <label>Start Date</label>
-          <input
+          <Input
+            disabled={disabled}
             placeholder="yyyy-mm-dd"
             name="startDate"
             type="text"
@@ -87,7 +99,8 @@ export const DateRangeForm = ({ project, onChange }) => {
           `}
         >
           <label>End Date</label>
-          <input
+          <Input
+            disabled={disabled}
             placeholder="yyyy-mm-dd"
             name="endDate"
             type="text"
@@ -102,6 +115,11 @@ export const DateRangeForm = ({ project, onChange }) => {
   );
 };
 DateRangeForm.propTypes = {
-  project: PropTypes.shape({}),
-  onChange: PropTypes.func.isRequired,
+  disabled: PropTypes.bool,
+  range: PropTypes.shape({
+    startDate: PropTypes.number,
+
+    endDate: PropTypes.number,
+  }),
+  onChange: PropTypes.func,
 };
