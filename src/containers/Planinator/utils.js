@@ -6,6 +6,7 @@ import uuid from 'uuid/v4';
 
 export { uuid, daysSince };
 
+export const MAX_ACCEPTABLE_BOARD_AGE = 5;
 export const dateFormat = 'YYYY-MM-DD';
 export const tsToDateString = ts => mo.utc(ts).format(dateFormat);
 export const dateStringToTs = dateString => mo.utc(dateString).valueOf();

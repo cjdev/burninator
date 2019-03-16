@@ -4,14 +4,13 @@ import styled from 'styled-components/macro'; // eslint-disable-line no-unused-v
 import PlaninatorContext from '../context';
 import { Tooltip } from '../../../components/Tooltips';
 import { BoardsIcon } from '../../../components/Icons';
-import { daysSince } from '../utils';
+import { MAX_ACCEPTABLE_BOARD_AGE, daysSince } from '../utils';
 
 export const BoardLink = ({ track }) => {
   const { knownBoards } = useContext(PlaninatorContext);
   const board = knownBoards.byId[track.board];
   const boardAge = daysSince(board.lastUpdate);
-  const boardNeedsUpdate = boardAge > 47;
-
+  const boardNeedsUpdate = boardAge > MAX_ACCEPTABLE_BOARD_AGE;
   const iconColor = boardNeedsUpdate ? 'red' : 'currentColor';
 
   return (
@@ -26,8 +25,9 @@ export const BoardLink = ({ track }) => {
         `}
       >
         <Tooltip effect="solid" id={track.id}>
-          <div>Goto {board.backlogName}</div>
-          {boardNeedsUpdate && <div>Board is {boardAge} days old! Please update</div>}
+          <div>{board.backlogName}</div>
+          <div>Board is {boardAge} days old</div>
+          {boardNeedsUpdate && <div>Please update asap!</div>}
         </Tooltip>
         <BoardsIcon
           data-tip
