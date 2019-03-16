@@ -90,13 +90,15 @@ Child.propTypes = {
     endDate: PropTypes.number,
   }).isRequired,
   settings: PropTypes.object,
+  project: PropTypes.object,
+  track: PropTypes.object,
   parentOffset: PropTypes.shape({
     left: PropTypes.number,
     width: PropTypes.number,
   }),
 };
 
-const ChildRow = ({ data, settings, parentOffset }) => {
+const ChildRow = ({ data, track, project, settings, parentOffset }) => {
   // console.log('row data: ', data);
   return (
     <div
@@ -109,18 +111,27 @@ const ChildRow = ({ data, settings, parentOffset }) => {
       `}
     >
       {mapIndex((child, idx) => (
-        <Child key={idx} data={child} settings={settings} parentOffset={parentOffset} />
+        <Child
+          key={idx}
+          data={child}
+          track={track}
+          project={project}
+          settings={settings}
+          parentOffset={parentOffset}
+        />
       ))(data)}
     </div>
   );
 };
 ChildRow.propTypes = {
+  project: PropTypes.object,
+  track: PropTypes.object,
   data: PropTypes.array.isRequired,
   settings: PropTypes.object,
   parentOffset: PropTypes.object,
 };
 
-export const ChildContainer = ({ project, settings, parentOffset }) => {
+export const ChildContainer = ({ track, project, settings, parentOffset }) => {
   const { children } = project;
   //
   // group the children as follows
@@ -184,13 +195,21 @@ export const ChildContainer = ({ project, settings, parentOffset }) => {
       `}
     >
       {mapIndex((cRow, idx) => (
-        <ChildRow key={idx} data={cRow} settings={settings} parentOffset={parentOffset} />
+        <ChildRow
+          key={idx}
+          data={cRow}
+          track={track}
+          project={project}
+          settings={settings}
+          parentOffset={parentOffset}
+        />
       ))(childRows)}
     </div>
   );
 };
 ChildContainer.propTypes = {
   project: PropTypes.object,
+  track: PropTypes.object,
   settings: PropTypes.object,
   parentOffset: PropTypes.object,
 };

@@ -142,7 +142,12 @@ export const Project = ({ project, settings, track, containerRef }) => {
         />
       </div>
       {expanded && (
-        <ChildContainer project={project} settings={settings} parentOffset={{ left, width }} />
+        <ChildContainer
+          track={track}
+          project={project}
+          settings={settings}
+          parentOffset={{ left, width }}
+        />
       )}
     </div>
   );

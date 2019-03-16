@@ -13,6 +13,8 @@ import { Spinner } from '../../../components/Spinner';
 import { PhaseSelector } from '../components/PhaseSelector';
 import { useModalPlanUpdater } from '../useModalPlanUpdater';
 import { DeleteFooter } from '../components/DeleteFooter';
+import { formatDate } from '../../../utils';
+// import { diff } from 'deep-object-diff';
 
 const ChildSettingsModal = ({ child, project, track, closeModal }) => {
   const getUpdatedPlan = state => {
@@ -29,21 +31,41 @@ const ChildSettingsModal = ({ child, project, track, closeModal }) => {
   const formValid = false; // TODO
 
   const getPlanWithoutChild = state => {
-    // TODO
-    const { settings, tracks } = state;
+    const tracks = R.map(t => {
+      if (t.id !== track.id) return t;
+      const newProjects = R.map(p => {
+        if (p.id !== project.id) return p;
+        return {
+          ...p,
+          children: R.reject(R.propEq('id', child.id))(p.children),
+        };
+      })(t.projects);
+      return {
+        ...t,
+        projects: newProjects,
+      };
+    })(state.tracks);
     return {
-      settings,
+      settings: state.settings,
       tracks,
     };
   };
+
   const { handler: deleteHandler } = useModalPlanUpdater(getPlanWithoutChild, closeModal);
   const [phase, setPhase] = useState(child.phase);
+
   return (
     <M.Modal onBackgroundClick={closeModal}>
       <M.Dialog>
         <M.Content>
           <M.Header title={`Settings: ${child.name}`} />
           <M.Body>
+            <label>TODO: layout</label>
+            <label>Start Date</label>
+            <div>{formatDate(child.startDate)}</div>
+            <label>End Date</label>
+            <div>{formatDate(child.endDate)}</div>
+
             <label>TODO</label>
             <div>Allow change the phase while maintaining the connection to a release</div>
 
@@ -64,7 +86,7 @@ const ChildSettingsModal = ({ child, project, track, closeModal }) => {
               {loading && <Spinner />}
             </BasicButton>
           </M.Footer>
-          <DeleteFooter buttonText={'TODO'} disabled={true} onDelete={deleteHandler} />
+          <DeleteFooter onDelete={deleteHandler} />
         </M.Content>
       </M.Dialog>
     </M.Modal>
