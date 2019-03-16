@@ -15,15 +15,19 @@ import { useModalPlanUpdater } from '../useModalPlanUpdater';
 import { DeleteFooter } from '../components/DeleteFooter';
 import { formatDate } from '../../../utils';
 
+const id = R.prop('id');
+const idsNotEqual = (obj, againstObj) => R.not(R.equals(id(obj), id(againstObj)));
+
 const ChildSettingsModal = ({ child, project, track, closeModal }) => {
   const [phase, setPhase] = useState(child.phase);
   const getUpdatedPlan = state => {
+    const { settings } = state;
     const tracks = R.map(t => {
-      if (t.id !== track.id) return t;
-      const newProjects = R.map(p => {
-        if (p.id !== project.id) return p;
-        const newChildren = R.map(c => {
-          if (c.id !== child.id) return c;
+      if (idsNotEqual(t, track)) return t;
+      const projects = R.map(p => {
+        if (idsNotEqual(p, project)) return p;
+        const children = R.map(c => {
+          if (idsNotEqual(c, child)) return c;
           return {
             ...c,
             phase,
@@ -31,16 +35,16 @@ const ChildSettingsModal = ({ child, project, track, closeModal }) => {
         })(p.children);
         return {
           ...p,
-          children: newChildren,
+          children,
         };
       })(t.projects);
       return {
         ...t,
-        projects: newProjects,
+        projects,
       };
     })(state.tracks);
     return {
-      settings: state.settings,
+      settings,
       tracks,
     };
   };
@@ -51,9 +55,9 @@ const ChildSettingsModal = ({ child, project, track, closeModal }) => {
 
   const getPlanWithoutChild = state => {
     const tracks = R.map(t => {
-      if (t.id !== track.id) return t;
+      if (idsNotEqual(t, track)) return t;
       const newProjects = R.map(p => {
-        if (p.id !== project.id) return p;
+        if (idsNotEqual(p, project)) return p;
         return {
           ...p,
           children: R.reject(R.propEq('id', child.id))(p.children),
@@ -84,9 +88,6 @@ const ChildSettingsModal = ({ child, project, track, closeModal }) => {
             <label>End Date</label>
             <div>{formatDate(child.endDate)}</div>
 
-            <label>TODO</label>
-            <div>Allow change the phase while maintaining the connection to a release</div>
-
             <label>Phase</label>
             <PhaseSelector
               phaseFilter={p => R.includes(p.value, ['build', 'launch', 'complete'])}
@@ -109,7 +110,6 @@ const ChildSettingsModal = ({ child, project, track, closeModal }) => {
       </M.Dialog>
     </M.Modal>
   );
-  // <M.Modal>
 };
 ChildSettingsModal.propTypes = {
   child: PropTypes.object,
