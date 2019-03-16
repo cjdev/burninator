@@ -17,7 +17,10 @@ const getBoardDetails = (allBoards, board) =>
 
 export const ReleaseSelector = ({ board, ...rest }) => {
   const { knownBoards } = useContext(PlaninatorContext);
-  const boardDetails = useMemo(() => getBoardDetails(knownBoards.values, board), [knownBoards, board]);
+  const boardDetails = useMemo(() => getBoardDetails(knownBoards.values, board), [
+    knownBoards,
+    board,
+  ]);
   const [releases, setReleases] = useState(null);
   useEffect(() => {
     fetchBoard(board, 'current').then(boardData => {
