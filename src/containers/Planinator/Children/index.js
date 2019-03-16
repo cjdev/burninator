@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import * as R from 'ramda';
 import styled from 'styled-components/macro'; // eslint-disable-line no-unused-vars
 import isAfter from 'date-fns/is_after';
-import { mapIndex, formatDate, getUTCDate } from '../../../utils';
-import { mapStartDateToTimeline, mapEndDateToWidth, phaseBgMap } from '../utils';
+import { mapIndex, getUTCDate } from '../../../utils';
+import { tsToDateString, mapStartDateToTimeline, mapEndDateToWidth, phaseBgMap } from '../utils';
 import { Tooltip } from '../../../components/Tooltips';
 import { SettingsButton } from './Settings';
 
@@ -61,7 +61,7 @@ const Child = ({ data, track, project, settings, parentOffset = { left: 0, width
       >
         <Tooltip effect="solid" id={data.id}>
           <div>{data.name}</div>
-          <div>{`${formatDate(data.startDate)} - ${formatDate(data.endDate)}`}</div>
+          <div>{`${tsToDateString(data.startDate)} - ${tsToDateString(data.endDate)}`}</div>
         </Tooltip>
         <div
           css={`
