@@ -4,11 +4,18 @@ import styled from 'styled-components/macro'; // eslint-disable-line no-unused-v
 import PlaninatorContext from '../context';
 import { Tooltip } from '../../../components/Tooltips';
 import { BoardsIcon } from '../../../components/Icons';
+import { daysSince } from '../utils';
 
 export const BoardLink = ({ track }) => {
   const { knownBoards } = useContext(PlaninatorContext);
+  const board = knownBoards.byId[track.board];
+  const boardAge = daysSince(board.lastUpdate);
+  const boardNeedsUpdate = boardAge > 47;
+
+  const iconColor = boardNeedsUpdate ? 'red' : 'currentColor';
+
   return (
-    <a href={`/board/${track.board}`} rel="noopener noreferrer" target="_blank">
+    <a href={`/board/${board.boardId}`} rel="noopener noreferrer" target="_blank">
       <span
         css={`
           display: inline-block;
@@ -19,7 +26,8 @@ export const BoardLink = ({ track }) => {
         `}
       >
         <Tooltip effect="solid" id={track.id}>
-          Go to {knownBoards.byId[track.board].backlogName}
+          <div>Goto {board.backlogName}</div>
+          {boardNeedsUpdate && <div>Board is {boardAge} days old! Please update</div>}
         </Tooltip>
         <BoardsIcon
           data-tip
@@ -27,7 +35,7 @@ export const BoardLink = ({ track }) => {
           size={1.1}
           css={`
             margin-top: -3px;
-            fill: currentColor;
+            fill: ${iconColor};
             cursor: pointer;
             &:hover {
               fill: #585858;

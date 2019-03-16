@@ -1,10 +1,10 @@
 import * as R from 'ramda';
 import diffInDays from 'date-fns/difference_in_days';
-import { getUTCDate, toTitleCase, mapIndex } from '../../utils';
+import { daysSince, getUTCDate, toTitleCase, mapIndex } from '../../utils';
 import mo from 'moment';
 import uuid from 'uuid/v4';
 
-export { uuid };
+export { uuid, daysSince };
 
 export const dateFormat = 'YYYY-MM-DD';
 export const tsToDateString = ts => mo.utc(ts).format(dateFormat);
