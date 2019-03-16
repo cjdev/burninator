@@ -45,13 +45,16 @@ const getDates = project => {
   return { start, end };
 };
 
+const MIN_WIDTH = 100;
+
 export const Project = ({ project, settings, track, containerRef }) => {
   const expandable = project.children !== undefined;
 
   const { start, end } = useMemo(() => getDates(project), [project]);
 
   const left = mapStartDateToTimeline(settings, start);
-  const width = mapEndDateToWidth(settings, { start, end });
+  let width = mapEndDateToWidth(settings, { start, end });
+  width = Math.max(width, MIN_WIDTH);
   // console.log({ name: project.name, start, end, left, width });
 
   const [titleRef, titlePadding] = useTitleCrawl(containerRef);
@@ -70,6 +73,7 @@ export const Project = ({ project, settings, track, containerRef }) => {
         <ChevronDownIcon
           css={`
             fill: #fff;
+            min-width: 2.25rem;
           `}
           onClick={() => toggleExpanded(!expanded)}
         />
@@ -77,6 +81,7 @@ export const Project = ({ project, settings, track, containerRef }) => {
         <ChevronRightIcon
           css={`
             fill: #fff;
+            min-width: 2.25rem;
           `}
           onClick={() => toggleExpanded(!expanded)}
         />
@@ -102,6 +107,7 @@ export const Project = ({ project, settings, track, containerRef }) => {
         css={`
           display: flex;
           align-items: center;
+          justify-content: space-between;
           border: 1px solid #999;
           ${hover && `border: 1px solid #666;`}
           border-radius: 2px;
@@ -116,20 +122,20 @@ export const Project = ({ project, settings, track, containerRef }) => {
         onMouseOver={() => setHover(true)}
         onMouseOut={() => setHover(false)}
       >
-        <span
+        <div
           ref={titleRef}
           css={`
             padding-left: ${titlePadding}px;
-            margin-right: 8px;
+            overflow-x: hidden;
+            margin-right: 4px;
           `}
         >
-          {expandable ? nameWithChevron : project.name}
-
           <Tooltip effect="solid" id={project.id}>
             <div>{project.name}</div>
             <div>{`${tsToDateString(start)} - ${tsToDateString(end)}`}</div>
           </Tooltip>
-        </span>
+          {expandable ? nameWithChevron : project.name}
+        </div>
 
         <SettingsButton
           css={`
