@@ -14,21 +14,40 @@ import { PhaseSelector } from '../components/PhaseSelector';
 import { useModalPlanUpdater } from '../useModalPlanUpdater';
 import { DeleteFooter } from '../components/DeleteFooter';
 import { formatDate } from '../../../utils';
-// import { diff } from 'deep-object-diff';
 
 const ChildSettingsModal = ({ child, project, track, closeModal }) => {
+  const [phase, setPhase] = useState(child.phase);
   const getUpdatedPlan = state => {
-    // TODO
-    const { settings, tracks } = state;
+    const tracks = R.map(t => {
+      if (t.id !== track.id) return t;
+      const newProjects = R.map(p => {
+        if (p.id !== project.id) return p;
+        const newChildren = R.map(c => {
+          if (c.id !== child.id) return c;
+          return {
+            ...c,
+            phase,
+          };
+        })(p.children);
+        return {
+          ...p,
+          children: newChildren,
+        };
+      })(t.projects);
+      return {
+        ...t,
+        projects: newProjects,
+      };
+    })(state.tracks);
     return {
-      settings,
+      settings: state.settings,
       tracks,
     };
   };
   const { state, handler } = useModalPlanUpdater(getUpdatedPlan, closeModal);
   const { putApiMeta } = state;
   const { error, loading } = putApiMeta;
-  const formValid = false; // TODO
+  const formValid = phase !== child.phase;
 
   const getPlanWithoutChild = state => {
     const tracks = R.map(t => {
@@ -52,7 +71,6 @@ const ChildSettingsModal = ({ child, project, track, closeModal }) => {
   };
 
   const { handler: deleteHandler } = useModalPlanUpdater(getPlanWithoutChild, closeModal);
-  const [phase, setPhase] = useState(child.phase);
 
   return (
     <M.Modal onBackgroundClick={closeModal}>

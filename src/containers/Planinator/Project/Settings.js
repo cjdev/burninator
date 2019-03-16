@@ -35,7 +35,6 @@ const ProjectSettingsModal = ({ closeModal, track, project }) => {
         projects: newProjects,
       };
     })(state.tracks);
-    // const changed = R.not(R.equals(newTracks, state.tracks));
     return {
       settings: state.settings,
       tracks: newTracks,
