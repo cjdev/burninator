@@ -37,10 +37,10 @@ const Board = ({
   useEffect(() => {
     setUrlOptions(location.search);
   }, [location.search, setUrlOptions]);
+
   useEffect(() => {
     getBoard({ boardId, version });
-    getBoardVersions(boardId);
-  }, [boardId, getBoard, getBoardVersions, version]);
+  }, [boardId, getBoard, version]);
 
   if (!isLoaded) {
     return <SpinnerPanel />;

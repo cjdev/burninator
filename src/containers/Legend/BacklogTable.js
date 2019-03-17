@@ -4,7 +4,7 @@ import { withRouter, Link } from 'react-router-dom';
 import styled from 'styled-components/macro';
 import { connect } from 'react-redux';
 import { getCurrentBoard } from '../../state/reducer';
-import { getSyncBoard, getResetBoard } from '../../state/actions';
+import { getBoardVersions, getSyncBoard, getResetBoard } from '../../state/actions';
 
 import { Panel, PanelTitle, PanelTitleRight } from '../../components/Panel';
 import { Spinner } from '../../components/Spinner';
@@ -30,6 +30,7 @@ class BacklogTable extends React.Component {
   static propTypes = {
     boardId: PropTypes.string.isRequired,
     history: PropTypes.object,
+    getBoardVersions: PropTypes.func.isRequired,
     getSyncBoard: PropTypes.func.isRequired,
     getResetBoard: PropTypes.func.isRequired,
     currentBoard: PropTypes.object,
@@ -42,6 +43,7 @@ class BacklogTable extends React.Component {
     this.handleSync = this.handleSync.bind(this);
     this.handleReset = this.handleReset.bind(this);
     this.state = {};
+    props.getBoardVersions(this.props.boardId);
   }
 
   handleSync = boardId => {
@@ -134,13 +136,13 @@ class BacklogTable extends React.Component {
   }
 }
 
-// export default withRouter(BacklogTable);
 export default withRouter(
   connect(
     state => ({ currentBoard: getCurrentBoard(state) }),
     {
       getResetBoard,
       getSyncBoard,
+      getBoardVersions,
     }
   )(BacklogTable)
 );
