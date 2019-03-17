@@ -1,3 +1,20 @@
+# 3.13.0 (2019.03.17)
+
+## Added
+
+- Planinator: beta
+- Burninator: make modals close when clicking off them
+- General: MIT license
+- General: eslint-plugin-react-hooks
+
+## Changed
+
+- General: upgraded deps, including React@16.8.4, visual-stack@3.3.0
+
+## Removed
+
+- General: AWS deployment scripts moved to separate repo
+
 # 3.12.4 (2019.01.31)
 
 ## Fixed
