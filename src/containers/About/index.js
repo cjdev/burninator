@@ -16,7 +16,7 @@ import { Markdown } from './Markdown';
 import trogdor from '../../trogdor.png';
 import { JIRA_WEB_URL } from '../../utils';
 
-const BurninatorUrl = 'http://gitlab.cj.com/cjdev/burninator';
+const BurninatorUrl = 'http://github.com/cjdev/burninator';
 
 const AddBoardPanel = ({ getResetBoard }) => {
   const [maybeBoardId, setMaybeBoardId] = useState(null);
