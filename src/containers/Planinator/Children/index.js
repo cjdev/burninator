@@ -1,113 +1,18 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import * as R from 'ramda';
 import styled from 'styled-components/macro'; // eslint-disable-line no-unused-vars
 import isAfter from 'date-fns/is_after';
-import { mapIndex, getUTCDate } from '../../../utils';
-import { tsToDateString, mapStartDateToTimeline, mapEndDateToWidth, phaseBgMap } from '../utils';
-import { Tooltip } from '../../../components/Tooltips';
-import { SettingsButton } from './Settings';
-
-const adjustWidth = (w, left, parentOffset) => {
-  let changedLeft = false;
-  if (left === 0) {
-    left = 4;
-    changedLeft = true;
-  }
-  let width = w;
-  width = left + width >= parentOffset.width ? width - 6 : width;
-  width = changedLeft ? width - 4 : width;
-  return width;
-};
-
-//
-// while keeping the release tied to jira, allow user to change the phase
-// to 'launch' or complete
-// * preserves the dates
-// * gear on the child to manage this
-//
-//
-const Child = ({ data, track, project, settings, parentOffset = { left: 0, width: 0 } }) => {
-  // console.log('data: ', data);
-  const start = getUTCDate(data.startDate);
-  const end = getUTCDate(data.endDate);
-  let left = mapStartDateToTimeline(settings, start, parentOffset.left);
-  const width = mapEndDateToWidth(settings, { start, end }, parentOffset.left);
-  const adjustedWidth = adjustWidth(width, left, parentOffset);
-  const [hover, setHover] = useState(false);
-
-  return (
-    <>
-      <div
-        onMouseOver={() => setHover(true)}
-        onMouseOut={() => setHover(false)}
-        css={`
-          position: absolute;
-          left: ${left}px;
-          width: ${adjustedWidth}px;
-
-          background: ${phaseBgMap[data.phase || 'default'].bg};
-          color: ${phaseBgMap[data.phase || 'default'].color};
-          border: 1px solid #999;
-          border-radius: 2px;
-          padding: 8px;
-
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-        `}
-        data-for={data.id}
-        data-tip
-      >
-        <Tooltip effect="solid" id={data.id}>
-          <div>{data.name}</div>
-          <div>{`${tsToDateString(data.startDate)} - ${tsToDateString(data.endDate)}`}</div>
-        </Tooltip>
-        <div
-          css={`
-            overflow-x: hidden;
-          `}
-        >
-          {data.name}
-        </div>
-        <SettingsButton
-          css={`
-            margin-top: -3px;
-            margin-left: 4px;
-          `}
-          project={project}
-          track={track}
-          child={data}
-          hover={hover}
-        />
-      </div>
-    </>
-  );
-};
-Child.propTypes = {
-  data: PropTypes.shape({
-    startDate: PropTypes.number,
-    endDate: PropTypes.number,
-  }).isRequired,
-  settings: PropTypes.object,
-  project: PropTypes.object,
-  track: PropTypes.object,
-  parentOffset: PropTypes.shape({
-    left: PropTypes.number,
-    width: PropTypes.number,
-  }),
-};
+import { mapIndex } from '../../../utils';
+import { Child } from './Child';
 
 const ChildRow = ({ data, track, project, settings, parentOffset }) => {
-  // console.log('row data: ', data);
   return (
     <div
       css={`
         position: relative;
-        border: 0px solid red;
         min-height: 40px;
-        margin-top: 4px;
-        margin-bottom: 4px;
+        margin: 4px 0;
       `}
     >
       {mapIndex((child, idx) => (
@@ -188,7 +93,6 @@ export const ChildContainer = ({ track, project, settings, parentOffset }) => {
   return (
     <div
       css={`
-        background: initial;
         color: initial;
         background: rgba(246, 246, 246, 0.5);
         border: 1px solid #ccc;

@@ -115,10 +115,15 @@ ChildSettingsModal.propTypes = {
 
 const SettingsButtonPure = ({ child, project, track, openModal, closeModal, hover, ...props }) => {
   return (
-    <span onClick={() => openModal(ChildSettingsModal, { track, closeModal, project, child })}>
+    <span
+      css={`
+        display: ${hover ? `inline-block` : `none`};
+      `}
+      onClick={() => openModal(ChildSettingsModal, { track, closeModal, project, child })}
+    >
       <SettingsIcon
         css={`
-          ${hover ? `fill: currentColor;` : `fill: transparent`}
+          fill: currentColor;
           &:hover {
             fill: #ddd;
           }

@@ -49,9 +49,9 @@ export const mapStartDateToTimeline = (settings, startDate, offset = 0) => {
   const numDays = diffInDays(startDate, settings.startDate);
   const pxPerDay = settings.monthWidthPx / DAYS_PER_MONTH;
   // console.log(
-  //   `left: ${numDays} days x ${pxPerDay}px == ${numDays * pxPerDay}, ${offset} offset, ${numDays *
-  //     pxPerDay -
-  //     offset} final width`
+  //   `mapSTART(left): ${numDays} days from start of timeline x ${pxPerDay}px == ${numDays *
+  //     pxPerDay} - ${offset} parent offset => ${numDays * pxPerDay -
+  //     offset} final relative start position`
   // );
   return numDays * pxPerDay - offset;
 };
@@ -59,9 +59,8 @@ export const mapStartDateToTimeline = (settings, startDate, offset = 0) => {
 export const mapEndDateToWidth = (settings, { start, end }) => {
   const numDays = diffInDays(end, start);
   const pxPerDay = settings.monthWidthPx / DAYS_PER_MONTH;
-  // console.log(`${f(start)} - ${f(end)} => ${numDays} days start to end`);
   // console.log(
-  //   `width: ${numDays} days x ${pxPerDay}px == ${numDays * pxPerDay}, ${numDays *
+  //   `mapWidth: ${numDays} days x ${pxPerDay}px == ${numDays * pxPerDay}, ${numDays *
   //     pxPerDay} final width`
   // );
   return numDays * pxPerDay;
