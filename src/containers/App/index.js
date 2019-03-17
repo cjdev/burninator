@@ -30,7 +30,7 @@ const AppSideNavInternal = ({ history }) => (
         />
       </RRLink>
     </Link>
-    {false && (
+    {true && (
       <Link hoverText="Plans">
         <RRLink to="/plans">
           <LinkContentWrapper
