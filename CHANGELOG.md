@@ -1,3 +1,15 @@
+# 3.13.1 (2019.03.17)
+
+## Added
+
+- General: add millis to server logging timestamp
+
+## Fixed
+
+- Burninator: fix slow loading of page by moving loading of board history down to sub-component
+- About: fix link to repo
+- General: fix start script to refer to app name
+
 # 3.13.0 (2019.03.17)
 
 ## Added
