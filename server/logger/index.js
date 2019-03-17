@@ -10,7 +10,7 @@ const myFormat = printf(info => `${info.timestamp} [${info.level}] ${info.messag
 const config = logLevel => ({
   format: winston.format.combine(
     colorize(),
-    timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
+    timestamp({ format: 'YYYY-MM-DD HH:mm:ss.SSS' }),
     myFormat
   ),
   transports: [
