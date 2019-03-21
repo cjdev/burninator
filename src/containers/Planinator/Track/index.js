@@ -41,6 +41,7 @@ export const Track = ({ track, position, containerRef }) => {
   const [expanded, toggleExpanded] = useState(true);
   const [titleRef, titlePadding] = useTitleCrawl(containerRef);
   const { left: todayLeft } = getTodayAndPosition(settings);
+  const [hover, setHover] = useState(false);
 
   return (
     <div
@@ -73,6 +74,8 @@ export const Track = ({ track, position, containerRef }) => {
           <ChevronRightIcon css={'cursor: pointer;'} onClick={() => toggleExpanded(!expanded)} />
         )}
         <div
+          onMouseOver={() => setHover(true)}
+          onMouseOut={() => setHover(false)}
           css={`
             user-select: none;
             text-transform: uppercase;
@@ -83,6 +86,7 @@ export const Track = ({ track, position, containerRef }) => {
           <TrackTitle onClick={() => toggleExpanded(!expanded)}>{track.name}</TrackTitle>
           {track.board && <BoardLink track={track} />}
           <ButtonSet
+            hover={hover}
             track={track}
             totalLength={tracks.length}
             position={position}
