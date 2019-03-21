@@ -13,6 +13,8 @@ import { isNilOrEmpty } from '../../../utils';
 import { PhaseSelector } from '../components/PhaseSelector';
 import { getPhaseForm } from '../components/PhaseForms';
 import { DeleteFooter } from '../components/DeleteFooter';
+import { NotesInput } from '../components/NotesInput';
+import { LinkInput } from '../components/LinkInput';
 
 const ProjectSettingsModal = ({ closeModal, track, project }) => {
   const getUpdatedPlan = state => {
@@ -22,11 +24,15 @@ const ProjectSettingsModal = ({ closeModal, track, project }) => {
 
       const newProjects = R.map(p => {
         if (p.id !== project.id) return p;
+
+        // new project...
         return {
           ...p,
           name: projectName,
           phase,
           ...finalPhaseFormData,
+          notes,
+          link,
         };
       })(t.projects);
 
@@ -43,6 +49,8 @@ const ProjectSettingsModal = ({ closeModal, track, project }) => {
 
   const [projectName, setProjectName] = useState(project.name);
   const [phase, setPhase] = useState(project.phase);
+  const [notes, setNotes] = useState(project.notes || '');
+  const [link, setLink] = useState(project.link || '');
 
   const { state, handler } = useModalPlanUpdater(getUpdatedPlan, closeModal);
   const { putApiMeta } = state;
@@ -88,6 +96,12 @@ const ProjectSettingsModal = ({ closeModal, track, project }) => {
               value={projectName}
               onChange={e => setProjectName(e.target.value)}
             />
+
+            <label>Link</label>
+            <LinkInput value={link} onChange={e => setLink(e.target.value || '')} />
+            <label>Notes</label>
+            <NotesInput value={notes} onChange={e => setNotes(e.target.value || '')} />
+
             <label>Phase</label>
             <PhaseSelector onChange={e => setPhase(e ? e.value : null)} value={phase} />
             {PhaseForm && (

@@ -9,6 +9,7 @@ import { tsToDateString, mapStartDateToTimeline, mapEndDateToWidth, phaseBgMap }
 import { useTitleCrawl } from '../useTitleCrawl';
 import { SettingsButton } from './Settings';
 import { Tooltip } from '../../../components/Tooltips';
+import { LinkIcon } from '../../../components/Icons';
 
 const getEarliestStart = R.pipe(
   R.sort(R.ascend(R.prop('startDate'))),
@@ -46,6 +47,62 @@ const getDates = project => {
 };
 
 const MIN_WIDTH = 100;
+
+const ButtonSet = ({ project, track, hover }) => {
+  return (
+    <div
+      css={`
+        display: ${hover ? `flex` : `none`};
+        justify-content: center;
+      `}
+    >
+      {project.link && (
+        <a
+          css={`
+            && {
+              text-decoration: none;
+              border-bottom: 0;
+              color: currentColor;
+            }
+            &&:hover {
+              text-decoration: none;
+              border-bottom: 0;
+              color: currentColor;
+            }
+          `}
+          href={project.link}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <LinkIcon
+            css={`
+              margin-top: -3px;
+              margin-left: 4px;
+              margin-right: 4px;
+              fill: currentColor;
+              &:hover {
+                fill: #ddd;
+              }
+              &:active {
+                fill: #bbb;
+              }
+            `}
+            size={1}
+          />
+        </a>
+      )}
+      <SettingsButton
+        css={`
+          margin-top: -3px;
+          margin-left: 4px;
+        `}
+        project={project}
+        track={track}
+        hover={hover}
+      />
+    </div>
+  );
+};
 
 export const Project = ({ project, settings, track, containerRef }) => {
   const expandable = project.children !== undefined;
@@ -136,15 +193,7 @@ export const Project = ({ project, settings, track, containerRef }) => {
           </Tooltip>
           {expandable ? nameWithChevron : project.name}
         </div>
-
-        <SettingsButton
-          css={`
-            margin-top: -3px;
-          `}
-          project={project}
-          track={track}
-          hover={hover}
-        />
+        <ButtonSet project={project} track={track} hover={hover} />
       </div>
       {expanded && (
         <ChildContainer
