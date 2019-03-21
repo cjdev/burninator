@@ -5,8 +5,66 @@ import { getUTCDate } from '../../../utils';
 import { tsToDateString, mapStartDateToTimeline, mapEndDateToWidth, phaseBgMap } from '../utils';
 import { Tooltip } from '../../../components/Tooltips';
 import { SettingsButton } from './Settings';
+import { LinkIcon } from '../../../components/Icons';
 
 const MIN_WIDTH = 30;
+
+const ButtonSet = ({ data, project, track, hover }) => {
+  return (
+    <div
+      css={`
+        display: ${hover ? `flex` : `none`};
+        justify-content: center;
+      `}
+    >
+      {data.link && (
+        <a
+          css={`
+            && {
+              text-decoration: none;
+              border-bottom: 0;
+              color: currentColor;
+            }
+            &&:hover {
+              text-decoration: none;
+              border-bottom: 0;
+              color: currentColor;
+            }
+          `}
+          href={data.link}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <LinkIcon
+            css={`
+              margin-top: -3px;
+              margin-left: 4px;
+              margin-right: 4px;
+              fill: currentColor;
+              &:hover {
+                fill: #ddd;
+              }
+              &:active {
+                fill: #bbb;
+              }
+            `}
+            size={1}
+          />
+        </a>
+      )}
+      <SettingsButton
+        css={`
+          margin-top: -3px;
+          margin-left: 4px;
+        `}
+        project={project}
+        track={track}
+        child={data}
+        hover={hover}
+      />
+    </div>
+  );
+};
 
 //
 // The naive happy path is to translate startDate and endDate to a left and
@@ -106,16 +164,7 @@ export const Child = ({ data, track, project, settings, parentOffset = { left: 0
         >
           {data.name}
         </div>
-        <SettingsButton
-          css={`
-            margin-top: -3px;
-            margin-left: 4px;
-          `}
-          project={project}
-          track={track}
-          child={data}
-          hover={hover}
-        />
+        <ButtonSet data={data} project={project} track={track} hover={hover} />
       </div>
     </>
   );

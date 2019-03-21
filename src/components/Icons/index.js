@@ -12,6 +12,7 @@ import {
   mdiChevronDoubleUp,
   mdiChevronRight,
   mdiClose,
+  mdiLink,
   mdiLoading,
   mdiPackageDown,
   mdiPackageUp,
@@ -40,6 +41,7 @@ export const ChevronDoubleUpIcon = makeIcon(mdiChevronDoubleUp);
 export const ChevronRightIcon = makeIcon(mdiChevronRight);
 export const CloseIcon = makeIcon(mdiClose);
 export const ExpandCollapseIcon = makeIcon(mdiUnfoldMoreHorizontal);
+export const LinkIcon = makeIcon(mdiLink);
 export const LoadingIcon = makeIcon(mdiLoading, { spin: 1 });
 export const PageLoadingIcon = makeIcon(mdiLoading, { size: 7, spin: 1 });
 export const PlaninatorIcon = makeIcon(mdiChartTimeline);

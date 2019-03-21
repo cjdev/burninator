@@ -3,16 +3,17 @@ import PropTypes from 'prop-types';
 import * as R from 'ramda';
 import styled from 'styled-components/macro'; // eslint-disable-line no-unused-vars
 import { connect } from 'react-redux';
+import ValidUrl from 'valid-url';
 import * as M from '@cjdev/visual-stack/lib/components/Modal';
 import { openModal, closeModal } from '@cjdev/visual-stack-redux';
-
 import { SettingsIcon } from '../../../components/Icons';
 import { BasicButton } from '../../../components/Button';
 import { Spinner } from '../../../components/Spinner';
-
 import { PhaseSelector } from '../components/PhaseSelector';
 import { useModalPlanUpdater } from '../useModalPlanUpdater';
 import { DeleteFooter } from '../components/DeleteFooter';
+import { NotesInput } from '../components/NotesInput';
+import { LinkInput } from '../components/LinkInput';
 import { DateRangeForm } from '../components/PhaseForms/DateRangeForm';
 
 const id = R.prop('id');
@@ -20,6 +21,9 @@ const idsNotEqual = (obj, againstObj) => R.not(R.equals(id(obj), id(againstObj))
 
 const ChildSettingsModal = ({ child, project, track, closeModal }) => {
   const [phase, setPhase] = useState(child.phase);
+  const [notes, setNotes] = useState(child.notes || '');
+  const [link, setLink] = useState(child.link || '');
+
   const getUpdatedPlan = state => {
     const { settings } = state;
     const tracks = R.map(t => {
@@ -28,9 +32,13 @@ const ChildSettingsModal = ({ child, project, track, closeModal }) => {
         if (idsNotEqual(p, project)) return p;
         const children = R.map(c => {
           if (idsNotEqual(c, child)) return c;
+
+          // new child...
           return {
             ...c,
             phase,
+            notes,
+            link,
           };
         })(p.children);
         return {
@@ -51,7 +59,10 @@ const ChildSettingsModal = ({ child, project, track, closeModal }) => {
   const { state, handler } = useModalPlanUpdater(getUpdatedPlan, closeModal);
   const { putApiMeta } = state;
   const { error, loading } = putApiMeta;
-  const formValid = phase !== child.phase;
+
+  const validLink = link === '' || !!ValidUrl.isWebUri(link);
+  const formValid =
+    phase !== child.phase || (validLink && link !== child.link) || notes !== child.notes;
 
   const getPlanWithoutChild = state => {
     const tracks = R.map(t => {
@@ -89,6 +100,10 @@ const ChildSettingsModal = ({ child, project, track, closeModal }) => {
               onChange={e => setPhase(e ? e.value : null)}
               value={phase}
             />
+            <label>Link</label>
+            <LinkInput value={link} onChange={e => setLink(e.target.value || '')} />
+            <label>Notes</label>
+            <NotesInput value={notes} onChange={e => setNotes(e.target.value || '')} />
           </M.Body>
           <M.Footer>
             <span>{error}</span>
