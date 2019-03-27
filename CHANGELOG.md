@@ -1,3 +1,26 @@
+[//]: # ' https://keepachangelog.com/en/1.0.0/'
+[//]: # ' ## Added      '
+[//]: # ' ## Changed    '
+[//]: # ' ## Deprecated '
+[//]: # ' ## Removed    '
+[//]: # ' ## Fixed      '
+[//]: # ' ## Security   '
+
+# 3.14.0 (2019.03.27)
+
+## Added
+
+- Planinator: notes and links to to project and children
+
+## Changed
+
+- Planinator: soften delete language
+
+## Fixed
+
+- Planinator: track button hover
+- Planinator: bottom spacing
+
 # 3.13.1 (2019.03.17)
 
 ## Added
