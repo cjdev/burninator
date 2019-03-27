@@ -4,7 +4,7 @@ import styled from 'styled-components/macro'; // eslint-disable-line no-unused-v
 import { BasicButton } from '../../../../components/Button';
 import * as M from '@cjdev/visual-stack/lib/components/Modal';
 
-export const DeleteFooter = ({ onDelete, buttonText = 'Delete Forever', ...props }) => {
+export const DeleteFooter = ({ onDelete, buttonText = 'Remove', ...props }) => {
   return (
     <M.Footer>
       <div
@@ -15,7 +15,7 @@ export const DeleteFooter = ({ onDelete, buttonText = 'Delete Forever', ...props
           color: #e1523d;
         `}
       >
-        <span>Click to permanently delete this track. DANGER!</span>
+        <span>Click to permanently remove this item from the plan</span>
         <BasicButton type="danger" onClick={onDelete} {...props}>
           {buttonText}
         </BasicButton>
