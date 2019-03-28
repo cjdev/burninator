@@ -23,7 +23,7 @@ const getQuarterMark = date => {
 
 const RoadmapContainer = styled.div`
   margin: 0;
-  width: calc(100vw - 120px);
+  width: calc(100vw - 114px);
   height: calc(100vh - 180px);
   border: 1px solid #ccc;
   border-radius: 2px;
