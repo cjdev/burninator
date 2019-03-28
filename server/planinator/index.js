@@ -167,6 +167,11 @@ const getStartDate = (board, releaseId) => {
   )(board.enhancedIssueList);
   const previous = board.enhancedIssueList[Math.max(ordinalOfPrevious, 0)];
 
+  if (!previous) {
+    console.error('getStartDate: no previous issue!', board.boardId, releaseId, ordinalOfPrevious);
+    return 0;
+  }
+
   // stories that are done have a completedWeekPadded of ''.
   // fall back to completedWeek
   return !!previous.completedWeekPadded
@@ -179,6 +184,10 @@ const getEndDate = (board, releaseId) => {
     R.filter(i => releaseIdLens(i) === releaseId),
     R.last
   )(board.enhancedIssueList);
+  if (!lastInRelease) {
+    console.error('getEndDate: no last issue!', board.boardId, releaseId, lastInRelease);
+    return 0;
+  }
 
   // stories that are done have a completedWeekPadded of ''.
   // fall back to completedWeek
