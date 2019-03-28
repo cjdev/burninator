@@ -1,6 +1,9 @@
 import { createGlobalStyle } from 'styled-components/macro';
 import { getTheme } from './themes.js';
 
+import 'font-awesome/css/font-awesome.css';
+import 'react-select/dist/react-select.css';
+
 const t = getTheme();
 
 export { Normalize } from 'styled-normalize';

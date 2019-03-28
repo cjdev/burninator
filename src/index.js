@@ -4,7 +4,7 @@ import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { ThemeProvider } from 'styled-components/macro';
 
-import { getTheme } from './themes.js';
+import { getTheme } from './themes';
 import configureStore from './state/configureStore';
 
 import App from './containers/App';
@@ -14,9 +14,6 @@ import * as Containers from './containers';
 // without it the layout of the page does not work?
 // eslint-disable-next-line no-unused-vars
 import Board from './containers/Board';
-
-import 'font-awesome/css/font-awesome.css';
-import 'react-select/dist/react-select.css';
 
 const store = configureStore();
 
