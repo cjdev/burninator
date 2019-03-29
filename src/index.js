@@ -15,6 +15,9 @@ import * as Containers from './containers';
 // eslint-disable-next-line no-unused-vars
 import Board from './containers/Board';
 
+import { getAuthProvider } from './auth';
+const AuthCallbackRoute = getAuthProvider().callbackRoute;
+
 const store = configureStore();
 
 ReactDOM.render(
@@ -40,6 +43,7 @@ ReactDOM.render(
             <Route path="/about" component={Containers.AsyncAbout} />
             <Redirect exact={true} from="/plans" to="/plans/1" />
             <Route path="/plans/:planId/:version?" component={Containers.AsyncPlaninator} />
+            {AuthCallbackRoute && <AuthCallbackRoute />}
           </Switch>
         </App>
       </ThemeProvider>

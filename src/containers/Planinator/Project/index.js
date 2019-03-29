@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useContext, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import * as R from 'ramda';
 import styled from 'styled-components/macro'; // eslint-disable-line no-unused-vars
@@ -7,6 +7,7 @@ import { getUTCDate } from '../../../utils';
 import { ChildContainer } from '../Children';
 import { tsToDateString, mapStartDateToTimeline, mapEndDateToWidth, phaseBgMap } from '../utils';
 import { useTitleCrawl } from '../useTitleCrawl';
+import PlaninatorContext from '../context';
 import { SettingsButton } from './Settings';
 import { Tooltip } from '../../../components/Tooltips';
 import { LinkIcon } from '../../../components/Icons';
@@ -49,6 +50,8 @@ const getDates = project => {
 const MIN_WIDTH = 100;
 
 const ButtonSet = ({ project, track, hover }) => {
+  const { authProvider, user } = useContext(PlaninatorContext);
+  const editable = authProvider.isAuthorized(user);
   return (
     <div
       css={`
@@ -91,15 +94,17 @@ const ButtonSet = ({ project, track, hover }) => {
           />
         </a>
       )}
-      <SettingsButton
-        css={`
-          margin-top: -3px;
-          margin-left: 4px;
-        `}
-        project={project}
-        track={track}
-        hover={hover}
-      />
+      {editable && (
+        <SettingsButton
+          css={`
+            margin-top: -3px;
+            margin-left: 4px;
+          `}
+          project={project}
+          track={track}
+          hover={hover}
+        />
+      )}
     </div>
   );
 };
@@ -190,6 +195,7 @@ export const Project = ({ project, settings, track, containerRef }) => {
           <Tooltip effect="solid" id={project.id}>
             <div>{project.name}</div>
             <div>{`${tsToDateString(start)} - ${tsToDateString(end)}`}</div>
+            <div>{project.notes}</div>
           </Tooltip>
           {expandable ? nameWithChevron : project.name}
         </div>

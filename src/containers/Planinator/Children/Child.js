@@ -1,15 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useContext, useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components/macro'; // eslint-disable-line no-unused-vars
 import { getUTCDate } from '../../../utils';
 import { tsToDateString, mapStartDateToTimeline, mapEndDateToWidth, phaseBgMap } from '../utils';
 import { Tooltip } from '../../../components/Tooltips';
 import { SettingsButton } from './Settings';
+import PlaninatorContext from '../context';
 import { LinkIcon } from '../../../components/Icons';
 
 const MIN_WIDTH = 30;
 
 const ButtonSet = ({ data, project, track, hover }) => {
+  const { authProvider, user } = useContext(PlaninatorContext);
+  const editable = authProvider.isAuthorized(user);
   return (
     <div
       css={`
@@ -52,16 +55,18 @@ const ButtonSet = ({ data, project, track, hover }) => {
           />
         </a>
       )}
-      <SettingsButton
-        css={`
-          margin-top: -3px;
-          margin-left: 4px;
-        `}
-        project={project}
-        track={track}
-        child={data}
-        hover={hover}
-      />
+      {editable && (
+        <SettingsButton
+          css={`
+            margin-top: -3px;
+            margin-left: 4px;
+          `}
+          project={project}
+          track={track}
+          child={data}
+          hover={hover}
+        />
+      )}
     </div>
   );
 };
@@ -156,6 +161,7 @@ export const Child = ({ data, track, project, settings, parentOffset = { left: 0
         <Tooltip effect="solid" id={data.id}>
           <div>{data.name}</div>
           <div>{`${tsToDateString(data.startDate)} - ${tsToDateString(data.endDate)}`}</div>
+          <div>{data.notes}</div>
         </Tooltip>
         <div
           css={`

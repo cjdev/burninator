@@ -41,7 +41,7 @@ export const PlanDatabase = root => {
 
   const getPlan = async (planId, version) => {
     const pathToVersion = await getPathToVersion(planId, version);
-    logger.debug('pathToVersion: ', version, pathToVersion);
+    logger.silly('pathToVersion: ', version, pathToVersion);
 
     const planData = await readFile(pathToVersion);
     return planData.toString();

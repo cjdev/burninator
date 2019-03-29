@@ -23,6 +23,7 @@ const defaults = {
   dataDir: path.resolve(__dirname, '../data/'),
   useDirectSocketPort: process.env.REACT_APP_USE_DIRECT_SOCKET_PORT !== undefined,
   PROFILING_THRESHOLD_MS: 5000,
+  authProvider: process.env.REACT_APP_AUTH_PROVIDER || 'None',
 };
 
 const validateRequiredFields = opts => {
@@ -52,6 +53,7 @@ const opts = {
     l(`appVersion`);
     l(`gitHash`);
     l(`dataDir`);
+    l(`authProvider`);
 
     l('API_PORT');
     l(`JIRA_ROOT_URL`);
@@ -62,6 +64,7 @@ const opts = {
     l(`PROFILING_THRESHOLD_MS`);
   },
 };
+// console.log(JSON.stringify(opts, null, 2));
 validateRequiredFields(opts);
 
 export default opts;

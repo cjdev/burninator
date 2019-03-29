@@ -9,6 +9,7 @@ import * as H from './handlers';
 import * as planinator from './planinator';
 import SocketIO from 'socket.io';
 import cors from 'cors';
+import { addAuth } from './auth';
 
 opts.logEnv(logger);
 
@@ -31,10 +32,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(expressLogger);
 app.use(express.static(path.join(__dirname, '..', 'build')));
+addAuth(app, logger);
 
-// <temp>
-app.get('/api/planinator/reset', planinator.handleResetPlan);
-// </temp>
 app.get('/api/planinator/:planId/:version?', planinator.handleGetPlan);
 app.put('/api/planinator/:planId', planinator.handlePutPlan);
 

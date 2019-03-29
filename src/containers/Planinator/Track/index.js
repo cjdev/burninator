@@ -15,9 +15,10 @@ import { ButtonSet } from './ButtonSet';
 import { TimeMarker } from './TimelineMarker';
 
 export const Track = ({ track, position, containerRef }) => {
-  const { state, planId, dispatch, version } = useContext(PlaninatorContext);
+  const { state, planId, dispatch, version, authProvider, user } = useContext(PlaninatorContext);
   const { tracks, settings } = state;
 
+  const editable = authProvider.isAuthorized(user);
   const timelineMarkers = useMemo(() => getTimelineMarkerPositions(settings), [settings]);
   const handleClickDown = async () => {
     const newPlan = {
@@ -85,14 +86,16 @@ export const Track = ({ track, position, containerRef }) => {
         >
           <TrackTitle onClick={() => toggleExpanded(!expanded)}>{track.name}</TrackTitle>
           {track.board && <BoardLink track={track} />}
-          <ButtonSet
-            hover={hover}
-            track={track}
-            totalLength={tracks.length}
-            position={position}
-            onClickUp={handleClickUp}
-            onClickDown={handleClickDown}
-          />
+          {editable && (
+            <ButtonSet
+              hover={hover}
+              track={track}
+              totalLength={tracks.length}
+              position={position}
+              onClickUp={handleClickUp}
+              onClickDown={handleClickDown}
+            />
+          )}
         </div>
       </div>
       {expanded && (

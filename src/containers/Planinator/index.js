@@ -4,15 +4,18 @@ import { Helmet } from 'react-helmet';
 import { withRouter } from 'react-router-dom';
 import { ModalMountPoint } from '@cjdev/visual-stack-redux/lib/components/Modal';
 import { Page, Header, Title } from '../../components/Page';
-import { Panel, PanelTitle, PanelTitleLeft, PanelTitleRight } from '../../components/Panel';
+import { Panel, PanelTitle, PanelTitleLeft } from '../../components/Panel';
 import { SpinnerPanel } from '../../components/Spinner';
-import { SettingsButton } from './PlanSettings';
-import { AddTrackButton } from './Track/AddTrack';
 import { Roadmap } from './Roadmap';
 import { reducer, initialState } from './state';
 import { getPlan } from './api';
 import PlaninatorContext from './context';
 import { useKnownBoards } from './useKnownBoards';
+import { getAuthProvider } from '../../auth';
+import { getUser } from '../../auth/userStorage';
+import { LoginPanelTitleRight } from './LoginPanelTitleRight';
+
+const authProvider = getAuthProvider();
 
 const PlaninatorHeader = ({ noVersions, state }) => {
   return (
@@ -27,8 +30,9 @@ PlaninatorHeader.propTypes = {
   state: PropTypes.any,
 };
 
-const Planinator = ({ match }) => {
+const Planinator = ({ match, location }) => {
   const knownBoards = useKnownBoards();
+  const user = getUser();
 
   const { planId, version } = match.params;
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -46,7 +50,9 @@ const Planinator = ({ match }) => {
   }
 
   return (
-    <PlaninatorContext.Provider value={{ state, dispatch, planId, version, knownBoards }}>
+    <PlaninatorContext.Provider
+      value={{ state, dispatch, planId, version, knownBoards, user, authProvider }}
+    >
       <Page header={<PlaninatorHeader state={state} noVersions={noVersions} />}>
         <Panel>
           {noVersions ? (
@@ -57,10 +63,7 @@ const Planinator = ({ match }) => {
             <>
               <PanelTitle>
                 <PanelTitleLeft>{state.settings.name}</PanelTitleLeft>
-                <PanelTitleRight>
-                  <AddTrackButton />
-                  <SettingsButton name={noVersions ? 'Start' : 'Settings'} state={state} />
-                </PanelTitleRight>
+                <LoginPanelTitleRight state={state} noVersions={noVersions} location={location} />
               </PanelTitle>
               <Roadmap />
             </>
@@ -72,6 +75,9 @@ const Planinator = ({ match }) => {
   );
 };
 Planinator.propTypes = {
+  location: PropTypes.shape({
+    pathname: PropTypes.string,
+  }).isRequired,
   match: PropTypes.shape({
     params: PropTypes.shape({
       planId: PropTypes.string.isRequired,
