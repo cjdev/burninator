@@ -12,6 +12,7 @@ public/CHANGELOG.md
 *.tgz
 *.log
 .DS_Store
+.idea/
 .vscode/
 coverage/
 data*/
