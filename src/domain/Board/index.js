@@ -420,7 +420,7 @@ export default class Board {
   }
 
   constructor(boardId, boardData, urlOptions, exceptedIssues) {
-    const startTs = Date.now();
+    // const startTs = Date.now();
     this.boardId = boardId;
     this.boardIx = getBoardIx(boardData);
     this.opts = getOptions(boardData.configurationSettings, urlOptions, exceptedIssues);
@@ -462,7 +462,7 @@ export default class Board {
         ? calculateJiraVersions2(this.enhancedIssueList, this.versionsById)
         : calculateJiraVersions1(this.enhancedIssueList);
       this.v2ChartData = calculateV2ChartData(this.enhancedIssueList);
-      console.log(`Board.ctor: ${Date.now() - startTs}ms`);
+      // console.log(`Board.ctor: ${Date.now() - startTs}ms`);
     }
   }
 }
