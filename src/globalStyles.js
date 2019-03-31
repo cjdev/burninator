@@ -16,13 +16,9 @@ span
     font-size: 14px;
 }
 body {
-  color: ${t.body.color};
-  font-family: "Open Sans", sans-serif;
   margin: 0;
   padding: 0;
-  background-color: ${t.body.bg}
 }
-
 .vs-application-layout-content a {
   text-decoration: none;
   cursor: pointer;
@@ -43,15 +39,19 @@ body {
   color: #000;
 }
 
+.vs-page-content.vs-page-content {
+  padding: 16px;
+}
+
 .vs-sidenav a:focus svg, .vs-sidenav .expanded > a.vs-sidenav-container-row svg {
   fill: #fed78f !important;
 }
+
 .vs-sidenav-container-row,
 .vs-sideNav-left-logo {
   background: #e06c6b !important;
 }
 
 body, p, td, th, h1, h2, h3, h4, h5 {
-    color: #333;
 }
 `;

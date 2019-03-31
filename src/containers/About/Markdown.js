@@ -11,28 +11,29 @@ export const Markdown = styled(ReactMarkdown)`
   }
 
   & h1 {
-    font-size: 1.6em;
+    font-size: 1.1em;
     margin-top: 24px;
     padding-bottom: 0.2em;
     border-bottom: 1px solid #ddd;
-    font-variant: all-small-caps;
   }
 
   & h1:first-of-type {
     margin-top: 5px;
   }
   & h2 {
-    font-size: 1.4em;
-    margin-top: 10px;
-    font-variant: all-small-caps;
+    margin-top: 4px;
+    margin-bottom: 8px;
+    text-transform: uppercase;
   }
+
   & h3 {
-    font-size: 1.2em;
+    font-size: 1.1em;
   }
 
   & ul {
     list-style: circle outside none;
     color: #333;
+    padding-left: 1em;
   }
 
   & li {

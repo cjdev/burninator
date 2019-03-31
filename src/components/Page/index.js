@@ -21,8 +21,7 @@ Header.propTypes = {
 };
 
 const TitleChildWrapper = styled.div`
-  font-variant: all-small-caps;
-  font-size: 1.5em !important;
+  font-size: 1.2em !important;
 `;
 
 const Title = ({ children }) => (

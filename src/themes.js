@@ -48,7 +48,7 @@ const defaultTheme = {
     },
     done: {
       color: 'inherit',
-      weight: '600',
+      weight: '400',
       bg: 'rgba(76,175,80,.5)',
       border: '3px solid rgba(76,175,80, .7)',
     },

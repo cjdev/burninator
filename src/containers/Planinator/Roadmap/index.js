@@ -55,11 +55,7 @@ const Month = ({ date, width }) => {
         min-width: ${width}px; // ~3px/day
         padding: 0 4px 8px;
         color: #999;
-        font-variant: all-small-caps;
         text-transform: uppercase;
-        & div {
-          font-size: 1.2em;
-        }
         border-bottom: 1px solid #ccc;
       `}
     >

@@ -4,16 +4,13 @@ import styled from 'styled-components/macro';
 import * as R from 'ramda';
 
 export const PanelTitle = styled.div`
-  border: 0px solid black;
   display: flex;
   justify-content: space-between;
   align-items: center;
   line-height: 1.2;
   margin-bottom: 8px;
-  font-size: 1.3rem;
-  font-weight: 500;
   text-transform: uppercase;
-  & div {
+  & * {
     font-size: inherit;
   }
 `;

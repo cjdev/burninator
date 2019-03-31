@@ -99,7 +99,7 @@ const faded = css`
 const cellCss = css`
   &.vs-cell {
     ${props => props.v ? `vertical-align: ${props.v}` : 'vertical-align: middle'};
-    ${props => props.padding ? `padding: ${props.padding}` : 'padding: 4px 8px'};
+    ${props => props.padding ? `padding: ${props.padding}` : 'padding: 2px 4px'};
     ${props => props.margin ? `margin: ${props.margin}` : 'margin: 0'};
     ${props => props.bold === true ? bold : undefined};
     ${props => props.faded && faded};

@@ -79,7 +79,6 @@ export const Track = ({ track, position, containerRef }) => {
           onMouseOut={() => setHover(false)}
           css={`
             user-select: none;
-            text-transform: uppercase;
             display: flex;
             align-items: center;
           `}
