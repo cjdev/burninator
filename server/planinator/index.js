@@ -12,125 +12,6 @@ import Board from '../../src/domain/Board';
 const planDir = path.resolve(opts.dataDir, 'plan');
 const db = PlanDatabase(planDir);
 
-const t = s => new Date(s).getTime();
-
-// eslint-disable-next-line  no-unused-vars
-const ppp = {
-  settings: {
-    name: 'Q1 2019 CJ Proposed Plan: Option #1',
-    startDate: t('2018-10-01Z'),
-    endDate: t('2025-03-01Z'),
-    monthWidthPx: 120,
-  },
-  tracks: [
-    // {
-    //   id: uuid(),
-    //   name: 'fhenderson',
-    //   projects: [
-    //     {
-    //       id: uuid(),
-    //       name: 'Completed #1',
-    //       phase: 'complete',
-    //       startDate: t('2018-10-03Z'),
-    //       endDate: t('2019-02-15Z'),
-    //     },
-    //     {
-    //       id: uuid(),
-    //       name: 'Planinator',
-    //       phase: 'build',
-    //       children: [
-    //         {
-    //           id: uuid(),
-    //           type: 'release',
-    //           phase: 'complete',
-    //           name: 'A Scrolling Timeline',
-    //           startDate: t('2019-02-25Z'),
-    //           endDate: t('2019-03-05Z'),
-    //         },
-    //         {
-    //           id: uuid(),
-    //           type: 'release',
-    //           phase: 'build',
-    //           name: 'Better with non-Jira data',
-    //           startDate: t('2019-03-06Z'),
-    //           endDate: t('2019-04-26Z'),
-    //         },
-    //         {
-    //           id: uuid(),
-    //           type: 'release',
-    //           phase: 'build',
-    //           name: 'Can Read from Jira',
-    //           startDate: t('2019-04-27Z'),
-    //           endDate: t('2019-06-15Z'),
-    //         },
-    //         {
-    //           id: uuid(),
-    //           type: 'release',
-    //           phase: 'launch',
-    //           name: 'Doh! Self Serve',
-    //           startDate: t('2019-06-16Z'),
-    //           endDate: t('2019-07-26Z'),
-    //         },
-    //       ],
-    //     },
-    //     {
-    //       id: uuid(),
-    //       name: 'Member-web Upgrades',
-    //       phase: 'design',
-    //       startDate: t('2019-07-20Z'),
-    //       endDate: t('2019-09-31Z'),
-    //     },
-    //     {
-    //       id: uuid(),
-    //       name: 'Mastery Server',
-    //       phase: 'assess',
-    //       startDate: t('2019-09-01Z'),
-    //       endDate: t('2019-10-01Z'),
-    //     },
-    //   ],
-    // },
-    {
-      id: uuid(),
-      name: 'Ad Systems',
-      board: 436,
-      // projects: [
-      //   {
-      //     id: uuid(),
-      //     name: 'Product Search',
-      //     phase: 'build',
-      //     children: [
-      //       {
-      //         releaseId: '50367',
-      //         phase: 'build',
-      //         id: uuid(),
-      //       },
-      //       {
-      //         releaseId: '50366',
-      //         phase: 'build',
-      //         id: uuid(),
-      //       },
-      //       {
-      //         releaseId: '50368',
-      //         phase: 'build',
-      //         id: uuid(),
-      //       },
-      //     ],
-      //   },
-      // ],
-    },
-    { id: uuid(), name: 'Compliance' },
-    { id: uuid(), name: 'Customer Insights' },
-    { id: uuid(), name: 'Engagement' },
-    { id: uuid(), name: 'FinTech' },
-    { id: uuid(), name: 'Insights' },
-    { id: uuid(), name: 'Personalization' },
-    { id: uuid(), name: 'Platform' },
-    { id: uuid(), name: 'Relationships' },
-    { id: uuid(), name: 'Tracking' },
-  ],
-};
-// console.log('ppp: ', ppp);
-
 export const handlePutPlan = async (req, res) => {
   try {
     //TODO input validation on body
@@ -142,11 +23,6 @@ export const handlePutPlan = async (req, res) => {
     logger.error(err.message);
     res.status(500).send('Internal Server Error');
   }
-};
-
-export const handleResetPlan = async (req, res) => {
-  await db.putPlan('1', ppp);
-  return res.status(200).send('OK');
 };
 
 ///////////////////////////////////////////////////////////////////////////////
