@@ -53,7 +53,8 @@ const getReleaseDiff = (pos, prev) => {
 const IndicatingCell = styled(Td)`
   ${({ indicator, theme, description }) => {
     return `
-      ${description && `border-top: 0;`}
+      border-top-color: transparent !important;
+      ${description && `border-top: 0 !important;`}
       color: ${theme.comparinator[indicator].color};
       font-weight: ${theme.comparinator[indicator].weight};
       background: ${theme.comparinator[indicator].bg};
@@ -197,6 +198,10 @@ const countZeroEstimateIssues = issues => {
   return R.filter(R.propEq('points', 0))(issues).length;
 };
 
+const BorderlessTd = styled(Td)`
+  border-color: transparent !important;
+`;
+
 const buildContent = d => {
   const zeroStories = countZeroEstimateIssues(d.issues);
   const zeroData = zeroStories > 0 ? `(${zeroStories})` : null;
@@ -204,18 +209,18 @@ const buildContent = d => {
     <Table>
       <tbody>
         <Tr>
-          <Td>Total Points</Td>
-          <Td right>{d.totalPoints}</Td>
+          <BorderlessTd>TTTTotal Points</BorderlessTd>
+          <BorderlessTd right>{d.totalPoints}</BorderlessTd>
         </Tr>
         <Tr>
-          <Td>Total Points Remaining</Td>
-          <Td right>{d.totalPointsLeft}</Td>
+          <BorderlessTd>Total Points Remaining</BorderlessTd>
+          <BorderlessTd right>{d.totalPointsLeft}</BorderlessTd>
         </Tr>
         <Tr>
-          <Td>Stories</Td>
-          <Td right>
+          <BorderlessTd>Stories</BorderlessTd>
+          <BorderlessTd right>
             {d.issues.length} {zeroData}
-          </Td>
+          </BorderlessTd>
         </Tr>
       </tbody>
     </Table>
