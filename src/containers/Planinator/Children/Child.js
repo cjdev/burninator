@@ -2,8 +2,8 @@ import React, { useContext, useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components/macro'; // eslint-disable-line no-unused-vars
 import { getUTCDate } from '../../../utils';
-import { tsToDateString, mapStartDateToTimeline, mapEndDateToWidth, phaseBgMap } from '../utils';
-import { Tooltip } from '../../../components/Tooltips';
+import { mapStartDateToTimeline, mapEndDateToWidth, phaseBgMap } from '../utils';
+import { BarTooltip } from '../components/BarTooltip';
 import { SettingsButton } from './Settings';
 import PlaninatorContext from '../context';
 import { LinkIcon } from '../../../components/Icons';
@@ -158,11 +158,7 @@ export const Child = ({ data, track, project, settings, parentOffset = { left: 0
         data-for={data.id}
         data-tip
       >
-        <Tooltip effect="solid" id={data.id}>
-          <div>{data.name}</div>
-          <div>{`${tsToDateString(data.startDate)} - ${tsToDateString(data.endDate)}`}</div>
-          <div>{data.notes}</div>
-        </Tooltip>
+        <BarTooltip data={data} />
         <div
           css={`
             overflow-x: hidden;

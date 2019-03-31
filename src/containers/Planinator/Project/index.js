@@ -9,7 +9,7 @@ import { tsToDateString, mapStartDateToTimeline, mapEndDateToWidth, phaseBgMap }
 import { useTitleCrawl } from '../useTitleCrawl';
 import PlaninatorContext from '../context';
 import { SettingsButton } from './Settings';
-import { Tooltip } from '../../../components/Tooltips';
+import { BarTooltip } from '../components/BarTooltip';
 import { LinkIcon } from '../../../components/Icons';
 
 const getEarliestStart = R.pipe(
@@ -192,11 +192,7 @@ export const Project = ({ project, settings, track, containerRef }) => {
             margin-right: 4px;
           `}
         >
-          <Tooltip effect="solid" id={project.id}>
-            <div>{project.name}</div>
-            <div>{`${tsToDateString(start)} - ${tsToDateString(end)}`}</div>
-            <div>{project.notes}</div>
-          </Tooltip>
+          <BarTooltip data={{ ...project, startDate: start, endDate: end }} />
           {expandable ? nameWithChevron : project.name}
         </div>
         <ButtonSet project={project} track={track} hover={hover} />

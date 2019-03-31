@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components/macro'; // eslint-disable-line no-unused-vars
 import PlaninatorContext from '../context';
-import { Tooltip } from '../../../components/Tooltips';
+import { BoardTooltip } from '../components/BarTooltip';
 import { BoardsIcon } from '../../../components/Icons';
 import { MAX_ACCEPTABLE_BOARD_AGE, daysSince } from '../utils';
 
@@ -24,11 +24,7 @@ export const BoardLink = ({ track }) => {
           }
         `}
       >
-        <Tooltip effect="solid" id={track.id}>
-          <div>{board.backlogName}</div>
-          <div>Board is {boardAge} days old</div>
-          {boardNeedsUpdate && <div>Please update asap!</div>}
-        </Tooltip>
+        <BoardTooltip data={{ ...track, backlogName: board.backlogName }} age={boardAge} />
         <BoardsIcon
           data-tip
           data-for={track.id}
