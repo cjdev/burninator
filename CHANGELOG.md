@@ -6,6 +6,22 @@
 [//]: # ' ## Fixed      '
 [//]: # ' ## Security   '
 
+# 3.15.0 (2019.03.31)
+
+## Changed
+
+- Comparinator: color / font / layout tweaks
+
+## Fixed
+
+- General: upgrade dependencies
+- Planinator: clearer tooltips
+- Planinator: plan width
+
+## Security
+
+- Planinator: Opt-in authentication / authorization based on CJ auth flow
+
 # 3.14.0 (2019.03.27)
 
 ## Added
