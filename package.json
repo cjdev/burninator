@@ -39,8 +39,8 @@
     "webpack-bundle-analyzer": "^3.0.3"
   },
   "dependencies": {
-    "@cjdev/visual-stack": "^3.3.0",
-    "@cjdev/visual-stack-redux": "^3.3.0",
+    "@cjdev/visual-stack": "^4.0.1",
+    "@cjdev/visual-stack-redux": "^4.0.1",
     "@mdi/js": "^3.4.93",
     "@mdi/react": "^1.1.0",
     "axios": "0.18.0",
