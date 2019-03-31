@@ -462,7 +462,7 @@ export default class Board {
         ? calculateJiraVersions2(this.enhancedIssueList, this.versionsById)
         : calculateJiraVersions1(this.enhancedIssueList);
       this.v2ChartData = calculateV2ChartData(this.enhancedIssueList);
-      console.log(`Board.ctor: ${Date.now() - startTs}ms`);
+      // console.log(`Board.ctor: ${Date.now() - startTs}ms`);
     }
   }
 }
