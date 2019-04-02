@@ -6,8 +6,10 @@ import PlaninatorContext from './context';
 import { AddTrackButton } from './Track/AddTrack';
 import { SettingsButton } from './PlanSettings';
 
-const LoginButton = ({ authProvider, redirectPath }) => (
-  <BasicButton onClick={() => authProvider.login(redirectPath)}>Login to Edit</BasicButton>
+const LoginButton = ({ authProvider, redirectPath, ...rest }) => (
+  <BasicButton {...rest} onClick={() => authProvider.login(redirectPath)}>
+    Login to Edit
+  </BasicButton>
 );
 LoginButton.propTypes = {
   authProvider: PropTypes.object.isRequired,
@@ -34,12 +36,16 @@ export const LoginPanelTitleRight = ({ location, noVersions, state }) => {
     <PanelTitleRight>
       {showEditButtons && (
         <>
-          <AddTrackButton />
+          <AddTrackButton data-testid="add-track-button" />
           <SettingsButton name={noVersions ? 'Start' : 'Settings'} state={state} />
         </>
       )}
       {showLoginButton && (
-        <LoginButton authProvider={authProvider} redirectPath={location.pathname} />
+        <LoginButton
+          data-testid="login-button"
+          authProvider={authProvider}
+          redirectPath={location.pathname}
+        />
       )}
       {showUnauthorizedMessage && <div>Edit not available</div>}
     </PanelTitleRight>

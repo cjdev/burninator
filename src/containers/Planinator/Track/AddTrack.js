@@ -89,8 +89,10 @@ const AddTrackModal = ({ closeModal }) => {
 AddTrackModal.propTypes = {
   closeModal: PropTypes.func.isRequired,
 };
-const AddTrackButtonPure = ({ openModal, closeModal }) => (
-  <BasicButton onClick={() => openModal(AddTrackModal, { closeModal })}>Add Track</BasicButton>
+const AddTrackButtonPure = ({ openModal, closeModal, ...rest }) => (
+  <BasicButton {...rest} onClick={() => openModal(AddTrackModal, { closeModal })}>
+    Add Track
+  </BasicButton>
 );
 AddTrackButtonPure.propTypes = {
   openModal: PropTypes.func.isRequired,
