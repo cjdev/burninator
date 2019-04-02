@@ -22,6 +22,7 @@ const ButtonSet = ({ data, project, track, hover }) => {
     >
       {data.link && (
         <a
+          data-testid="buttonset-datalink"
           css={`
             && {
               text-decoration: none;
@@ -57,6 +58,7 @@ const ButtonSet = ({ data, project, track, hover }) => {
       )}
       {editable && (
         <SettingsButton
+          data-testid="buttonset-settingsbutton"
           css={`
             margin-top: -3px;
             margin-left: 4px;
@@ -138,6 +140,7 @@ export const Child = ({ data, track, project, settings, parentOffset = { left: 0
   return (
     <>
       <div
+        data-testid="child"
         onMouseOver={() => setHover(true)}
         onMouseOut={() => setHover(false)}
         css={`
@@ -180,7 +183,7 @@ Child.propTypes = {
   project: PropTypes.object,
   track: PropTypes.object,
   parentOffset: PropTypes.shape({
-    left: PropTypes.number,
-    width: PropTypes.number,
+    left: PropTypes.number.isRequired,
+    width: PropTypes.number.isRequired,
   }),
 };
