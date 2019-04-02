@@ -449,14 +449,11 @@ export default class Board {
       );
       // debugTableEnhancedIssueList(this.enhancedIssueList);
 
-      this.versionsById = R.reduce(
-        (acc, val) => ({
-          ...acc,
-          [val.id]: val,
-        }),
-        {},
-        this.serverBoardData.allJiraVersions || []
-      );
+      this.versionsById = R.pipe(
+        R.groupBy(R.prop('id')),
+        R.map(R.prop(0))
+      )(this.serverBoardData.allJiraVersions || []);
+
       this.hasVersionObjects = R.any(containsVersionObj)(this.enhancedIssueList);
       this.jiraVersions = this.hasVersionObjects
         ? calculateJiraVersions2(this.enhancedIssueList, this.versionsById)

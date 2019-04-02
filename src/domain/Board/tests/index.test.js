@@ -1,5 +1,6 @@
 import moment from 'moment';
 import R from 'ramda';
+import Board from '../';
 import * as BoardExports from '../';
 
 const format = m => moment(m).format('YYYY-MM-DD');
@@ -319,6 +320,56 @@ describe('Board', () => {
       expect(moment(zero.completedWeekPadded).format('YYYY-MM-DD')).toEqual('2018-01-20');
       expect(moment(two.completedWeek).format('YYYY-MM-DD')).toEqual('2018-02-17');
       expect(moment(two.completedWeekPadded).format('YYYY-MM-DD')).toEqual('2018-03-10');
+    });
+  });
+
+  describe('ctor', () => {
+    const boardId = 1234;
+    const boardData = {
+      backlogName: 'backlogname',
+      lastUpdate: new Date().getTime(),
+      configurationSettings: {},
+    };
+    const urlOptions = {};
+    const exceptedIssues = [];
+
+    test('should return board', () => {
+      const board = new Board(boardId, boardData, urlOptions, exceptedIssues);
+
+      expect(board).not.toBe(null);
+      expect(board.boardId).toEqual(boardId);
+      expect(board.boardIx).toContain(boardData.backlogName);
+      expect(board.opts).not.toBeNull();
+      expect(board.serverBoardData).toEqual(boardData);
+      expect(board.backlogName).toEqual(boardData.backlogName);
+      expect(board.lastUpdate).toEqual(boardData.lastUpdate);
+      expect(board.basisDate).toEqual(boardData.lastUpdate);
+    });
+
+    test('should return error when final velocity === 0', () => {
+      const board = new Board(boardId, boardData, urlOptions, exceptedIssues);
+
+      expect(board.error.message).toEqual('Velocity is 0. Cannot draw board');
+      expect(board.enhancedIssueList.length).toEqual(0);
+    });
+
+    test('should return versionsById ', () => {
+      const boardDataWithVersions = {
+        ...boardData,
+        allJiraVersions: [{ id: 1 }, { id: 2 }, { id: 12345 }],
+      };
+      const urlOptionsWithVelocity = {
+        ...urlOptions,
+        v: 10, // override
+      };
+      const board = new Board(
+        boardId,
+        boardDataWithVersions,
+        urlOptionsWithVelocity,
+        exceptedIssues
+      );
+      // console.log('board.versionsById: ', board.versionsById);
+      expect(board.versionsById).toEqual({ 1: { id: 1 }, 2: { id: 2 }, 12345: { id: 12345 } });
     });
   });
 });
