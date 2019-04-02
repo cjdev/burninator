@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from 'testing-utils';
+import { render } from '../../../../testing/testing-utils';
 
 import V2Chart from '../';
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import PlaninatorContext from '../../context';
 import { Child } from '../Child';
-import { renderWithRedux } from 'testing-utils';
+import { renderWithRedux } from '../../../../testing/testing-utils';
 
 const reducer = (state, action) => state;
 const settings = { monthWidthPx: 3, startDate: new Date('2001-01-01').getTime() };
