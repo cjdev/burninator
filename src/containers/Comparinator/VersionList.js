@@ -358,7 +358,7 @@ VersionHeader.propTypes = {
   title: PropTypes.string.isRequired,
 };
 
-class VersionList2 extends React.Component {
+export class VersionList2 extends React.Component {
   static propTypes = {
     getBoard: PropTypes.func.isRequired,
     getBoardVersions: PropTypes.func.isRequired,

@@ -14,7 +14,7 @@ import { isNilOrEmpty } from '../../../utils';
 import { PhaseSelector } from '../components/PhaseSelector';
 import { getPhaseForm } from '../components/PhaseForms';
 
-const AddProjectModal = ({ closeModal, track }) => {
+export const AddProjectModal = ({ closeModal, track }) => {
   const getUpdatedPlan = state => {
     const finalPhaseFormData = phaseFormData.convert();
     const newTracks = R.map(t => {

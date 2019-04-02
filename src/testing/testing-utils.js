@@ -5,6 +5,12 @@ import { Provider, connect } from 'react-redux';
 import { render } from 'react-testing-library';
 export * from 'react-testing-library';
 
+export const simpleReducer = (state, action) => state;
+export const loggingReducer = (state, action) => {
+  console.log('action: ', action);
+  return state;
+};
+
 export const renderWithRedux = reducer => (
   ui,
   { initialState, store = createStore(reducer, initialState) } = {}
