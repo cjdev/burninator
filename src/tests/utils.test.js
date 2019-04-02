@@ -16,7 +16,8 @@ import {
   weekDaysBetween,
 } from '../utils';
 
-const testDate = new Date('2018-01-02 12:34:56');
+// const testDate = new Date('2018-01-02 12:34:56');
+const testDate = new Date(Date.UTC(2018, 0, 2, 20, 34, 56));
 
 describe('utils', () => {
   describe('weekDaysSince', () => {
@@ -66,7 +67,7 @@ describe('utils', () => {
     });
   });
   describe('formatLongDate', () => {
-    test('should format valid date as M/D/YY', () => {
+    test('should format valid date as MM/DD/YYYY HH:mm:ss', () => {
       expect(formatLongDate(testDate)).toEqual('01/02/2018 12:34:56');
     });
     test('should format invalid date as --', () => {
