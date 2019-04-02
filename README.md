@@ -1,5 +1,7 @@
 # Burninator
 
+[![Build Status](https://travis-ci.org/cjdev/burninator.svg?branch=master)](https://travis-ci.org/cjdev/burninator)
+
 Jira-driven burndowns.
 
 #### Installation
