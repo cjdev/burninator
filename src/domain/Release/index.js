@@ -43,12 +43,22 @@ const getPastSprintIssuesByVersion = R.pipe(
   // debug
   R.groupBy(R.prop('vId'))
 );
-const getEndOfLastInPast = R.pipe(
-  R.map(i => R.filter(e => e.to === '6')(i.statusHistory.entries || [])),
-  R.sort((a, b) => new Date(a.ts) - new Date(b.ts)),
-  R.last,
-  R.prop('ts')
-);
+
+const getEndOfLastInPast = (vId, issues) => {
+  // console.log('getEndOfLastInPast vId, issues.length: ', vId, issues.length);
+  const result = R.pipe(
+    R.map(i => R.filter(e => e.to === '6')(i.statusHistory.entries || [])),
+    R.filter(i => i.length > 0),
+    R.flatten,
+    // R.forEach(x => console.log('beforeSort', vId, x)),
+    R.sort((a, b) => new Date(a.ts) - new Date(b.ts)),
+    // R.forEach(x => console.log('afterSort', vId, x.ts)),
+    R.last,
+    R.prop('ts')
+  )(issues);
+  return result;
+};
+
 const getStartEnd = (
   vId,
   backlogIssues = [],
@@ -56,6 +66,7 @@ const getStartEnd = (
   enhancedIssueList,
   version
 ) => {
+  // console.log('>> getStartEnd:', vId);
   // startDate:
   //  1. looks for earliest 'in-progress' among all the stories in past
   //  2. if none found, find the first story in backlog, get story before it in the big list,
@@ -67,16 +78,17 @@ const getStartEnd = (
   if (!startDate) {
     console.log(`NO STARTDATE FOR ${vId} ${version.name}`);
   }
+  // console.log(vId, 'startDate: ', startDate);
 
   // endDate:
   //  1. look for latest completedWeekPadded in backlog
   //  2. if none found, find latest resolution date in past list
   //
   let endDate = getLastCompletedWeekPadded(backlogIssues);
-  console.log(vId, 'endDate: ', endDate);
+  // console.log(vId, 'endDate: ', endDate);
   if (!endDate) {
-    endDate = getEndOfLastInPast(pastSprintIssues);
-    console.log(vId, 'past endDate: ', endDate);
+    endDate = getEndOfLastInPast(vId, pastSprintIssues);
+    // console.log(vId, 'past endDate: ', endDate);
   }
   if (!endDate) {
     console.log(`NO END FOR ${vId} ${version.name}`);
@@ -107,14 +119,28 @@ const getStartEnd = (
 //
 // NOTE the same story can be in both lists
 
+const debugVersionsById = versions => {
+  return R.pipe(
+    R.values,
+    R.map(R.pick(['id', 'name'])),
+    rDebug,
+    R.keys,
+    R.length
+  )(versions);
+};
+
 export const getReleases = (enhancedIssueList, versionsById, boardData) => {
-  // console.log('enhancedIssueList: ', enhancedIssueList.length);
+  // console.log('>>>>>>>>>>>>>>>>>>>>>>>>>> Release.getReleases');
+
+  // console.log('enhancedIssueList: ', enhancedIssueList[0]);
+  // console.log('versionsById: ', debugVersionsById(versionsById));
+  // console.log('>> boardData: ', R.keys(boardData));
 
   const backlogIssueListByVersion = getBacklogIssuesByVersion(enhancedIssueList || []);
-  // console.log('backlogIssueList.length: ', R.keys(backlogIssueListByVersion));
+  // console.log('>> backlogIssueList.length: ', R.keys(backlogIssueListByVersion));
 
   const pastSprintIssuesByVersion = getPastSprintIssuesByVersion(boardData.sprints || []);
-  // console.log('pastSprintIssueByVresion: ', R.keys(pastSprintIssuesByVersion));
+  // console.log('>> pastSprintIssueByVersion: ', R.keys(pastSprintIssuesByVersion));
 
   const combinedVersionIdSet = R.pipe(
     R.keys,
@@ -123,7 +149,7 @@ export const getReleases = (enhancedIssueList, versionsById, boardData) => {
     R.uniq,
     R.sort((a, b) => a.localeCompare(b))
   )(pastSprintIssuesByVersion);
-  // console.log(': ', combinedVersionIdSet);
+  // console.log('>> combinedVersionIdSet ', combinedVersionIdSet);
 
   const finalVersionDates = R.pipe(
     R.map(vId => {
@@ -143,5 +169,6 @@ export const getReleases = (enhancedIssueList, versionsById, boardData) => {
     R.map(R.prop(0))
   )(combinedVersionIdSet);
   // console.log('finalVersionDates: ', finalVersionDates);
+  // console.log('finalVersionDates: ', R.keys(finalVersionDates).length);
   return finalVersionDates;
 };
