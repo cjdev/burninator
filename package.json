@@ -100,7 +100,7 @@
     "lint": "eslint --ext .js src/ server/",
     "format": "prettier --write \"{src,server}/**/*.js\"",
     "server": "REACT_APP_VERSION=$npm_package_version REACT_APP_GIT_HASH=$(git rev-parse HEAD) babel-node ./server/index.js",
-    "server:dev": "nodemon --watch server --exec npm run server",
+    "server:dev": "nodemon --watch server --watch src/domain --ignore '*.test.js' --exec npm run server",
     "prod": "REACT_APP_VERSION=$npm_package_version REACT_APP_GIT_HASH=$(git rev-parse HEAD) npm run server",
     "sync": "babel-node --presets es2015,stage-2 --plugins transform-object-rest-spread ./server/sync/cli.js",
     "test": "react-scripts test --env=jsdom",
