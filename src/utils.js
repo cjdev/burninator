@@ -9,6 +9,7 @@ import qs from 'qs';
 
 export const JIRA_WEB_URL = process.env.REACT_APP_JIRA_ROOT_URL;
 export const mapIndex = R.addIndex(R.map);
+export const rDebug = R.forEach(console.log);
 
 export const toTitleCase = str =>
   str.replace(/\w\S*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());

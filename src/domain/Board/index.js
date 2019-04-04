@@ -11,6 +11,7 @@ import isSameDay from 'date-fns/is_same_day';
 
 import { diffDates, formatDate, formatIso, formatTs, weekDaysBetween } from '../../utils';
 import getOptions from './options';
+import { getReleases } from '../Release';
 
 const hoursInAWeek = 7 * 24;
 const defaultToEmpty = R.defaultTo({});
@@ -461,5 +462,9 @@ export default class Board {
       this.v2ChartData = calculateV2ChartData(this.enhancedIssueList);
       // console.log(`Board.ctor: ${Date.now() - startTs}ms`);
     }
+  }
+
+  getReleases() {
+    return getReleases(this.enhancedIssueList, this.versionsById, this.boardData);
   }
 }
