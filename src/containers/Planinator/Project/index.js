@@ -5,7 +5,7 @@ import styled from 'styled-components/macro'; // eslint-disable-line no-unused-v
 import { ChevronDownIcon, ChevronRightIcon } from '../../../components/Icons';
 import { getUTCDate } from '../../../utils';
 import { ChildContainer } from '../Children';
-import { tsToDateString, mapStartDateToTimeline, mapEndDateToWidth, phaseBgMap } from '../utils';
+import { mapStartDateToTimeline, mapEndDateToWidth, phaseBgMap } from '../utils';
 import { useTitleCrawl } from '../useTitleCrawl';
 import PlaninatorContext from '../context';
 import { SettingsButton } from './Settings';
