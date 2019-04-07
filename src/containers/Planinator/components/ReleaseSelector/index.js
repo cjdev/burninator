@@ -7,6 +7,7 @@ import { Spinner } from '../../../../components/Spinner';
 import { fetchBoard } from '../../../../api';
 import Board from '../../../../domain/Board';
 import PlaninatorContext from '../../context';
+import { ReleaseOption } from './ReleaseOption.js';
 
 const Select = styled(ReactSelector)`
   margin-bottom: 0.8rem;
@@ -25,11 +26,18 @@ export const ReleaseSelector = ({ board, ...rest }) => {
   useEffect(() => {
     fetchBoard(board, 'current').then(boardData => {
       const b = new Board(board, boardData);
+
       const releases = R.pipe(
+        R.values,
         R.filter(v => v.id !== 'undefined'),
-        R.map(v => ({ value: v.id, label: v.name })),
-        R.sortBy(R.prop('label'))
-      )(b.jiraVersions);
+        R.map(v => ({
+          ...v,
+          value: v.id,
+          label: v.name,
+          endDateTs: new Date(v.endDate).getTime(),
+        })),
+        R.sortBy(R.prop('endDateTs'))
+      )(b.getReleases());
       setReleases(releases);
     });
   }, [board]);
@@ -37,7 +45,13 @@ export const ReleaseSelector = ({ board, ...rest }) => {
   return releases && boardDetails ? (
     <>
       <label>Releases from {boardDetails.backlogName}</label>
-      <Select options={releases} {...rest} multi placeholder="Select releases..." />
+      <Select
+        optionComponent={ReleaseOption}
+        options={releases}
+        {...rest}
+        multi
+        placeholder="Select releases..."
+      />
     </>
   ) : (
     <div>
