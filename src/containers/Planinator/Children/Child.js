@@ -5,6 +5,7 @@ import { getUTCDate } from '../../../utils';
 import { mapStartDateToTimeline, mapEndDateToWidth, phaseBgMap } from '../utils';
 import { BarTooltip } from '../components/BarTooltip';
 import { SettingsButton } from './Settings';
+import { useTitleCrawl } from '../useTitleCrawl';
 import PlaninatorContext from '../context';
 import { LinkIcon } from '../../../components/Icons';
 
@@ -115,7 +116,14 @@ const adjust = (naturalLeft, naturalWidth, parentOffset) => {
   };
 };
 
-export const Child = ({ data, track, project, settings, parentOffset = { left: 0, width: 0 } }) => {
+export const Child = ({
+  data,
+  track,
+  project,
+  settings,
+  parentOffset = { left: 0, width: 0 },
+  containerRef,
+}) => {
   const start = getUTCDate(data.startDate);
   const end = getUTCDate(data.endDate);
 
@@ -135,11 +143,13 @@ export const Child = ({ data, track, project, settings, parentOffset = { left: 0
   //   });
   // }, []);
 
+  const [titleRef, titlePadding] = useTitleCrawl(containerRef);
   const [hover, setHover] = useState(false);
 
   return (
     <>
       <div
+        ref={titleRef}
         data-testid="child"
         onMouseOver={() => setHover(true)}
         onMouseOut={() => setHover(false)}
@@ -153,6 +163,7 @@ export const Child = ({ data, track, project, settings, parentOffset = { left: 0
           border: 1px solid #999;
           border-radius: 2px;
           padding: 8px;
+          padding-left: ${Math.max(8, titlePadding)}px;
 
           display: flex;
           align-items: center;

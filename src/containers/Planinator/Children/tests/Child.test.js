@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import PlaninatorContext from '../../context';
 import { Child } from '../Child';
 import { renderWithRedux } from '../../../../testing/testing-utils';
@@ -30,9 +30,18 @@ describe('<Child />', () => {
       parentOffset,
     };
 
+    const ChildContainer = () => {
+      const containerRef = useRef(null);
+      return (
+        <div ref={containerRef}>
+          <Child {...props} containerRef={containerRef} />
+        </div>
+      );
+    };
+
     const { getByTestId, getByText } = renderWithRedux(reducer)(
       <PlaninatorContext.Provider value={{ authProvider }}>
-        <Child {...props} />
+        <ChildContainer />
       </PlaninatorContext.Provider>
     );
     // console.log(debug());
@@ -60,9 +69,18 @@ describe('<Child />', () => {
       parentOffset,
     };
 
+    const ChildContainer = () => {
+      const containerRef = useRef(null);
+      return (
+        <div ref={containerRef}>
+          <Child {...props} containerRef={containerRef} />
+        </div>
+      );
+    };
+
     const { queryByTestId } = renderWithRedux(reducer)(
       <PlaninatorContext.Provider value={{ authProvider }}>
-        <Child {...props} />
+        <ChildContainer />
       </PlaninatorContext.Provider>
     );
     expect(queryByTestId('buttonset-datalink')).not.toBeInTheDocument();
@@ -88,10 +106,18 @@ describe('<Child />', () => {
     const noAuthProvider = {
       isAuthorized: () => false,
     };
+    const ChildContainer = () => {
+      const containerRef = useRef(null);
+      return (
+        <div ref={containerRef}>
+          <Child {...props} containerRef={containerRef} />
+        </div>
+      );
+    };
 
     const { queryByTestId } = renderWithRedux(reducer)(
       <PlaninatorContext.Provider value={{ authProvider: noAuthProvider }}>
-        <Child {...props} />
+        <ChildContainer />
       </PlaninatorContext.Provider>
     );
     expect(queryByTestId('child')).toHaveStyleRule('left', '3px');
@@ -118,9 +144,17 @@ describe('<Child />', () => {
       isAuthorized: () => false,
     };
 
+    const ChildContainer = () => {
+      const containerRef = useRef(null);
+      return (
+        <div ref={containerRef}>
+          <Child {...props} containerRef={containerRef} />
+        </div>
+      );
+    };
     const { queryByTestId } = renderWithRedux(reducer)(
       <PlaninatorContext.Provider value={{ authProvider: noAuthProvider }}>
-        <Child {...props} />
+        <ChildContainer />
       </PlaninatorContext.Provider>
     );
     expect(queryByTestId('child')).toHaveStyleRule('left', '-31px');
@@ -147,10 +181,18 @@ describe('<Child />', () => {
     const noAuthProvider = {
       isAuthorized: () => false,
     };
+    const ChildContainer = () => {
+      const containerRef = useRef(null);
+      return (
+        <div ref={containerRef}>
+          <Child {...props} containerRef={containerRef} />
+        </div>
+      );
+    };
 
     const { queryByTestId } = renderWithRedux(reducer)(
       <PlaninatorContext.Provider value={{ authProvider: noAuthProvider }}>
-        <Child {...props} />
+        <ChildContainer />
       </PlaninatorContext.Provider>
     );
     expect(queryByTestId('buttonset-settingsbutton')).not.toBeInTheDocument();

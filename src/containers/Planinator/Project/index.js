@@ -203,6 +203,7 @@ export const Project = ({ project, settings, track, containerRef }) => {
           project={project}
           settings={settings}
           parentOffset={{ left, width }}
+          containerRef={containerRef}
         />
       )}
     </div>

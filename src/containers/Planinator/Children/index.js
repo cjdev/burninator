@@ -6,7 +6,7 @@ import isAfter from 'date-fns/is_after';
 import { mapIndex } from '../../../utils';
 import { Child } from './Child';
 
-const ChildRow = ({ data, track, project, settings, parentOffset }) => {
+const ChildRow = ({ data, track, project, settings, parentOffset, containerRef }) => {
   return (
     <div
       css={`
@@ -23,6 +23,7 @@ const ChildRow = ({ data, track, project, settings, parentOffset }) => {
           project={project}
           settings={settings}
           parentOffset={parentOffset}
+          containerRef={containerRef}
         />
       ))(data)}
     </div>
@@ -36,7 +37,7 @@ ChildRow.propTypes = {
   parentOffset: PropTypes.object,
 };
 
-export const ChildContainer = ({ track, project, settings, parentOffset }) => {
+export const ChildContainer = ({ track, project, settings, parentOffset, containerRef }) => {
   const { children } = project;
   //
   // group the children as follows
@@ -106,6 +107,7 @@ export const ChildContainer = ({ track, project, settings, parentOffset }) => {
           project={project}
           settings={settings}
           parentOffset={parentOffset}
+          containerRef={containerRef}
         />
       ))(childRows)}
     </div>
