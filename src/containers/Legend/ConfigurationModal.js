@@ -27,7 +27,7 @@ const Label = styled.label`
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  font-weight: 600;
+  font-weight: 500;
 `;
 
 const Input = styled.input`
@@ -43,45 +43,34 @@ const Input = styled.input`
   }
 `;
 
-const NumberInput = ({ width = '50px', ...rest }) => {
-  return <Input type="number" width={width} {...rest} textAlign="right" />;
+const NumberInput = ({ width = '40px', ...rest }) => {
+  return (
+    <Input
+      type="text"
+      css={`
+        && {
+          width: 90%;
+          margin: 0 4px;
+        }
+      `}
+      {...rest}
+      textAlign="right"
+    />
+  );
 };
 NumberInput.propTypes = {
   width: PropTypes.number,
 };
 
 const DD = styled.div`
-  display: flex;
+  display: flex:
   flex-direction: column;
   align-items: center;
-  & div {
-    margin-right: 10px;
-    margin-bottom: 3px;
-  }
 `;
 
-//
-// Generic container for input things
-// only allows for an area definition
-//
-const InputAreaBase = styled.div`
-  ${area};
-`;
-
-const HorizontalInputArea = styled(InputAreaBase)`
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-`;
-
-const FormContainer = styled.div`
-  display: grid;
-  grid-gap: 25px 10px;
-  grid-template-columns: auto 1fr;
-  grid-template-areas:
-    'velocity-label  velocity-input'
-    'scope-label     scope-input'
-    'stalled-label   stalled-input';
+const FormContainer = styled.div``;
+const Section = styled.div`
+  margin: 0 8px 24px 8px;
 `;
 
 class ModalDialog extends React.Component {
@@ -191,53 +180,66 @@ class ModalDialog extends React.Component {
             <M.Header title="Configure" />
             <M.Body>
               <FormContainer>
-                <Label area="velocity-label">Velocity Prediction</Label>
-                <HorizontalInputArea area="velocity-input">
-                  <Input
-                    ref={value => {
-                      this.velocityInput = value;
-                    }}
-                    type="number"
-                    name="velocity"
-                    onChange={this.handleVelocityChange}
-                    placeholder={processed.velocityData.naturalVelocity}
-                    value={this.state.velocity}
-                    width="100px"
-                  />
-                  <Hint>Must be a number > 0</Hint>
-                </HorizontalInputArea>
-
-                <Label area="scope-label">Scope Growth Prediction</Label>
-                <HorizontalInputArea area="scope-input">
-                  <Input
-                    name="scopeGrowth"
-                    type="number"
-                    step="0.1"
-                    min="0"
-                    max="1"
-                    width="100px"
-                    placeholder={config.scopeGrowth.default}
-                    value={this.state.scopeGrowth}
-                    onChange={this.handleScopeGrowthChange}
-                  />
-                  <Hint>Must be a decimal between 0 and 1</Hint>
-                </HorizontalInputArea>
-
-                <Label area="stalled-label">Stalled Story Configuration</Label>
-                <HorizontalInputArea area="stalled-input">
-                  {[1, 2, 3, 5, 8, 13].map(point => (
-                    <DD key={point}>
-                      <div>{point} pt</div>
-                      <NumberInput
-                        min="0"
-                        name={`stall-${point}`}
-                        value={this.state.stalled[point] || ''}
-                        data-points={point}
-                        onChange={this.handleStalledStoryChange}
-                      />
-                    </DD>
-                  ))}
-                </HorizontalInputArea>
+                <div
+                  css={`
+                    display: flex;
+                    justify-content: space-between;
+                  `}
+                >
+                  <Section>
+                    <Label area="velocity-label">Velocity Prediction</Label>
+                    <Input
+                      ref={value => {
+                        this.velocityInput = value;
+                      }}
+                      type="text"
+                      name="velocity"
+                      onChange={this.handleVelocityChange}
+                      placeholder={processed.velocityData.naturalVelocity}
+                      value={this.state.velocity}
+                    />
+                    <Hint>Must be a number > 0</Hint>
+                  </Section>
+                  <Section>
+                    <Label area="scope-label">Scope Growth Prediction</Label>
+                    <Input
+                      name="scopeGrowth"
+                      type="text"
+                      placeholder={config.scopeGrowth.default}
+                      value={this.state.scopeGrowth}
+                      onChange={this.handleScopeGrowthChange}
+                    />
+                    <Hint>Must be a decimal between 0 and 1</Hint>
+                  </Section>
+                </div>
+                <Section>
+                  <Label area="stalled-label">Stalled Story Configuration</Label>
+                  <div
+                    css={`
+                      display: flex;
+                      justify-content: space-between;
+                    `}
+                  >
+                    {[1, 2, 3, 5, 8, 13].map(point => (
+                      <DD key={point}>
+                        <div
+                          css={`
+                            text-align: center;
+                          `}
+                        >
+                          {point} pt
+                        </div>
+                        <NumberInput
+                          min="0"
+                          name={`stall-${point}`}
+                          value={this.state.stalled[point] || ''}
+                          data-points={point}
+                          onChange={this.handleStalledStoryChange}
+                        />
+                      </DD>
+                    ))}
+                  </div>
+                </Section>
               </FormContainer>
             </M.Body>
             <M.Footer>
