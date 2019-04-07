@@ -1,5 +1,5 @@
 import * as R from 'ramda';
-import { rDebug } from '../../utils';
+import { rDebug } from '../../utils'; //eslint-disable-line
 
 const versionIdLens = R.view(R.lensPath(['versionObj', 'id']));
 
@@ -18,20 +18,18 @@ const getFirstInProgress = issues => {
   )(issues);
 };
 const getStartOfFirstInBacklog = (versionIssues, allIssues) => {
-  // console.log('getStartOfFirstInBacklog');
   const firstWithVersion = R.pipe(
     R.map(R.pick(['key', 'completedWeekPadded', 'ordinal'])),
-    R.sort((a, b) => a.ordinal - b.ordinal),
-    // debug,
+    R.sortBy(R.prop('ordinal')),
     R.head
   )(versionIssues);
   const previous = R.find(R.propEq('ordinal', firstWithVersion.ordinal - 1))(allIssues);
   // console.log('previous: ', previous.ordinal, previous.completedWeekPadded);
   return previous.completedWeekPadded;
 };
+
 const getLastCompletedWeekPadded = R.pipe(
-  R.sort((a, b) => a.ordinal - b.ordinal),
-  // debug,
+  R.sortBy(R.prop('ordinal')),
   R.last,
   R.prop('completedWeekPadded')
 );
@@ -40,23 +38,18 @@ const getPastSprintIssuesByVersion = R.pipe(
   R.map(R.prop('issues')),
   R.flatten,
   R.map(i => R.assoc('vId', versionIdLens(i))(i)),
-  // debug
   R.groupBy(R.prop('vId'))
 );
 
 const getEndOfLastInPast = (vId, issues) => {
-  // console.log('getEndOfLastInPast vId, issues.length: ', vId, issues.length);
-  const result = R.pipe(
+  return R.pipe(
     R.map(i => R.filter(e => e.to === '6')(i.statusHistory.entries || [])),
     R.filter(i => i.length > 0),
     R.flatten,
-    // R.forEach(x => console.log('beforeSort', vId, x)),
     R.sort((a, b) => new Date(a.ts) - new Date(b.ts)),
-    // R.forEach(x => console.log('afterSort', vId, x.ts)),
     R.last,
     R.prop('ts')
   )(issues);
-  return result;
 };
 
 const getStartEnd = (
@@ -85,10 +78,8 @@ const getStartEnd = (
   //  2. if none found, find latest resolution date in past list
   //
   let endDate = getLastCompletedWeekPadded(backlogIssues);
-  // console.log(vId, 'endDate: ', endDate);
   if (!endDate) {
     endDate = getEndOfLastInPast(vId, pastSprintIssues);
-    // console.log(vId, 'past endDate: ', endDate);
   }
   if (!endDate) {
     console.log(`NO END FOR ${vId} ${version.name}`);
@@ -119,28 +110,27 @@ const getStartEnd = (
 //
 // NOTE the same story can be in both lists
 
-const debugVersionsById = versions => {
-  return R.pipe(
-    R.values,
-    R.map(R.pick(['id', 'name'])),
-    rDebug,
-    R.keys,
-    R.length
-  )(versions);
-};
+// const debugVersionsById = versions => {
+//   return R.pipe(
+//     R.values,
+//     R.map(R.pick(['id', 'name'])),
+//     rDebug,
+//     R.keys,
+//     R.length
+//   )(versions);
+// };
 
 export const getReleases = (enhancedIssueList, versionsById, boardData) => {
   // console.log('>>>>>>>>>>>>>>>>>>>>>>>>>> Release.getReleases');
-
   // console.log('enhancedIssueList: ', enhancedIssueList[0]);
-  // console.log('versionsById: ', debugVersionsById(versionsById));
-  // console.log('>> boardData: ', R.keys(boardData));
+  // console.log('versionsById:', debugVersionsById(versionsById));
+  // console.log('boardData.keys:', R.keys(boardData));
 
   const backlogIssueListByVersion = getBacklogIssuesByVersion(enhancedIssueList || []);
-  // console.log('>> backlogIssueList.length: ', R.keys(backlogIssueListByVersion));
+  // console.log('>> backlogIssueList.keys:', R.keys(backlogIssueListByVersion));
 
   const pastSprintIssuesByVersion = getPastSprintIssuesByVersion(boardData.sprints || []);
-  // console.log('>> pastSprintIssueByVersion: ', R.keys(pastSprintIssuesByVersion));
+  // console.log('>> pastSprintIssueByVersion.keys:', R.keys(pastSprintIssuesByVersion));
 
   const combinedVersionIdSet = R.pipe(
     R.keys,

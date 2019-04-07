@@ -9,8 +9,10 @@ import qs from 'qs';
 
 export const JIRA_WEB_URL = process.env.REACT_APP_JIRA_ROOT_URL;
 export const mapIndex = R.addIndex(R.map);
-export const rDebug = data => {
-  R.is(Object, data) ? R.forEachObjIndexed(console.log)(data) : R.forEach(console.log)(data);
+export const rDebug = prefix => data => {
+  R.is(Object, data)
+    ? R.forEachObjIndexed(i => console.log(prefix, i))(data)
+    : R.forEach(i => console.log(prefix, i))(data);
 };
 
 export const toTitleCase = str =>
