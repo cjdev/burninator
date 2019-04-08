@@ -69,9 +69,11 @@ export const updateBoardVersion = async ({ boardId, version, data }) => {
         'content-type': 'application/json',
       },
     });
+    if (!response.ok) {
+      throw Error(response.statusText);
+    }
     return await response.json();
   } catch (err) {
-    console.log('updateBoardVersion err: ', err);
     throw err;
   }
 };
