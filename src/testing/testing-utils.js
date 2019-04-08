@@ -23,3 +23,25 @@ export const renderWithRedux = reducer => (
     store,
   };
 };
+
+export const jsonResult = expected => ({
+  json: () => Promise.resolve(expected),
+});
+
+export const response500 = (extras = {}) => () =>
+  Promise.resolve({
+    ok: false,
+    statusText: 'Internal Server Error',
+    ...extras,
+  });
+
+export const responseOk = (impl = {}) => () =>
+  Promise.resolve({
+    ok: true,
+    statusText: 'OK',
+    ...impl,
+  });
+
+export const mockFetchWith = response => {
+  jest.spyOn(global, 'fetch').mockImplementation(response);
+};

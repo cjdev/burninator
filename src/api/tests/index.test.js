@@ -1,27 +1,7 @@
+import { jsonResult, response500, responseOk, mockFetchWith } from '../../testing/testing-utils';
 import { fetchBoard, fetchCompareVersions, fetchKnownBoards, updateBoardVersion } from '../';
 
 afterEach(() => jest.restoreAllMocks());
-
-const jsonResult = expected => ({
-  json: () => Promise.resolve(expected),
-});
-
-const response500 = () => () =>
-  Promise.resolve({
-    ok: false,
-    statusText: 'Internal Server Error',
-  });
-
-const responseOk = impl => () =>
-  Promise.resolve({
-    ok: true,
-    statusText: 'OK',
-    ...impl,
-  });
-
-const mockFetchWith = response => {
-  jest.spyOn(global, 'fetch').mockImplementation(response);
-};
 
 describe('fetchKnownBoards', () => {
   it('should return all boards', async () => {
