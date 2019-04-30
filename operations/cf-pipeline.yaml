@@ -1,5 +1,12 @@
 AWSTemplateFormatVersion: '2010-09-09'
 
+Parameters:
+  GitHubOAuthToken:
+    Type: String
+    MinLength: 1
+    NoEcho: true
+
+
 Resources:
 
     ArtifactStore:
@@ -111,14 +118,17 @@ Resources:
                   - Name: Source
                     ActionTypeId:
                         Category: Source
-                        Owner: AWS
+                        Owner: ThirdParty
                         Version: 1
-                        Provider: S3
+                        Provider: GitHub
                     OutputArtifacts:
                         - Name: SourceArtifact
                     Configuration:
-                        S3Bucket: !Ref SourceStore
-                        S3ObjectKey: master.zip
+                        Owner: cjdev
+                        Repo: burninator
+                        Branch: master
+                        OAuthToken: !Ref GitHubOAuthToken
+                        PollForSourceChanges: true
               - Name: Build
                 Actions:
                   - Name: Build

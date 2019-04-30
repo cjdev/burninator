@@ -15,11 +15,13 @@ operation() {
 provision() {
     local stack_name="$1"
     local config_file="$2"
+    local oauth_token="$3"
     local op="$(operation $stack_name)"
     aws cloudformation "${op}-stack" \
         --stack-name $stack_name \
         --template-body "file://${config_file}" \
         --capabilities CAPABILITY_IAM \
+        --parameters ParameterKey=GitHubOAuthToken,ParameterValue=${oauth_token} \
     || echo "$stack_name not provisioned: $?" 1>&2
 }
 
@@ -36,5 +38,5 @@ provision burninator-compute cf-compute.yaml
 provision burninator-service cf-service.yaml
 
 # Pipeline
-provision burninator-pipeline cf-pipeline.yaml
+provision burninator-pipeline cf-pipeline.yaml "$1"
 

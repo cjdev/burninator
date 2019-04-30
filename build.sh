@@ -17,6 +17,9 @@ echo "$artifactid" > artifact-id
 if [ "$localbuild" == "" ]; then
   tag="${ECR_REPOSITORY}:artifact-${artifactid}"
   tagl="${ECR_REPOSITORY}:latest"
+  commitid="$CODEBUILD_RESOLVED_SOURCE_VERSION"
+  echo "$commitid" > commit-id
+
 else
   commitid="$(git rev-parse HEAD)"
   echo "$commitid" > commit-id
@@ -31,7 +34,7 @@ if [ "$localbuild" == "" ]; then
 fi
 
 # CI=true npm run test
-npm run build
+npm run build:aws
 
 docker build -t "$tag" .
 docker tag "$tag" "$tagl"
