@@ -1,0 +1,167 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+Resources:
+
+  HostsRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: "Allow"
+            Principal:
+              Service:
+                - ec2.amazonaws.com
+            Action:
+              - "sts:AssumeRole"
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/CloudWatchLogsFullAccess
+      Policies:
+        - PolicyName: "hostsrole"
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - ecs:DeregisterContainerInstance
+                  - ecs:DiscoverPollEndpoint
+                  - ecs:Poll
+                  - ecs:RegisterContainerInstance
+                  - ecs:StartTelemetrySession
+                  - ecs:Submit*
+                  - ecr:GetAuthorizationToken
+                  - ecr:BatchCheckLayerAvailability
+                  - ecr:GetDownloadUrlForLayer
+                  - ecr:BatchGetImage
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource: ["*"]
+
+  Cluster:
+    Type: AWS::ECS::Cluster
+
+  HostsProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Roles:
+        - !Ref HostsRole
+
+  HostsConfig:
+    Type: AWS::AutoScaling::LaunchConfiguration
+    Properties:
+      ImageId: ami-0285183bbef6224bd
+      InstanceType: t2.medium
+      SecurityGroups:
+        - !ImportValue network-AttachedNetworkDefaultSecurityGroup
+      IamInstanceProfile: !Ref HostsProfile
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+          echo ECS_CLUSTER=${Cluster} >> /etc/ecs/ecs.config
+          yum install -y aws-cfn-bootstrap
+          /opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource ECSAutoScalingGroup --region ${AWS::Region}
+
+  Hosts:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      AvailabilityZones:
+        - !ImportValue network-AttachedNetworkLeftSubnetAZ
+        - !ImportValue network-AttachedNetworkRightSubnetAZ
+      LaunchConfigurationName: !Ref HostsConfig
+      Tags:
+        - Key: Name
+          Value: Burninator
+          PropagateAtLaunch: true
+      MaxSize: 5
+      MinSize: 2
+      VPCZoneIdentifier:
+        - !ImportValue network-AttachedNetworkLeftSubnet
+        - !ImportValue network-AttachedNetworkRightSubnet
+
+
+
+  # ContainerSecurityGroup:
+  #   Type: AWS::EC2::SecurityGroup
+  #   Properties:
+  #     GroupDescription: Container firewall rules
+  #     SecurityGroupEgress:
+  #       - CidrIp: 0.0.0.0/0
+  #         IpProtocol: "-1"
+  #     SecurityGroupIngress:
+  #       - CidrIp: 0.0.0.0/0
+  #         IpProtocol: "-1"
+  #     VpcId: !ImportValue network-AttachedNetwork
+
+  # HTTPTarget:
+  #   Type: AWS::ElasticLoadBalancingV2::TargetGroup
+  #   Properties:
+  #     HealthCheckIntervalSeconds: 20
+  #     HealthCheckPath: /index.html
+  #     HealthCheckPort: 80
+  #     HealthCheckProtocol: HTTP
+  #     HealthCheckTimeoutSeconds: 15
+  #     HealthyThresholdCount: 3
+  #     UnhealthyThresholdCount: 3
+  #     Matcher:
+  #       HttpCode: "200"
+  #     Port: 80
+  #     Protocol: HTTP
+  #     TargetType: ip
+  #     VpcId: !ImportValue clearinghouse-accounting-network:Network
+
+  # HTTPListener:
+  #   Type: AWS::ElasticLoadBalancingV2::Listener
+  #   Properties:
+  #     DefaultActions:
+  #       - TargetGroupArn: !Ref HTTPTarget
+  #         Type: forward
+  #     LoadBalancerArn: !Ref LoadBalancer
+  #     Port: 80
+  #     Protocol: HTTP
+
+  # LoadBalancer:
+  #   Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+  #   Properties:
+  #     Scheme: internet-facing
+  #     SecurityGroups:
+  #       - !Ref ContainerSecurityGroup
+  #     Subnets:
+  #       - !ImportValue clearinghouse-accounting-network:LeftPublicSubnet
+  #       - !ImportValue clearinghouse-accounting-network:RightPublicSubnet
+  #     Type: application
+
+  # Service:
+  #   Type: AWS::ECS::Service
+  #   DependsOn:
+  #     - LoadBalancer
+  #     - HTTPListener
+  #     - HTTPTarget
+  #   Properties:
+  #     Cluster: !Ref Cluster
+  #     DesiredCount: 2
+  #     LaunchType: FARGATE
+  #     LoadBalancers:
+  #       - ContainerName: ServiceTask
+  #         ContainerPort: 80
+  #         TargetGroupArn: !Ref HTTPTarget
+  #     NetworkConfiguration:
+  #       AwsvpcConfiguration:
+  #         AssignPublicIp: DISABLED
+  #         SecurityGroups:
+  #           - !Ref ContainerSecurityGroup
+  #         Subnets:
+  #           - !ImportValue clearinghouse-accounting-network:LeftPrivateSubnet
+  #           - !ImportValue clearinghouse-accounting-network:RightPrivateSubnet
+  #     TaskDefinition: !Ref Task
+
+# Outputs:
+#   LoadBalancerAddress:
+#     Value: !GetAtt LoadBalancer.DNSName
+
+
+
+Outputs:
+  Cluster:
+    Value: !Ref Cluster
+    Export:
+      Name: !Sub ${AWS::StackName}:Cluster

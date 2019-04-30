@@ -1,0 +1,14 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - echo "pre build"
+      - find . -name '*.sh' -type f | xargs chmod +x
+  build:
+    commands:
+      - echo "build"
+      - ./build.sh
+  post_build:
+    commands:
+      - echo "post build"

@@ -1,0 +1,34 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Resources:
+  Datastore:
+    Type: AWS::S3::Bucket
+
+  ReadWriteDataPolicy:
+        Type: AWS::IAM::ManagedPolicy
+        Properties:
+          PolicyDocument:
+              Version: 2012-10-17
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - s3:DeleteObject
+                    - s3:DeleteObjectVersion
+                    - s3:GetObject
+                    - s3:ListBucket
+                    - s3:ListBucketMultipartUploads
+                    - s3:ListBucketVersions
+                    - s3:ListMultipartUploadParts
+                    - s3:PutObject
+                  Resource:
+                    - !Sub ${Datastore.Arn}/*
+
+Outputs:
+  Datastore:
+    Value: !Ref Datastore
+    Export:
+      Name: !Sub ${AWS::StackName}:Datastore
+  ReadWritePolicyArn:
+    Value: !Ref ReadWriteDataPolicy
+    Export:
+      Name: !Sub ${AWS::StackName}:ReadWriteDataPolicyArn

@@ -1,0 +1,37 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+Resources:
+
+  RuntimeRepository:
+      Type: AWS::ECR::Repository
+      Properties:
+          RepositoryPolicyText:
+              Version: "2012-10-17"
+              Statement:
+                - Sid: pull
+                  Effect: Allow
+                  Principal:
+                      Service: ecs-tasks.amazonaws.com
+                  Action:
+                    - ecr:GetAuthorizationToken
+                    - ecr:GetDownloadUrlForLayer
+                    - ecr:BatchGetImage
+                    - ecr:BatchCheckLayerAvailability
+                - Sid: push
+                  Effect: Allow
+                  Principal:
+                      Service: codebuild.amazonaws.com
+                  Action:
+                    - ecr:*
+
+Outputs:
+  RuntimeRepository:
+    Value: !Sub ${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${RuntimeRepository}
+    Export:
+      Name: !Sub ${AWS::StackName}:RuntimeRepository
+  RuntimeRepositoryArn:
+    Value: !Sub arn:aws:ecr:${AWS::Region}:${AWS::AccountId}:repository/${RuntimeRepository}
+    Export:
+      Name: !Sub ${AWS::StackName}:RuntimeRepositoryArn
+
+

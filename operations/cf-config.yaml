@@ -1,0 +1,56 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Parameters: {}
+
+Resources:
+
+  ConfigurationKey:
+    Type: "AWS::KMS::Key"
+    Properties:
+      Description: Key for delivering configurationsecrets
+      Enabled: true
+      EnableKeyRotation: false
+      KeyPolicy:
+        Version: 2012-10-17
+        Id: key-burninator-configuration
+        Statement:
+          - Sid: Enable IAM User Permissions
+            Effect: Allow
+            Principal:
+              AWS: !Join
+                - ''
+                - - 'arn:aws:iam::'
+                  - !Ref 'AWS::AccountId'
+                  - ':root'
+            Action: 'kms:*'
+            Resource: '*'
+
+
+  DecryptSecretsPolicy:
+        Type: AWS::IAM::ManagedPolicy
+        Properties:
+          PolicyDocument:
+              Version: 2012-10-17
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - kms:Decrypt
+                  Resource:
+                    - !GetAtt ConfigurationKey.Arn
+
+
+Outputs:
+  ConfigurationKey:
+    Value: !Ref ConfigurationKey
+    Export:
+      Name: !Sub ${AWS::StackName}:ConfigurationKey
+
+  ConfigurationKeyArn:
+    Value: !GetAtt ConfigurationKey.Arn
+    Export:
+      Name: !Sub ${AWS::StackName}:ConfigurationKeyArn
+
+  DecryptSecretsPolicyArn:
+    Value: !Ref DecryptSecretsPolicy
+    Export:
+      Name: !Sub ${AWS::StackName}:DecryptSecretsPolicyArn

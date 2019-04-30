@@ -1,0 +1,41 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+Resources:
+
+  Logs:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      RetentionInDays: 30
+
+  WriteLogsPolicy:
+        Type: AWS::IAM::ManagedPolicy
+        Properties:
+          PolicyDocument:
+              Version: 2012-10-17
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - logs:CreateLogStream
+                    - logs:PutLogEvents
+                  Resource:
+                    - !GetAtt Logs.Arn
+
+
+
+
+Outputs:
+
+  LogGroup:
+    Value: !Ref Logs
+    Export:
+      Name: !Sub ${AWS::StackName}:LogGroup
+
+  LogGroupArn:
+    Value: !GetAtt Logs.Arn
+    Export:
+      Name: !Sub ${AWS::StackName}:LogGroupArn
+
+  WriteLogsPolicyArn:
+    Value: !Ref WriteLogsPolicy
+    Export:
+      Name: !Sub ${AWS::StackName}:WriteLogsPolicyArn

@@ -1,0 +1,188 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Resources:
+
+    ArtifactStore:
+        Type: AWS::S3::Bucket
+
+    SourceStore:
+        Type: AWS::S3::Bucket
+        Properties:
+            VersioningConfiguration:
+                Status: Enabled
+
+    PipelineRole:
+        Type: AWS::IAM::Role
+        Properties:
+            AssumeRolePolicyDocument:
+                Statement:
+                    Effect: Allow
+                    Action: sts:AssumeRole
+                    Principal:
+                        Service: codepipeline.amazonaws.com
+            Policies:
+              - PolicyName: pipeline
+                PolicyDocument:
+                    Version: 2012-10-17
+                    Statement:
+                      - Effect: Allow
+                        Action:
+                          - codebuild:*
+                        Resource:
+                          - !GetAtt Builder.Arn
+                      - Effect: Allow
+                        Action:
+                          - s3:getObject
+                          - s3:GetObjectVersion
+                          - s3:GetBucketVersioning
+                        Resource:
+                          - !GetAtt SourceStore.Arn
+                          - !Sub ${SourceStore.Arn}/*
+                      - Effect: Allow
+                        Action:
+                          - s3:GetBucketVersioning
+                          - s3:GetObject
+                          - s3:GetObjectVersion
+                          - s3:PutObject
+                        Resource:
+                          - !GetAtt ArtifactStore.Arn
+                          - !Sub ${ArtifactStore.Arn}/*
+
+    BuilderRole:
+        Type: AWS::IAM::Role
+        Properties:
+            AssumeRolePolicyDocument:
+                Statement:
+                    Effect: Allow
+                    Action: sts:AssumeRole
+                    Principal:
+                        Service: codebuild.amazonaws.com
+            Policies:
+              - PolicyName: artifact-store
+                PolicyDocument:
+                    Version: 2012-10-17
+                    Statement:
+                      - Effect: Allow
+                        Action:
+                          - s3:GetObject
+                          - s3:GetObjectVersion
+                          - s3:PutObject
+                        Resource:
+                          - !GetAtt ArtifactStore.Arn
+                          - !Sub ${ArtifactStore.Arn}/*
+                      - Effect: Allow
+                        Action:
+                          - logs:CreateLogGroup
+                          - logs:CreateLogStream
+                          - logs:PutLogEvents
+                        Resource: "*"
+                      - Effect: Allow
+                        Action:
+                          - ecr:BatchCheckLayerAvailability
+                          - ecr:BatchDeleteImage
+                          - ecr:BatchGetImage
+                          - ecr:CompleteLayerUpload
+                          - ecr:DescribeImages
+                          - ecr:GetDownloadUrlForLayer
+                          - ecr:InitiateLayerUpload
+                          - ecr:ListImages
+                          - ecr:PutImage
+                          - ecr:UploadLayerPart
+                        Resource:
+                          - !ImportValue burninator-repository:RuntimeRepositoryArn
+                      - Effect: Allow
+                        Action:
+                          - ecr:GetAuthorizationToken
+                        Resource:
+                          - "*"
+
+
+    Pipeline:
+        Type: AWS::CodePipeline::Pipeline
+        Properties:
+            ArtifactStore:
+                Location: !Ref ArtifactStore
+                Type: S3
+            RoleArn: !GetAtt PipelineRole.Arn
+            RestartExecutionOnUpdate: false
+            Stages:
+              - Name: Source
+                Actions:
+                  - Name: Source
+                    ActionTypeId:
+                        Category: Source
+                        Owner: AWS
+                        Version: 1
+                        Provider: S3
+                    OutputArtifacts:
+                        - Name: SourceArtifact
+                    Configuration:
+                        S3Bucket: !Ref SourceStore
+                        S3ObjectKey: master.zip
+              - Name: Build
+                Actions:
+                  - Name: Build
+                    ActionTypeId:
+                        Category: Build
+                        Owner: AWS
+                        Version: 1
+                        Provider: CodeBuild
+                    Configuration:
+                        ProjectName: !Ref Builder
+                    InputArtifacts:
+                      - Name: SourceArtifact
+                    OutputArtifacts:
+                      - Name: BuildArtifact
+
+    Builder:
+        Type: AWS::CodeBuild::Project
+        Properties:
+            Artifacts:
+                Type: CODEPIPELINE
+            Source:
+                Type: CODEPIPELINE
+                BuildSpec: buildspec.yaml
+            Cache:
+                Type: S3
+                Location: !Sub ${ArtifactStore}/BUILD_CACHE
+            Environment:
+                ComputeType: BUILD_GENERAL1_LARGE
+                Image: aws/codebuild/nodejs:10.14.1
+                Type: LINUX_CONTAINER
+                PrivilegedMode: true
+                EnvironmentVariables:
+                  - Name: ECR_REPOSITORY
+                    Value: !ImportValue burninator-repository:RuntimeRepository
+            Name: !Sub ${AWS::StackName}-builder
+            ServiceRole: !Ref BuilderRole
+
+    SubmitterPseudoUser:
+        Type: AWS::IAM::User
+        Properties:
+            Policies:
+              - PolicyName: submitterUser
+                PolicyDocument:
+                    Version: 2012-10-17
+                    Statement:
+                      - Effect: Allow
+                        Action:
+                          - s3:PutObject
+                        Resource:
+                          - !Sub "${SourceStore.Arn}/*"
+
+    SubmitterPseudoUserAccessKey:
+        Type: "AWS::IAM::AccessKey"
+        Properties:
+            Serial: 1
+            UserName: !Ref SubmitterPseudoUser
+
+Outputs:
+    SourceStore:
+        Value: !Ref SourceStore
+    ArtifactStore:
+        Value: !Ref ArtifactStore
+    SubmitterPseudoUserAccessKey:
+        Value: !Ref SubmitterPseudoUserAccessKey
+    SubmitterPseudoUserAccessKeySecret:
+        Value: !GetAtt SubmitterPseudoUserAccessKey.SecretAccessKey
+

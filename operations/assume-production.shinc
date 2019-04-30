@@ -1,0 +1,38 @@
+# don't run this file
+# source it
+
+# then
+#  Assume Deployer Role with
+#    aws-assume-deployer <device serial> <mfa token>
+#
+#  Erase all deployer credentials with
+#    aws-end-session
+
+# some params for when you copy this to your own project
+deployer_role='arn:aws:iam::123972995618:role/cjorganization/CJOrganizationAccessRole'
+
+
+aws-assume-deployer() {
+  local mfa_serial="$1"
+  local mfa_token="$2"
+
+  eval "$(aws --profile cjumb sts assume-role \
+    --role-arn "$deployer_role" \
+    --role-session-name "bootstrap$$" \
+    --serial-number "$mfa_serial" \
+    --token-code "$mfa_token" \
+    --query \
+       'Credentials |
+          join (`\n`,
+           values({
+             AccessKeyId: join(``, [`export AWS_ACCESS_KEY_ID=`,AccessKeyId]),
+             SecretAccessKey:join(``, [`export AWS_SECRET_ACCESS_KEY=`,SecretAccessKey]),
+             SessionToken:join(``, [`export AWS_SESSION_TOKEN=`,SessionToken])
+           }))' \
+    --output text)"
+}
+
+aws-end-session() {
+  eval $(env | sed -En 's/^(AWS_[^=]*)=.*$/unset \1/p')
+}
+
