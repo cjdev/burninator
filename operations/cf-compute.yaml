@@ -60,13 +60,22 @@ Resources:
           echo ECS_CLUSTER=${Cluster} >> /etc/ecs/ecs.config
           yum install -y aws-cfn-bootstrap
           /opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource ECSAutoScalingGroup --region ${AWS::Region}
+          mkdir -p /home/ec2-user/efs-mount-point
+          echo "-- MOUNTING ---------------------------------------------------------------------"
+          sudo mount -t nfs -o nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport mount-target-DNS:/ \
+               /home/ec2-user/efs-mount-point
+          chown ec2-user /home/ec2-user/efs-mount-point
+          sudo mount
+          ls -lR /home/ec2-user
+          # sudo mount -t nfs -o nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport mount-target-ip:/  ~/efs-mount-point
+
 
   Hosts:
     Type: AWS::AutoScaling::AutoScalingGroup
     Properties:
       AvailabilityZones:
         - !ImportValue network-AttachedNetworkLeftSubnetAZ
-        - !ImportValue network-AttachedNetworkRightSubnetAZ
+        # - !ImportValue network-AttachedNetworkRightSubnetAZ
       LaunchConfigurationName: !Ref HostsConfig
       Tags:
         - Key: Name
@@ -76,7 +85,7 @@ Resources:
       MinSize: 2
       VPCZoneIdentifier:
         - !ImportValue network-AttachedNetworkLeftSubnet
-        - !ImportValue network-AttachedNetworkRightSubnet
+        # - !ImportValue network-AttachedNetworkRightSubnet
 
 
 
