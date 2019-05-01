@@ -168,9 +168,9 @@ Resources:
                 EnvironmentVariables:
                   - Name: ECR_REPOSITORY
                     Value: !ImportValue burninator-repository:RuntimeRepository
-                  - Name: ECR_CLUSTER
+                  - Name: ECS_CLUSTER
                     Value: !ImportValue burninator-compute:Cluster
-                  - Name: ECR_SERVICE
+                  - Name: ECS_SERVICE
                     Value: !ImportValue burninator-service:Service
             Name: !Sub ${AWS::StackName}-builder
             ServiceRole: !Ref BuilderRole

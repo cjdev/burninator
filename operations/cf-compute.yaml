@@ -92,19 +92,17 @@ Resources:
         - !ImportValue network-AttachedNetworkLeftSubnet
         - !ImportValue network-AttachedNetworkRightSubnet
 
-
-
-  # ContainerSecurityGroup:
-  #   Type: AWS::EC2::SecurityGroup
-  #   Properties:
-  #     GroupDescription: Container firewall rules
-  #     SecurityGroupEgress:
-  #       - CidrIp: 0.0.0.0/0
-  #         IpProtocol: "-1"
-  #     SecurityGroupIngress:
-  #       - CidrIp: 0.0.0.0/0
-  #         IpProtocol: "-1"
-  #     VpcId: !ImportValue network-AttachedNetwork
+  ContainerSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Container firewall rules
+      SecurityGroupEgress:
+        - CidrIp: 0.0.0.0/0
+          IpProtocol: "-1"
+      SecurityGroupIngress:
+        - CidrIp: 0.0.0.0/0
+          IpProtocol: "-1"
+      VpcId: !ImportValue network-AttachedNetwork
 
   # HTTPTarget:
   #   Type: AWS::ElasticLoadBalancingV2::TargetGroup
@@ -133,40 +131,18 @@ Resources:
   #     Port: 80
   #     Protocol: HTTP
 
-  # LoadBalancer:
-  #   Type: AWS::ElasticLoadBalancingV2::LoadBalancer
-  #   Properties:
-  #     Scheme: internet-facing
-  #     SecurityGroups:
-  #       - !Ref ContainerSecurityGroup
-  #     Subnets:
-  #       - !ImportValue clearinghouse-accounting-network:LeftPublicSubnet
-  #       - !ImportValue clearinghouse-accounting-network:RightPublicSubnet
-  #     Type: application
+  LoadBalancer:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      IpAddressType: ipv4
+      Scheme: internal
+      SecurityGroups:
+        - !Ref ContainerSecurityGroup
+      Subnets:
+        - !ImportValue network-AttachedNetworkLeftSubnet
+        - !ImportValue network-AttachedNetworkRightSubnet
+      Type: application
 
-  # Service:
-  #   Type: AWS::ECS::Service
-  #   DependsOn:
-  #     - LoadBalancer
-  #     - HTTPListener
-  #     - HTTPTarget
-  #   Properties:
-  #     Cluster: !Ref Cluster
-  #     DesiredCount: 2
-  #     LaunchType: FARGATE
-  #     LoadBalancers:
-  #       - ContainerName: ServiceTask
-  #         ContainerPort: 80
-  #         TargetGroupArn: !Ref HTTPTarget
-  #     NetworkConfiguration:
-  #       AwsvpcConfiguration:
-  #         AssignPublicIp: DISABLED
-  #         SecurityGroups:
-  #           - !Ref ContainerSecurityGroup
-  #         Subnets:
-  #           - !ImportValue clearinghouse-accounting-network:LeftPrivateSubnet
-  #           - !ImportValue clearinghouse-accounting-network:RightPrivateSubnet
-  #     TaskDefinition: !Ref Task
 
 # Outputs:
 #   LoadBalancerAddress:
