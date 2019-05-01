@@ -104,7 +104,7 @@ Resources:
                           - "*"
                       - Effect: Allow
                         Action:
-                          - ec:UpdateService
+                          - ecs:UpdateService
                         Resource:
                           - !ImportValue burninator-service:ServiceArn
 

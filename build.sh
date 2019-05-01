@@ -45,6 +45,8 @@ if [ "$localbuild" == "" ]; then
   docker push "$tagl"
 fi
 
+echo "cluster: $ECS_CLUSTER"
+echo "service: $ECS_SERVICE"
 aws --region us-west-1 ecs update-service \
     --cluster ${ECS_CLUSTER} \
     --service ${ECS_SERVICE} \

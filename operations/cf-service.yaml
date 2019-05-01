@@ -65,6 +65,35 @@ Resources:
       DesiredCount: 1
       TaskDefinition: !Ref Task
 
+  HTTPTarget:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      HealthCheckIntervalSeconds: 20
+      HealthCheckPath: /
+      HealthCheckPort: 80
+      HealthCheckProtocol: HTTP
+      HealthCheckTimeoutSeconds: 15
+      HealthyThresholdCount: 5
+      UnhealthyThresholdCount: 3
+      Matcher:
+        HttpCode: "200"
+      Port: 80
+      Protocol: HTTP
+      TargetType: ip
+      VpcId: !ImportValue network-AttachedNetwork
+
+  HTTPListener:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      DefaultActions:
+        - TargetGroupArn: !Ref HTTPTarget
+          Type: forward
+      LoadBalancerArn: !ImportValue burninator-compute:LoadBalancerArn
+      Port: 80
+      Protocol: HTTP
+
+
+
 Outputs:
   Service:
     Value: !GetAtt BurninatorService.Name

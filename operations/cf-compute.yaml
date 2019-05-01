@@ -104,33 +104,6 @@ Resources:
           IpProtocol: "-1"
       VpcId: !ImportValue network-AttachedNetwork
 
-  # HTTPTarget:
-  #   Type: AWS::ElasticLoadBalancingV2::TargetGroup
-  #   Properties:
-  #     HealthCheckIntervalSeconds: 20
-  #     HealthCheckPath: /index.html
-  #     HealthCheckPort: 80
-  #     HealthCheckProtocol: HTTP
-  #     HealthCheckTimeoutSeconds: 15
-  #     HealthyThresholdCount: 3
-  #     UnhealthyThresholdCount: 3
-  #     Matcher:
-  #       HttpCode: "200"
-  #     Port: 80
-  #     Protocol: HTTP
-  #     TargetType: ip
-  #     VpcId: !ImportValue clearinghouse-accounting-network:Network
-
-  # HTTPListener:
-  #   Type: AWS::ElasticLoadBalancingV2::Listener
-  #   Properties:
-  #     DefaultActions:
-  #       - TargetGroupArn: !Ref HTTPTarget
-  #         Type: forward
-  #     LoadBalancerArn: !Ref LoadBalancer
-  #     Port: 80
-  #     Protocol: HTTP
-
   LoadBalancer:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     Properties:
@@ -148,10 +121,16 @@ Resources:
 #   LoadBalancerAddress:
 #     Value: !GetAtt LoadBalancer.DNSName
 
-
-
 Outputs:
   Cluster:
     Value: !Ref Cluster
     Export:
       Name: !Sub ${AWS::StackName}:Cluster
+  LoadBalancer:
+    Value: !GetAtt LoadBalancer.LoadBalancerName
+    Export:
+      Name: !Sub ${AWS::StackName}:LoadBalancer
+  LoadBalancerArn:
+    Value: !Ref LoadBalancer
+    Export:
+      Name: !Sub ${AWS::StackName}:LoadBalancerArn
