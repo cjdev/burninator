@@ -13,30 +13,57 @@ operation() {
 }
 
 provision() {
-    local stack_name="$1"
-    local config_file="$2"
-    local oauth_token="$3"
+    local stack_name="burninator-${1}"
+    local config_file="cf-${1}.yaml"
+    shift
+    if [[ "${1}" != "" ]]; then
+        config_file="cf-${1}.yaml"
+        shift
+    fi
+
     local op="$(operation $stack_name)"
+
+    local params=()
+    if [[ "${1}" != "" ]]; then
+        params=(--parameters)
+        while [[ "$1" != "" ]]; do
+            if [ "$op" == "create" ]; then
+                params+=("ParameterKey=${1},ParameterValue=${2}")
+            else
+                params+=("ParameterKey=${1},UsePreviousValue=true")
+            fi
+            shift; shift
+        done
+    fi
+
+    local failed=""
     aws cloudformation "${op}-stack" \
         --stack-name $stack_name \
         --template-body "file://${config_file}" \
         --capabilities CAPABILITY_IAM \
-        --parameters ParameterKey=GitHubOAuthToken,ParameterValue=${oauth_token} \
-    || echo "$stack_name not provisioned: $?" 1>&2
+        "${params[@]}" || failed="Y"
+
+    if [ "$failed" == "Y" ]; then
+        echo "$stack_name not provisioned" 1>&2
+    else
+        aws cloudformation wait stack-${op}-complete \
+            --stack-name $stack_name
+    fi
+
 }
 
 cd "$(dirname "$0")"
 
 export AWS_DEFAULT_REGION=us-west-1
-
 # Infrastructure
-provision burninator-data cf-data.yaml
-provision burninator-repository cf-repository.yaml
-provision burninator-config cf-config.yaml
-provision burninator-logs cf-logs.yaml
-provision burninator-compute cf-compute.yaml
-provision burninator-service cf-service.yaml
+provision data
+provision repository
+provision config
+provision logs
+provision compute
+provision service
 
 # Pipeline
-provision burninator-pipeline cf-pipeline.yaml "$1"
+provision pipeline pipeline GitHubOAuthToken "$1"
+
 

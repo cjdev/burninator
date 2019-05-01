@@ -23,12 +23,46 @@ Resources:
                   Resource:
                     - !Sub ${Datastore.Arn}/*
 
+  DataVolume:
+    Type: AWS::EFS::FileSystem
+
+  LeftDataVolumeTarget:
+    Type: AWS::EFS::MountTarget
+    Properties:
+      FileSystemId : !Ref DataVolume
+      SecurityGroups :
+        - !ImportValue network-AttachedNetworkDefaultSecurityGroup
+      SubnetId : !ImportValue network-AttachedNetworkLeftSubnet
+
+  RightDataVolumeTarget:
+    Type: AWS::EFS::MountTarget
+    Properties:
+      FileSystemId : !Ref DataVolume
+      SecurityGroups :
+        - !ImportValue network-AttachedNetworkDefaultSecurityGroup
+      SubnetId : !ImportValue network-AttachedNetworkRightSubnet
+
+
 Outputs:
   Datastore:
     Value: !Ref Datastore
     Export:
       Name: !Sub ${AWS::StackName}:Datastore
+  DataVolume:
+    Value: !Ref DataVolume
+    Export:
+      Name: !Sub ${AWS::StackName}:DataVolume
   ReadWritePolicyArn:
     Value: !Ref ReadWriteDataPolicy
     Export:
       Name: !Sub ${AWS::StackName}:ReadWriteDataPolicyArn
+  LeftDataVolumeTarget:
+    Value: !Ref LeftDataVolumeTarget
+    Export:
+      Name: !Sub ${AWS::StackName}:LeftDataVolumeTarget
+  RightDataVolumeTarget:
+    Value: !Ref RightDataVolumeTarget
+    Export:
+      Name: !Sub ${AWS::StackName}:RightDataVolumeTarget
+
+
