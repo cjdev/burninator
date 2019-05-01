@@ -64,6 +64,11 @@ Resources:
       Cluster: !ImportValue burninator-compute:Cluster
       DesiredCount: 1
       TaskDefinition: !Ref Task
+      LoadBalancers:
+        - ContainerName: ServiceTask
+          ContainerPort: 3011
+          TargetGroupArn: !Ref HTTPTarget
+
 
   HTTPTarget:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
@@ -79,7 +84,6 @@ Resources:
         HttpCode: "200"
       Port: 80
       Protocol: HTTP
-      TargetType: ip
       VpcId: !ImportValue network-AttachedNetwork
 
   HTTPListener:

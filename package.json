@@ -100,7 +100,7 @@
     "eject": "react-scripts eject",
     "lint": "eslint --ext .js src/ server/",
     "format": "prettier --write \"{src,server}/**/*.js\"",
-    "server": "REACT_APP_VERSION=$npm_package_version REACT_APP_GIT_HASH=$(git rev-parse HEAD) babel-node ./server/index.js",
+    "server": "babel-node ./server/index.js",
     "server:dev": "nodemon --watch server --watch src/domain --ignore '*.test.js' --exec npm run server",
     "prod": "REACT_APP_VERSION=$npm_package_version REACT_APP_GIT_HASH=$(git rev-parse HEAD) npm run server",
     "prod:aws": "REACT_APP_VERSION=$npm_package_version REACT_APP_GIT_HASH=$(cat commit-id) npm run server --migrate",
