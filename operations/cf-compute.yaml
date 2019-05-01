@@ -73,7 +73,7 @@ Resources:
     Properties:
       AvailabilityZones:
         - !ImportValue network-AttachedNetworkLeftSubnetAZ
-        # - !ImportValue network-AttachedNetworkRightSubnetAZ
+        - !ImportValue network-AttachedNetworkRightSubnetAZ
       LaunchConfigurationName: !Ref HostsConfig
       Tags:
         - Key: Name
@@ -83,7 +83,7 @@ Resources:
       MinSize: 2
       VPCZoneIdentifier:
         - !ImportValue network-AttachedNetworkLeftSubnet
-        # - !ImportValue network-AttachedNetworkRightSubnet
+        - !ImportValue network-AttachedNetworkRightSubnet
 
 
 
