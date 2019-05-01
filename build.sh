@@ -44,3 +44,8 @@ if [ "$localbuild" == "" ]; then
   docker push "$tag"
   docker push "$tagl"
 fi
+
+aws --region us-west-1 ecs update-service \
+    --cluster ${ECS_CLUSTER} \
+    --service ${ECS_SERVICE} \
+    --force-new-deployment

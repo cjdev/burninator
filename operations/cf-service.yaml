@@ -40,7 +40,6 @@ Resources:
       ExecutionRoleArn: !GetAtt TaskExecRole.Arn
       Family: BurninatorServiceTask
       Memory: 512
-      # NetworkMode: awsvpc
       TaskRoleArn: !GetAtt ApplicationRole.Arn
       ContainerDefinitions:
         - Name: ServiceTask
@@ -65,3 +64,13 @@ Resources:
       Cluster: !ImportValue burninator-compute:Cluster
       DesiredCount: 1
       TaskDefinition: !Ref Task
+
+Outputs:
+  Service:
+    Value: !GetAtt BurninatorService.Name
+    Export:
+      Name: !Sub ${AWS::StackName}:Service
+  ServiceArn:
+    Value: !Ref BurninatorService
+    Export:
+      Name: !Sub ${AWS::StackName}:ServiceArn

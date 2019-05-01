@@ -102,6 +102,11 @@ Resources:
                           - ecr:GetAuthorizationToken
                         Resource:
                           - "*"
+                      - Effect: Allow
+                        Action:
+                          - ec:UpdateService
+                        Resource:
+                          - !ImportValue burninator-service:ServiceArn
 
 
     Pipeline:
@@ -163,36 +168,40 @@ Resources:
                 EnvironmentVariables:
                   - Name: ECR_REPOSITORY
                     Value: !ImportValue burninator-repository:RuntimeRepository
+                  - Name: ECR_CLUSTER
+                    Value: !ImportValue burninator-compute:Cluster
+                  - Name: ECR_SERVICE
+                    Value: !ImportValue burninator-service:Service
             Name: !Sub ${AWS::StackName}-builder
             ServiceRole: !Ref BuilderRole
 
-    SubmitterPseudoUser:
-        Type: AWS::IAM::User
-        Properties:
-            Policies:
-              - PolicyName: submitterUser
-                PolicyDocument:
-                    Version: 2012-10-17
-                    Statement:
-                      - Effect: Allow
-                        Action:
-                          - s3:PutObject
-                        Resource:
-                          - !Sub "${SourceStore.Arn}/*"
+    # SubmitterPseudoUser:
+    #     Type: AWS::IAM::User
+    #     Properties:
+    #         Policies:
+    #           - PolicyName: submitterUser
+    #             PolicyDocument:
+    #                 Version: 2012-10-17
+    #                 Statement:
+    #                   - Effect: Allow
+    #                     Action:
+    #                       - s3:PutObject
+    #                     Resource:
+    #                       - !Sub "${SourceStore.Arn}/*"
 
-    SubmitterPseudoUserAccessKey:
-        Type: "AWS::IAM::AccessKey"
-        Properties:
-            Serial: 1
-            UserName: !Ref SubmitterPseudoUser
+    # SubmitterPseudoUserAccessKey:
+    #     Type: "AWS::IAM::AccessKey"
+    #     Properties:
+    #         Serial: 1
+    #         UserName: !Ref SubmitterPseudoUser
 
 Outputs:
     SourceStore:
         Value: !Ref SourceStore
     ArtifactStore:
         Value: !Ref ArtifactStore
-    SubmitterPseudoUserAccessKey:
-        Value: !Ref SubmitterPseudoUserAccessKey
-    SubmitterPseudoUserAccessKeySecret:
-        Value: !GetAtt SubmitterPseudoUserAccessKey.SecretAccessKey
+    # SubmitterPseudoUserAccessKey:
+    #     Value: !Ref SubmitterPseudoUserAccessKey
+    # SubmitterPseudoUserAccessKeySecret:
+    #     Value: !GetAtt SubmitterPseudoUserAccessKey.SecretAccessKey
 
