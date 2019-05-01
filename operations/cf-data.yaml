@@ -48,6 +48,10 @@ Outputs:
     Value: !Ref Datastore
     Export:
       Name: !Sub ${AWS::StackName}:Datastore
+  DataVolume:
+    Value: !Ref DataVolume
+    Export:
+      Name: !Sub ${AWS::StackName}:DataVolume
   ReadWritePolicyArn:
     Value: !Ref ReadWriteDataPolicy
     Export:

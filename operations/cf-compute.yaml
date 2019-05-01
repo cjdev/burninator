@@ -57,15 +57,22 @@ Resources:
       IamInstanceProfile: !Ref HostsProfile
       KeyName: wavelet
       UserData:
-        Fn::Base64: !Sub |
-          #!/bin/bash -xe
-          exec > /root/init.log 2>&1
-          echo ECS_CLUSTER=${Cluster} >> /etc/ecs/ecs.config
-          yum install -y aws-cfn-bootstrap amazon-efs-utils
-          mkdir -p /home/ec2-user/efs-mount-point
-          mount -t efs fs-0da01214:/ /home/ec2-user/efs-mount-point/
-          chown ec2-user /home/ec2-user/efs-mount-point
-          # /opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource SOMETHINGGOESHERE --region ${AWS::Region}
+        Fn::Base64:
+          Fn::Join:
+            - ""
+            - - "#!/bin/bash -xe\n"
+              - efsvol=
+              - !ImportValue burninator-data:DataVolume
+              - "\n"
+              - !Sub |
+                  exec > /root/init.log 2>&1
+                  echo $efsvol
+                  echo ECS_CLUSTER=${Cluster} >> /etc/ecs/ecs.config
+                  yum install -y aws-cfn-bootstrap amazon-efs-utils
+                  mkdir -p /home/ec2-user/efs-mount-point
+                  mount -t efs $efsvol:/ /home/ec2-user/efs-mount-point/
+                  chown ec2-user /home/ec2-user/efs-mount-point
+                  # /opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource SOMETHINGGOESHERE --region ${AWS::Region}
 
 
   Hosts:
