@@ -1,0 +1,27 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+Resources:
+
+  HTTPListener:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      DefaultActions:
+        - TargetGroupArn: !ImportValue burninator-service:HTTPTarget
+          Type: forward
+      LoadBalancerArn: !ImportValue burninator-compute:LoadBalancerArn
+      Port: 80
+      Protocol: HTTP
+
+  Domain:
+    Type: AWS::Route53::RecordSet
+    Properties :
+      HostedZoneName : tl.cjpowered.com.
+      Name: burninator.tl.cjpowered.com.
+      Type: A
+      AliasTarget:
+        HostedZoneId: !ImportValue burninator-compute:LoadBalancerCanonicalHostedZoneID
+        DNSName: !ImportValue burninator-compute:LoadBalancerDNSName
+
+Outputs:
+  URL:
+    Value: http://${Domain}

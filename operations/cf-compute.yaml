@@ -117,10 +117,6 @@ Resources:
       Type: application
 
 
-# Outputs:
-#   LoadBalancerAddress:
-#     Value: !GetAtt LoadBalancer.DNSName
-
 Outputs:
   Cluster:
     Value: !Ref Cluster
@@ -134,3 +130,12 @@ Outputs:
     Value: !Ref LoadBalancer
     Export:
       Name: !Sub ${AWS::StackName}:LoadBalancerArn
+  LoadBalancerDNSName:
+    Value: !GetAtt LoadBalancer.DNSName
+    Export:
+      Name: !Sub ${AWS::StackName}:LoadBalancerDNSName
+  LoadBalancerCanonicalHostedZoneID:
+    Value: !GetAtt LoadBalancer.CanonicalHostedZoneID
+    Export:
+      Name: !Sub ${AWS::StackName}:LoadBalancerCanonicalHostedZoneID
+

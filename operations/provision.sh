@@ -62,6 +62,7 @@ provision config
 provision logs
 provision compute
 provision service
+provision access
 
 # Pipeline
 provision pipeline pipeline GitHubOAuthToken "$1"

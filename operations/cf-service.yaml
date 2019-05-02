@@ -86,17 +86,6 @@ Resources:
       Protocol: HTTP
       VpcId: !ImportValue network-AttachedNetwork
 
-  HTTPListener:
-    Type: AWS::ElasticLoadBalancingV2::Listener
-    Properties:
-      DefaultActions:
-        - TargetGroupArn: !Ref HTTPTarget
-          Type: forward
-      LoadBalancerArn: !ImportValue burninator-compute:LoadBalancerArn
-      Port: 80
-      Protocol: HTTP
-
-
 
 Outputs:
   Service:
@@ -107,3 +96,8 @@ Outputs:
     Value: !Ref BurninatorService
     Export:
       Name: !Sub ${AWS::StackName}:ServiceArn
+  HTTPTarget:
+    Value: !Ref HTTPTarget
+    Export:
+      Name: !Sub ${AWS::StackName}:HTTPTarget
+
