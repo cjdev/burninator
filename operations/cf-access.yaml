@@ -12,6 +12,16 @@ Resources:
       Port: 80
       Protocol: HTTP
 
+  CertificateValidation:
+    Type: AWS::Route53::RecordSet
+    Properties :
+      HostedZoneName : tl.cjpowered.com.
+      Name: _28dc5e9c805bdf71c161f49deb980876.burninator.tl.cjpowered.com.
+      Type: CNAME
+      TTL: 900
+      ResourceRecords:
+        - _bf81a436d18b546440e666123aa0cf23.ltfvzjuylp.acm-validations.aws
+
   Domain:
     Type: AWS::Route53::RecordSet
     Properties :
