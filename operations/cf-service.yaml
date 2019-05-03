@@ -76,12 +76,6 @@ Resources:
       TaskRoleArn: !GetAtt ApplicationRole.Arn
       ContainerDefinitions:
         - Name: BackupTask
-          PortMappings:
-            - ContainerPort: 3011
-              HostPort: 80
-          ExtraHosts:
-            - Hostname: jira.cnvrmedia.net
-              IpAddress: 10.110.192.10
           Image: !ImportValue burninator-repository:RuntimeRepository
           Memory: 256
           LogConfiguration:
