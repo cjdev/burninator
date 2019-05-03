@@ -1,7 +1,7 @@
 AWSTemplateFormatVersion: '2010-09-09'
 
 Resources:
-  Datastore:
+  BackupStore:
     Type: AWS::S3::Bucket
 
   ReadWriteDataPolicy:
@@ -21,7 +21,7 @@ Resources:
                     - s3:ListMultipartUploadParts
                     - s3:PutObject
                   Resource:
-                    - !Sub ${Datastore.Arn}/*
+                    - !Sub ${BackupStore.Arn}/*
 
   DataVolume:
     Type: AWS::EFS::FileSystem
@@ -44,10 +44,10 @@ Resources:
 
 
 Outputs:
-  Datastore:
-    Value: !Ref Datastore
+  BackupStore:
+    Value: !Ref BackupStore
     Export:
-      Name: !Sub ${AWS::StackName}:Datastore
+      Name: !Sub ${AWS::StackName}:BackupStore
   DataVolume:
     Value: !Ref DataVolume
     Export:
