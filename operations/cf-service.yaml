@@ -57,6 +57,14 @@ Resources:
               awslogs-group: !ImportValue burninator-logs:LogGroup
               awslogs-region: !Ref AWS::Region
               awslogs-stream-prefix: service
+          MountPoints:
+            - SourceVolume: EFS
+              ContainerPath: /app/data
+              ReadOnly: false
+      Volumes:
+        - Name: EFS
+          Host:
+            SourcePath: /home/ec2-user/efs-mount-point
 
   BurninatorService:
     Type: AWS::ECS::Service
