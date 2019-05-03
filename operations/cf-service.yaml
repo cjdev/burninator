@@ -31,18 +31,51 @@ Resources:
       ManagedPolicyArns:
         - !ImportValue burninator-logs:WriteLogsPolicyArn
         - !ImportValue burninator-config:DecryptSecretsPolicyArn
-        - !ImportValue burninator-data:ReadWriteDataPolicyArn
+        - !ImportValue burninator-data:PutToBackupStorePolicyArn
 
   Task:
     Type: AWS::ECS::TaskDefinition
     Properties:
       Cpu: 256
       ExecutionRoleArn: !GetAtt TaskExecRole.Arn
-      Family: BurninatorServiceTask
-      Memory: 512
+      Family: !Sub ${AWS::StackName}-BurninatorServiceTask
+      Memory: 3172
       TaskRoleArn: !GetAtt ApplicationRole.Arn
       ContainerDefinitions:
         - Name: ServiceTask
+          PortMappings:
+            - ContainerPort: 3011
+              HostPort: 80
+          ExtraHosts:
+            - Hostname: jira.cnvrmedia.net
+              IpAddress: 10.110.192.10
+          Image: !ImportValue burninator-repository:RuntimeRepository
+          Memory: 3172
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-group: !ImportValue burninator-logs:LogGroup
+              awslogs-region: !Ref AWS::Region
+              awslogs-stream-prefix: service
+          MountPoints:
+            - SourceVolume: EFS
+              ContainerPath: /app/data
+              ReadOnly: false
+      Volumes:
+        - Name: EFS
+          Host:
+            SourcePath: /home/ec2-user/efs-mount-point/burninator
+
+  BackupTask:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Cpu: 256
+      ExecutionRoleArn: !GetAtt TaskExecRole.Arn
+      Family: !Sub ${AWS::StackName}-BurninatorBackupTask
+      Memory: 256
+      TaskRoleArn: !GetAtt ApplicationRole.Arn
+      ContainerDefinitions:
+        - Name: BackupTask
           PortMappings:
             - ContainerPort: 3011
               HostPort: 80
@@ -61,6 +94,11 @@ Resources:
             - SourceVolume: EFS
               ContainerPath: /app/data
               ReadOnly: false
+          Environment:
+            - Name: BACKUP_BUCKET
+              Value: !ImportValue burninator-data:BackupStore
+          Command:
+            - ./scripts/backupaws.sh
       Volumes:
         - Name: EFS
           Host:

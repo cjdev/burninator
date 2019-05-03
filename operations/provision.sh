@@ -65,6 +65,6 @@ provision service
 provision access
 
 # Pipeline
-provision pipeline pipeline GitHubOAuthToken "$1"
+# provision pipeline pipeline GitHubOAuthToken "$1"
 
 

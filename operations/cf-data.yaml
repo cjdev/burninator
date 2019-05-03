@@ -3,8 +3,11 @@ AWSTemplateFormatVersion: '2010-09-09'
 Resources:
   BackupStore:
     Type: AWS::S3::Bucket
+    Properties:
+        VersioningConfiguration:
+          Status: Enabled
 
-  ReadWriteDataPolicy:
+  PutToBackupStorePolicy:
         Type: AWS::IAM::ManagedPolicy
         Properties:
           PolicyDocument:
@@ -12,13 +15,6 @@ Resources:
               Statement:
                 - Effect: Allow
                   Action:
-                    - s3:DeleteObject
-                    - s3:DeleteObjectVersion
-                    - s3:GetObject
-                    - s3:ListBucket
-                    - s3:ListBucketMultipartUploads
-                    - s3:ListBucketVersions
-                    - s3:ListMultipartUploadParts
                     - s3:PutObject
                   Resource:
                     - !Sub ${BackupStore.Arn}/*
@@ -52,10 +48,10 @@ Outputs:
     Value: !Ref DataVolume
     Export:
       Name: !Sub ${AWS::StackName}:DataVolume
-  ReadWritePolicyArn:
-    Value: !Ref ReadWriteDataPolicy
+  PutToBackupStorePolicyArn:
+    Value: !Ref PutToBackupStorePolicy
     Export:
-      Name: !Sub ${AWS::StackName}:ReadWriteDataPolicyArn
+      Name: !Sub ${AWS::StackName}:PutToBackupStorePolicyArn
   LeftDataVolumeTarget:
     Value: !Ref LeftDataVolumeTarget
     Export:

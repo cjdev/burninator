@@ -12,6 +12,7 @@ COPY build app/build
 COPY server app/server
 COPY src app/src
 COPY scripts/decrypt.sh app/scripts/
+COPY scripts/backupaws.sh app/scripts/
 
 COPY package.json package-lock.json .babelrc CHANGELOG.md commit-id artifact-id production.env.* scripts/startaws.sh app/
 
