@@ -64,7 +64,7 @@ Resources:
       Volumes:
         - Name: EFS
           Host:
-            SourcePath: /home/ec2-user/efs-mount-point
+            SourcePath: /home/ec2-user/efs-mount-point/burninator
 
   BurninatorService:
     Type: AWS::ECS::Service
