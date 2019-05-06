@@ -6,6 +6,20 @@ Resources:
     Properties:
         VersioningConfiguration:
           Status: Enabled
+        LifecycleConfiguration:
+          Rules:
+            - Id: clean
+              Status: Enabled
+              AbortIncompleteMultipartUpload:
+                DaysAfterInitiation: 2
+            - Id: archive
+              Status: Enabled
+              NoncurrentVersionTransitions:
+                - StorageClass : GLACIER
+                  TransitionInDays : 10
+            - Id: remove
+              Status: Enabled
+              NoncurrentVersionExpirationInDays: 60
 
   PutToBackupStorePolicy:
         Type: AWS::IAM::ManagedPolicy

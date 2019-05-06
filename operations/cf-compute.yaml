@@ -122,6 +122,10 @@ Outputs:
     Value: !Ref Cluster
     Export:
       Name: !Sub ${AWS::StackName}:Cluster
+  ClusterArn:
+    Value: !GetAtt Cluster.Arn
+    Export:
+      Name: !Sub ${AWS::StackName}:ClusterArn
   LoadBalancer:
     Value: !GetAtt LoadBalancer.LoadBalancerName
     Export:
