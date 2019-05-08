@@ -95,7 +95,7 @@ export const handleGetBoardStatus = (req, res) => {
 };
 
 
-export const asyncHandleGetBoardHistory = async (req, res) => {
+const asyncHandleGetBoardHistory = async (req, res) => {
     const { boardId } = req.params;
     const fileNames = db2.listPath(`${boardId}/history`);
 
@@ -109,6 +109,8 @@ export const asyncHandleGetBoardHistory = async (req, res) => {
 
 export const handleGetBoardHistory = wrapAsync(asyncHandleGetBoardHistory);
 
+
+
 export const handleGetBoard = wrapAsync(async (req, res) => {
   timedHandler(req, async t => {
     t.update('getBoard PRE');
@@ -118,6 +120,8 @@ export const handleGetBoard = wrapAsync(async (req, res) => {
     t.update('getBoard POST');
   });
 });
+
+
 
 export const handleGetBoardComparinator = wrapAsync(async (req, res, next) => {
   const { boardId } = req.params;

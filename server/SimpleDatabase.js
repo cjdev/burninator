@@ -23,9 +23,9 @@ export const SimpleDatabase = root => {
   const getSync = id =>
     timeSync(`getSync (${id})`, () => fs.readFileSync(getPathForId(id), 'utf8'));
 
-  const getA = async id => time(`getA (${id})`, async () => await readFile(getPathForId(id)));
+  const getA = async id => await readFile(getPathForId(id));
 
-  const getP = id => time(`getP (${id})`, () => readFile(getPathForId(id)));
+  const getP = id => readFile(getPathForId(id));
 
   const put = (id, data, cb) => {
     const pathForId = getPathForId(id);
