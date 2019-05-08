@@ -20,6 +20,10 @@ Concurrently, in separate consoles, run:
 
 Navigate to http://localhost:3000 (or your port if modified in package.json).
 
+Depending on how much data you have, you may need to increase the maximum heap size
+for node. Run `export NODE_OPTIONS="--max-old-space-size=5120"` or similar before
+starting the app it crashes.
+
 #### Connecting to Jira
 
 The server reads Jira configuration from a `./.env` file that defines environment variables:
