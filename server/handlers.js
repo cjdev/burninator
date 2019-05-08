@@ -94,19 +94,20 @@ export const handleGetBoardStatus = (req, res) => {
   res.json(syncState.getSyncStatus(req.params.boardId));
 };
 
-export const handleGetBoardHistory = (req, res) => {
-  timedHandler(req, () => {
+
+export const asyncHandleGetBoardHistory = async (req, res) => {
     const { boardId } = req.params;
     const fileNames = db2.listPath(`${boardId}/history`);
 
-    const versionData = R.pipe(
-      R.map(fileName => JSON.parse(db2.getSync(`${boardId}/history/${fileName}`))),
-      R.map(R.pick(['lastUpdate', 'versionArchive', 'versionName']))
-    )(fileNames);
+    const filePaths = R.map(fn => `${boardId}/history/${fn}`, fileNames);
+    const fileDataRequests = R.map(p => db2.getP(p), filePaths);
+    const fileData = await Promise.all(fileDataRequests);
+    const versionData = R.map(R.pick(['lastUpdate', 'versionArchive', 'versionName']), fileData);
     logger.silly(`versionData: ${versionData}`);
     res.json(versionData);
-  });
 };
+
+export const handleGetBoardHistory = wrapAsync(asyncHandleGetBoardHistory);
 
 export const handleGetBoard = wrapAsync(async (req, res) => {
   timedHandler(req, async t => {
