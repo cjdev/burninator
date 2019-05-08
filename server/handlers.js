@@ -31,22 +31,14 @@ const getPathToVersion = async (boardId, version) => {
   return `${boardId}/${filePath}`;
 };
 
-const noopTimer = {
-  update: () => {},
-};
 
-export const getBoard = async (boardId, version = 'current', timer = noopTimer) => {
+export const getBoard = async (boardId, version = 'current') => {
   const filePath = await getPathToVersion(boardId, version);
-  // timer.update('getBoard: POST getPathToVersion');
 
-  const configurationSettings = await time('CONFIG', async () => {
-    return await getConfigForBoard(boardId, version);
-  });
+  const configurationSettings = await getConfigForBoard(boardId, version);
 
-  // timer.update('getBoard POST getConfigForBoard');
   const status = syncState.getSyncStatus(boardId);
   const boardData = await db2.getP(filePath);
-  // timer.update(`getBoard POST getP`);
   return {
     ...bufToJSON(boardData),
     configurationSettings,
@@ -109,18 +101,13 @@ const asyncHandleGetBoardHistory = async (req, res) => {
 
 export const handleGetBoardHistory = wrapAsync(asyncHandleGetBoardHistory);
 
-
-
-export const handleGetBoard = wrapAsync(async (req, res) => {
-  timedHandler(req, async t => {
-    t.update('getBoard PRE');
+const asyncHandleGetBoard = async (req, res) => {
     const { boardId, version } = req.params;
-    const board = await getBoard(boardId, version, t);
+    const board = await getBoard(boardId, version);
     res.json(board);
-    t.update('getBoard POST');
-  });
-});
+};
 
+export const handleGetBoard = wrapAsync(asyncHandleGetBoard);
 
 
 export const handleGetBoardComparinator = wrapAsync(async (req, res, next) => {
