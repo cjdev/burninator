@@ -38,10 +38,8 @@ Resources:
   Task:
     Type: AWS::ECS::TaskDefinition
     Properties:
-      Cpu: 256
       ExecutionRoleArn: !GetAtt TaskExecRole.Arn
       Family: !Sub ${AWS::StackName}-BurninatorServiceTask
-      Memory: 3172
       TaskRoleArn: !GetAtt ApplicationRole.Arn
       ContainerDefinitions:
         - Name: ServiceTask
@@ -52,7 +50,7 @@ Resources:
             - Hostname: jira.cnvrmedia.net
               IpAddress: 10.110.192.10
           Image: !ImportValue burninator-repository:RuntimeRepository
-          Memory: 3172
+          Memory: 6144
           LogConfiguration:
             LogDriver: awslogs
             Options:
@@ -71,10 +69,8 @@ Resources:
   BackupTask:
     Type: AWS::ECS::TaskDefinition
     Properties:
-      Cpu: 256
       ExecutionRoleArn: !GetAtt TaskExecRole.Arn
       Family: !Sub ${AWS::StackName}-BurninatorBackupTask
-      Memory: 256
       TaskRoleArn: !GetAtt ApplicationRole.Arn
       ContainerDefinitions:
         - Name: BackupTask
@@ -172,7 +168,9 @@ Resources:
       Port: 80
       Protocol: HTTP
       VpcId: !ImportValue network-AttachedNetwork
-
+      TargetGroupAttributes:
+        - Key: deregistration_delay.timeout_seconds
+          Value: "20"
 
 Outputs:
   Service:

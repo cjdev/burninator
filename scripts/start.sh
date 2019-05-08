@@ -4,7 +4,7 @@ PWD=$(pwd)
 
 mkdir -p logs
 
-export NODE_OPTIONS="--max-old-space-size=3172"
+export NODE_OPTIONS="--max-old-space-size=5120"
 
 npm install && \
 npm run build && \

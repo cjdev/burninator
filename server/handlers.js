@@ -94,7 +94,8 @@ const asyncHandleGetBoardHistory = async (req, res) => {
     const filePaths = R.map(fn => `${boardId}/history/${fn}`, fileNames);
     const fileDataRequests = R.map(p => db2.getP(p), filePaths);
     const fileData = await Promise.all(fileDataRequests);
-    const versionData = R.map(R.pick(['lastUpdate', 'versionArchive', 'versionName']), fileData);
+    const fileInfo = R.map(d => JSON.parse(d), fileData);
+    const versionData = R.map(R.pick(['lastUpdate', 'versionArchive', 'versionName']), fileInfo);
     logger.silly(`versionData: ${versionData}`);
     res.json(versionData);
 };
