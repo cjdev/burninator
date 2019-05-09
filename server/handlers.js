@@ -126,10 +126,14 @@ export const handleGetBoardComparinator = wrapAsync(async (req, res, next) => {
   res.json({ versions: R.zipWith((p, v) => ({ p: v }), versionsParam, versionData) });
 });
 
-export const handleGetBoardConfigurationHistory = (req, res) => {
+const asyncHandleGetBoardConfigurationHistory = async (req, res) => {
   const boardId = req.params.boardId;
-  res.json(db2.listPath(`${boardId}/config`));
+  const  hist = await db2.asyncListPath(`${boardId}/config`);
+  res.json(hist);
 };
+
+export const handleGetBoardConfigurationHistory = wrapAsync(asyncHandleGetBoardConfigurationHistory);
+
 
 export const handleGetBoardConfigurationVersion = wrapAsync(async (req, res) => {
   const when = versionOrNow(req.params.version);
