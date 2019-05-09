@@ -156,11 +156,11 @@ Resources:
   HTTPTarget:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
-      HealthCheckIntervalSeconds: 20
+      HealthCheckIntervalSeconds: 125
       HealthCheckPath: /health
       HealthCheckPort: 80
       HealthCheckProtocol: HTTP
-      HealthCheckTimeoutSeconds: 15
+      HealthCheckTimeoutSeconds: 120
       HealthyThresholdCount: 5
       UnhealthyThresholdCount: 3
       Matcher:
