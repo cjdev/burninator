@@ -87,7 +87,8 @@ export const handleGetBoardStatus = (req, res) => {
 
 const asyncHandleGetBoardHistory = async (req, res) => {
     const { boardId } = req.params;
-    const fileNames = db2.listPath(`${boardId}/history`);
+
+    const fileNames = await db2.asyncListPath(`${boardId}/history`);
 
     const filePaths = R.map(fn => `${boardId}/history/${fn}`, fileNames);
     const fileDataRequests = R.map(p => db2.getP(p), filePaths);
