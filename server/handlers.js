@@ -21,7 +21,10 @@ const getConfigForBoard = async (boardId, version) => {
   return configBuf ? JSON.parse(configBuf) : {};
 };
 
-const getLatestBoardFileName = async boardId => R.last(db2.listPath(`${boardId}/history`).sort());
+const getLatestBoardFileName = async boardId => {
+    const hist = await db2.asyncListPath(`${boardId}/history`);
+    return R.reduce(R.max, 0, hist);
+}
 
 const getPathToVersion = async (boardId, version) => {
   const filePath =
