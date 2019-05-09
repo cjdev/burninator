@@ -51,7 +51,7 @@ Resources:
     Type: AWS::AutoScaling::LaunchConfiguration
     Properties:
       ImageId: ami-05cc68a00d392447a
-      InstanceType: m5.large
+      InstanceType: m5.2xlarge
       SecurityGroups:
         - !ImportValue network-AttachedNetworkDefaultSecurityGroup
       IamInstanceProfile: !Ref HostsProfile
