@@ -2,29 +2,6 @@ AWSTemplateFormatVersion: "2010-09-09"
 
 Resources:
 
-  HTTPListener:
-    Type: AWS::ElasticLoadBalancingV2::Listener
-    Properties:
-      DefaultActions:
-        - TargetGroupArn: !ImportValue burninator-service:HTTPTarget
-          Type: forward
-      LoadBalancerArn: !ImportValue burninator-compute:LoadBalancerArn
-      Port: 80
-      Protocol: HTTP
-
-  HTTPSListener:
-    Type: AWS::ElasticLoadBalancingV2::Listener
-    Properties:
-      DefaultActions:
-        - TargetGroupArn: !ImportValue burninator-service:HTTPTarget
-          Type: forward
-      LoadBalancerArn: !ImportValue burninator-compute:LoadBalancerArn
-      Port: 443
-      Protocol: HTTPS
-      Certificates:
-        - CertificateArn: arn:aws:acm:us-west-1:123972995618:certificate/103047ed-5260-4791-942a-c0128cbb4d65
-
-
   CertificateValidation:
     Type: AWS::Route53::RecordSet
     Properties :
