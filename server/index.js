@@ -50,6 +50,7 @@ app.get('/api/board/:boardId/status', H.handleGetBoardStatus);
 app.get('/api/board/:boardId', H.handleGetBoard);
 app.get('/api/sync/:boardId', H.handleGetSyncBoard);
 app.get('/api/reset/:boardId', H.handleGetResetBoard);
+app.get('/health', H.handleHealth);
 app.get('/*', H.handleDefault);
 
 const logError = error => {

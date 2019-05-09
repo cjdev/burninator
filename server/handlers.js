@@ -262,3 +262,9 @@ export const handleChangelog = (req, res) =>
 
 export const handleDefault = (req, res) =>
   res.sendFile(path.resolve(__dirname, '../build/index.html'));
+
+export const handleHealth = (req, res) => {
+    const mused = Math.round(process.memoryUsage() / 10485.76) / 100;
+    console.log("Memory In Use: ", mused, "MB");
+    res.json({});
+}
