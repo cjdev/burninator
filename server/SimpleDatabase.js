@@ -5,6 +5,8 @@ import { promisify } from 'util';
 import { time, timeSync } from './logger';
 const readFile = promisify(fs.readFile);
 const writeFile = promisify(fs.writeFile);
+const readDir = promisify(fs.readdir);
+const existsPath = promisify(fs.exists);
 
 export const SimpleDatabase = root => {
   const rootPath = path.resolve(root);
@@ -46,9 +48,22 @@ export const SimpleDatabase = root => {
     return fs.readdirSync(rootPath);
   };
 
+  const asyncListPath = async id => {
+    const have = await asyncExists(id);
+    if (have) {
+        return await readDir(getPathForId(id));
+    } else {
+        return [];
+    }
+  };
+
   const listPath = id => {
     // console.log('listPath rootPath, id: ', rootPath, id, exists(id));
     return exists(id) ? fs.readdirSync(getPathForId(id)) : [];
+  };
+
+  const asyncExists = async id => {
+    return await existsPath(getPathForId(id));
   };
 
   const exists = id => {
@@ -64,7 +79,9 @@ export const SimpleDatabase = root => {
     put,
     putP,
     list,
+    asyncListPath,
     listPath,
+    asyncExists,
     exists,
   };
 };

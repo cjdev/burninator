@@ -47,17 +47,15 @@ export const getBoard = async (boardId, version = 'current') => {
 };
 
 const configAsOf = async (boardId, when) => {
-  const allConfigs = db2.listPath(`${boardId}/config`);
+  const allConfigs = await db2.asyncListPath(`${boardId}/config`);
   logger.silly(`allConfigs ${allConfigs}`);
 
-  const latest = await time('LATEST', async () => {
-    return await R.pipe(
+  const latest = R.pipe(
       R.map(x => parseInt(x, 10)),
       R.sort(R.comparator(R.lt)),
       R.filter(x => x <= when),
       R.last
     )(allConfigs);
-  });
 
   if (latest) {
     return await db2.getA(`${boardId}/config/${latest}`);
@@ -264,7 +262,7 @@ export const handleDefault = (req, res) =>
   res.sendFile(path.resolve(__dirname, '../build/index.html'));
 
 export const handleHealth = (req, res) => {
-    const mused = Math.round(process.memoryUsage() / 10485.76) / 100;
+    const mused = Math.round(process.memoryUsage().heapUsed / 10485.76) / 100;
     console.log("Memory In Use: ", mused, "MB");
     res.json({});
 }
