@@ -68,7 +68,7 @@ Resources:
                   exec > /root/init.log 2>&1
                   echo $efsvol
                   echo ECS_CLUSTER=${Cluster} >> /etc/ecs/ecs.config
-                  yum install -y aws-cfn-bootstrap amazon-efs-utils
+                  yum install -y aws-cfn-bootstrap amazon-efs-utils rsync
                   mkdir -p /home/ec2-user/efs-mount-point
                   mount -t efs $efsvol:/ /home/ec2-user/efs-mount-point/
                   chown ec2-user /home/ec2-user/efs-mount-point
@@ -87,7 +87,8 @@ Resources:
           Value: Burninator
           PropagateAtLaunch: true
       MaxSize: 5
-      MinSize: 2
+      MinSize: 1
+      DesiredCapacity: 1
       VPCZoneIdentifier:
         - !ImportValue network-AttachedNetworkLeftSubnet
         - !ImportValue network-AttachedNetworkRightSubnet
