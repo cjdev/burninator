@@ -19,13 +19,20 @@ if [ "$localbuild" == "" ]; then
   tagl="${ECR_REPOSITORY}:latest"
   commitid="$CODEBUILD_RESOLVED_SOURCE_VERSION"
   echo "$commitid" > commit-id
-
 else
   commitid="$(git rev-parse HEAD)"
   echo "$commitid" > commit-id
   tag="burninator:local-${commitid}-mod"
   tagl="burninator:latest"
 fi
+
+if [ -f ".env" ]; then
+    echo using exisiting .env
+else
+    ./scripts/decrypt.sh
+    echo using decrypted .env
+fi
+
 
 env
 

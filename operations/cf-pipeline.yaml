@@ -27,6 +27,8 @@ Resources:
                     Action: sts:AssumeRole
                     Principal:
                         Service: codepipeline.amazonaws.com
+            ManagedPolicyArns:
+              - !ImportValue burninator-config:DecryptSecretsPolicyArn
             Policies:
               - PolicyName: pipeline
                 PolicyDocument:
