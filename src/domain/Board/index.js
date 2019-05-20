@@ -27,7 +27,9 @@ const getCompletedVersionsForWeek = (issueKeysForWeek, allIssues) => {
     R.filter(i => i.isFinalInVersion)
   )(allIssues);
 };
-const closedInSprint = issue => issue.resolution.name === 'Done' && issue.resolvedInSprint;
+const closedInSprint = issue => {
+    return (issue.resolution.name === 'Done' && issue.resolvedInSprint);
+};
 const getClosedIssues = iteration => R.filter(closedInSprint)(iteration.issues);
 const getIssuesTotalPoints = R.pipe(
   R.pluck('points'),
@@ -75,7 +77,7 @@ export const calculateDatePointMapForVelocity = (basisDate, V, totalRemainingPoi
 // export for testing
 export const calculateEpics = issues => {
   return R.pipe(
-    R.groupBy(i => i.epic.name),
+    R.groupBy(i => { return i.epic.name; }),
     R.mapObjIndexed((issues, name) => ({
       name,
       issues,

@@ -33,22 +33,23 @@ const enhanceTracks = tracks => {
 
     const finalVersionDates = board.getReleases();
     // console.log(finalVersionDates);
-
     const newProjects = R.map(project => {
       if (project.phase !== 'build') return project;
-
       const newChildren = R.pipe(
         R.map(child => {
+          const fvds = finalVersionDates[child.releaseId] || {};
+          if (!fvds) {
+              console.log("no fvds:", fvds);
+          }
           if (!child.releaseId) return child;
           return {
             ...child,
-            startDate: toTs(finalVersionDates[child.releaseId].startDate),
-            endDate: toTs(finalVersionDates[child.releaseId].endDate),
+            startDate: toTs(fvds.startDate),
+            endDate: toTs(fvds.endDate),
           };
         }),
         R.sort(sortByTs)
       )(project.children || []);
-
       return {
         ...project,
         children: newChildren,

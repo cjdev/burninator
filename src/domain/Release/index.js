@@ -10,7 +10,7 @@ const getBacklogIssuesByVersion = R.pipe(
 );
 const getFirstInProgress = issues => {
   return R.pipe(
-    R.map(i => R.filter(e => e.from === '1' && e.to === '3')(i.statusHistory.entries || [])),
+    R.map(i => R.filter(e => e.from === '1' && e.to === '3')((i.statusHistory || {}).entries || [])),
     R.flatten,
     R.sort((a, b) => new Date(a.ts) - new Date(b.ts)),
     R.head,
@@ -23,9 +23,13 @@ const getStartOfFirstInBacklog = (versionIssues, allIssues) => {
     R.sortBy(R.prop('ordinal')),
     R.head
   )(versionIssues);
-  const previous = R.find(R.propEq('ordinal', firstWithVersion.ordinal - 1))(allIssues);
-  // console.log('previous: ', previous.ordinal, previous.completedWeekPadded);
-  return previous.completedWeekPadded;
+  if (firstWithVersion) {
+    const previous = R.find(R.propEq('ordinal', firstWithVersion.ordinal - 1))(allIssues);
+    if (previous) {
+        return previous.completedWeekPadded;
+    }
+  }
+  return null;
 };
 
 const getLastCompletedWeekPadded = R.pipe(
@@ -43,7 +47,7 @@ const getPastSprintIssuesByVersion = R.pipe(
 
 const getEndOfLastInPast = (vId, issues) => {
   return R.pipe(
-    R.map(i => R.filter(e => e.to === '6')(i.statusHistory.entries || [])),
+    R.map(i => R.filter(e => e.to === '6')((i.statusHistory || {}).entries || [])),
     R.filter(i => i.length > 0),
     R.flatten,
     R.sort((a, b) => new Date(a.ts) - new Date(b.ts)),
@@ -69,7 +73,7 @@ const getStartEnd = (
     startDate = getStartOfFirstInBacklog(backlogIssues, enhancedIssueList);
   }
   if (!startDate) {
-    console.log(`NO STARTDATE FOR ${vId} ${version.name}`);
+    console.log(`NO STARTDATE FOR ${vId} ${(version || {}).name}`);
   }
   // console.log(vId, 'startDate: ', startDate);
 
@@ -82,7 +86,7 @@ const getStartEnd = (
     endDate = getEndOfLastInPast(vId, pastSprintIssues);
   }
   if (!endDate) {
-    console.log(`NO END FOR ${vId} ${version.name}`);
+    console.log(`NO END FOR ${vId} ${(version || {}).name}`);
   }
   // console.log('------------- getStartEnd: vId, start, end', vId, startDate, endDate);
   return {

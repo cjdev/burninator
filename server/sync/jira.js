@@ -122,7 +122,7 @@ const batchGet = async cb => {
 
 const getBoards = async (ctx, boardId, opts, startAt) => {
   const { data } = await getJSON(ctx, sprintsForBoard(boardId, startAt), opts);
-  // logger.debug(ctx, boardId, startAt, data.values.length);
+//   logger.debug(ctx, boardId, startAt, data.values.length);
   logger.silly(
     ctx,
     R.map(
