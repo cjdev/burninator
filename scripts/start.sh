@@ -4,7 +4,7 @@ PWD=$(pwd)
 
 mkdir -p logs
 
-export NODE_OPTIONS="--max-old-space-size=13312"
+export NODE_OPTIONS="--max-old-space-size=26624"
 
 npm install && \
 npm run build && \
@@ -17,4 +17,3 @@ forever start \
     ./
 
 forever list
-
