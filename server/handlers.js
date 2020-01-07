@@ -34,16 +34,27 @@ const getPathToVersion = async (boardId, version) => {
   return `${boardId}/${filePath}`;
 };
 
+const getPathToMeta = async (boardId, version) => {
+  const filePath =
+    version === undefined || version === 'current'
+      ? `meta/${await getLatestBoardFileName(boardId)}`
+      : `meta/${version}`;
+  return `${boardId}/${filePath}`;
+};
 
 export const getBoard = async (boardId, version = 'current') => {
   const filePath = await getPathToVersion(boardId, version);
+  const metaPath = await getPathToMeta(boardId, version);
 
   const configurationSettings = await getConfigForBoard(boardId, version);
 
   const status = syncState.getSyncStatus(boardId);
   const boardData = await db2.getP(filePath);
+  const metaData = await db2.getP(metaPath);
+
   return {
     ...bufToJSON(boardData),
+    ...bufToJSON(metaData),
     configurationSettings,
     status,
   };
@@ -94,11 +105,27 @@ const asyncHandleGetBoardHistory = async (req, res) => {
     const fileNames = await db2.asyncListPath(`${boardId}/history`);
 
     const verdat = async fn => {
-        const fp = `${boardId}/history/${fn}`;
-        const fdat = await db2.getP(fp);
-        const finfo = JSON.parse(fdat);
-        return R.pick(['lastUpdate', 'versionArchive', 'versionName'], finfo);
-    }
+
+        const version = fn;
+        const dataPath = await getPathToVersion(boardId, version);
+        const metaPath = await getPathToMeta(boardId, version);
+
+
+        const hasMeta = await db2.asyncExists(metaPath);
+        let meta;
+
+        if(!hasMeta) {
+          const raw = await db2.getP(dataPath);
+          const jsonData = JSON.parse(raw);
+          meta = R.pick(['lastUpdate', 'versionArchive', 'versionName'], jsonData);
+          // write it so this is fast next time.
+          await db2.putP(metaPath, JSON.stringify(meta));
+        } else {
+          const rawMeta = await db2.getP(metaPath);
+          meta = JSON.parse(rawMeta);
+        }
+        return meta;
+    };
 
     const versionData = await Promise.all(R.map(verdat, fileNames));
 
@@ -155,9 +182,13 @@ export const handlePostBoardVersion = wrapAsync(async (req, res) => {
   const name = getName(req);
   const archive = getArchive(req);
   const existing = await getBoard(boardId, version);
-  if (name !== undefined) existing.versionName = name;
-  if (archive !== undefined) existing.versionArchive = archive;
-  await db2.putP(`${boardId}/history/${version}`, JSON.stringify(existing, null, '  '));
+
+  const meta = R.pick(['lastUpdate', 'versionArchive', 'versionName'], existing);
+
+  if (name !== undefined) meta.versionName = name;
+  if (archive !== undefined) meta.versionArchive = archive;
+  await db2.putP(await getPathToMeta(boardId, version), JSON.stringify(meta, null, '  '));
+
   const updated = await getBoard(boardId, version);
   res.json(updated);
 });
@@ -179,8 +210,12 @@ export const handleGetResetBoard = wrapAsync(async (req, res) => {
       dataDir: boardDir,
     });
     await db2.putP(
-      `${boardId}/history/${postSyncBoard.lastUpdate}`,
+      await getPathToVersion(boardId, postSyncBoard.lastUpdate),
       JSON.stringify(postSyncBoard, null, ' ')
+    );
+    await db2.putP(
+      await getPathToMeta(boardId, postSyncBoard.lastUpdate),
+      JSON.stringify({lastUpdate: postSyncBoard.lastUpdate})
     );
     syncState.stopSync(boardId);
     const newBoard = await getBoard(boardId);
@@ -207,8 +242,12 @@ const syncBoard = async (existingData, boardId, syncUpdate = () => {}) => {
   );
   syncUpdate('saving board data...');
   await db2.putP(
-    `${boardId}/history/${postSyncBoard.lastUpdate}`,
+    await getPathToVersion(boardId, postSyncBoard.lastUpdate),
     JSON.stringify(postSyncBoard, null, ' ')
+  );
+  await db2.putP(
+    await getPathToMeta(boardId, postSyncBoard.lastUpdate),
+    JSON.stringify({lastUpdate: postSyncBoard.lastUpdate})
   );
   syncState.stopSync(boardId);
   return await getBoard(boardId);
