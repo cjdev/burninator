@@ -10,8 +10,6 @@ Run `yarn install` in the root directory.
 
 If the first time installing, create a `data` directory on the root directory.
 
-Copy the `./.env.sample` file to `./.env` and fill in settings as needed.
-
 #### Running the app locally
 
 Concurrently, in separate consoles, run:
