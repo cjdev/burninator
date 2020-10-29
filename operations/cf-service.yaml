@@ -46,7 +46,7 @@ Resources:
               HostPort: 0
           ExtraHosts:
             - Hostname: jira.cnvrmedia.net
-              IpAddress: 10.34.0.225
+              IpAddress: 10.110.194.63
           Image: !ImportValue burninator-repository:RuntimeRepository
           Memory: 32768
           LogConfiguration:
