@@ -101,7 +101,7 @@ Resources:
       - HTTPSListener
     Properties:
       Cluster: !ImportValue burninator-compute:Cluster
-      DesiredCount: 0
+      DesiredCount: 1
       TaskDefinition: !Ref Task
       LoadBalancers:
         - ContainerName: ServiceTask
