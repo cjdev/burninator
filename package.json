@@ -42,7 +42,7 @@
     "@cjdev/visual-stack-redux": "^4.0.1",
     "@mdi/js": "^3.4.93",
     "@mdi/react": "^1.1.0",
-    "axios": "^0.19.0",
+    "axios": "^0.21.1",
     "bluebird": "^3.4.6",
     "cors": "^2.8.5",
     "date-fns": "^1.29.0",
